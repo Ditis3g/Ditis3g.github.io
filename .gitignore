@@ -2,3 +2,6 @@
 /public/
 /resources/_gen/
 .hugo_build.lock
+
+# 자동화 로그 (PC마다 다름, 올리지 않음)
+/scripts/daily-blog.log

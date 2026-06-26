@@ -9,7 +9,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-$BlogDir    = 'D:\Project\Blog'
+$BlogDir    = Split-Path $PSScriptRoot -Parent   # repo location (works wherever cloned)
 $MemoDir    = 'D:\BlogMemo'
 $PostsDir   = Join-Path $BlogDir 'content\posts'
 $PromptFile = Join-Path $BlogDir 'scripts\prompt-instructions.txt'
@@ -40,6 +40,11 @@ try {
             Select-Object -First 1
   if (-not $claude) { Log "claude.exe not found. exit."; exit 1 }
   Log "claude: $claude"
+
+  # Pull latest first (safe for multi-PC: another PC may have pushed)
+  Set-Location $BlogDir
+  git pull --rebase origin main | Out-Null
+  Log "git pull done"
 
   # Collect memo files (.txt/.md, exclude README)
   $memoFiles = Get-ChildItem $MemoDir -File -ErrorAction SilentlyContinue |
@@ -81,8 +86,10 @@ try {
   # Safety: ensure draft stays true
   if ($raw -match 'draft:\s*false') { $raw = $raw -replace 'draft:\s*false', 'draft: true' }
 
-  # Save post (UTF-8, no BOM)
+  # Save post (UTF-8, no BOM). Avoid filename collision (e.g. another PC same day).
   $postPath = Join-Path $PostsDir "$today-study.md"
+  $n = 2
+  while (Test-Path $postPath) { $postPath = Join-Path $PostsDir "$today-study-$n.md"; $n++ }
   [System.IO.File]::WriteAllText($postPath, $raw, $utf8)
   Log "draft saved: $postPath"
 
@@ -96,6 +103,7 @@ try {
   Set-Location $BlogDir
   git add -A
   git commit -m "study draft: $today" | Out-Null
+  git pull --rebase origin main | Out-Null
   git push origin main
   Log "git push done (draft, not public)."
 
