@@ -83,6 +83,14 @@ try {
   $raw = $raw -replace '^\s*```(?:markdown|md)?\s*\r?\n', ''
   $raw = $raw -replace '\r?\n```\s*$', ''
 
+  # Strip any chatty preamble before the Hugo front matter delimiter
+  # (model sometimes prepends "I'll follow the instructions..."). Hugo needs
+  # the front matter (--- or +++) on the very first line.
+  $fmStart = [regex]::Match($raw, '(?m)^(---|\+\+\+)\s*$')
+  if ($fmStart.Success -and $fmStart.Index -gt 0) {
+    $raw = $raw.Substring($fmStart.Index).Trim()
+  }
+
   # Safety: ensure draft stays true
   if ($raw -match 'draft:\s*false') { $raw = $raw -replace 'draft:\s*false', 'draft: true' }
 
