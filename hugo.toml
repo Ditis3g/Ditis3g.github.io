@@ -1,0 +1,56 @@
+baseURL = 'https://ditis3g.github.io/'
+locale = 'ko-kr'
+title = 'Physical AI 드림팀'
+theme = 'PaperMod'
+
+# 페이지네이션 (한 페이지에 글 몇 개)
+[pagination]
+  pagerSize = 10
+
+# 검색 기능 등에 필요
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+[params]
+  env = 'production'
+  description = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀"
+  author = "Ditis3g"
+  defaultTheme = "auto"        # 방문자 시스템에 맞춰 밝게/어둡게 자동
+  ShowReadingTime = true       # 읽는 데 걸리는 시간 표시
+  ShowShareButtons = true      # 공유 버튼
+  ShowPostNavLinks = true      # 이전/다음 글 이동
+  ShowBreadCrumbs = true       # 상단 경로 표시
+  ShowCodeCopyButtons = true   # 코드 복사 버튼
+  ShowToc = true               # 목차
+
+  [params.homeInfoParams]
+    Title = "Physical AI 드림팀 👋"
+    Content = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀의 기록입니다."
+
+# 상단 메뉴
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "글 목록"
+    url = "/posts/"
+    weight = 10
+  [[menu.main]]
+    identifier = "search"
+    name = "검색"
+    url = "/search/"
+    weight = 20
+
+# 코드 하이라이트
+[markup]
+  [markup.highlight]
+    noClasses = false
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    style = "monokai"
+
+# 검색 기능용 출력 포맷
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
