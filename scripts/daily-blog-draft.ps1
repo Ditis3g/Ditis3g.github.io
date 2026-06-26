@@ -1,6 +1,6 @@
 # ============================================================
 #  Daily blog draft generator
-#  Reads study memos from D:\BlogMemo, asks Claude (headless)
+#  Reads study memos from D:\blog-memo, asks Claude (headless)
 #  to turn them into a Hugo draft post, commits & pushes.
 #  Run by Windows Task Scheduler every day at 23:00.
 #  NOTE: Korean instructions live in prompt-instructions.txt
@@ -10,7 +10,7 @@
 $ErrorActionPreference = 'Stop'
 
 $BlogDir    = Split-Path $PSScriptRoot -Parent   # repo location (works wherever cloned)
-$MemoDir    = 'D:\BlogMemo'
+$MemoDir    = 'D:\blog-memo'
 $PostsDir   = Join-Path $BlogDir 'content\posts'
 $PromptFile = Join-Path $BlogDir 'scripts\prompt-instructions.txt'
 $LogFile    = Join-Path $BlogDir 'scripts\daily-blog.log'
