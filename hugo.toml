@@ -2,6 +2,7 @@ baseURL = 'https://ditis3g.github.io/'
 locale = 'ko-kr'
 title = 'Physical AI 드림팀'
 theme = 'PaperMod'
+timeZone = 'Asia/Seoul'
 
 # 페이지네이션 (한 페이지에 글 몇 개)
 [pagination]
