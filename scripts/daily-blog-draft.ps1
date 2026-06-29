@@ -31,14 +31,22 @@ try {
   # Augment PATH (git etc.)
   $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
 
-  # Locate claude.exe (newest version folder, robust to updates)
-  $ccBase = Join-Path $env:APPDATA 'Claude\claude-code'
-  $claude = Get-ChildItem $ccBase -Directory -ErrorAction SilentlyContinue |
+  # Locate claude.exe (newest version). Robust to scheduled-task profile/env
+  # quirks: try %APPDATA% first, then scan every user profile under C:\Users
+  # (a scheduled task may run with APPDATA pointing at the system profile).
+  Log "env APPDATA=$env:APPDATA USERPROFILE=$env:USERPROFILE"
+  $ccRoots = @()
+  if ($env:APPDATA) { $ccRoots += (Join-Path $env:APPDATA 'Claude\claude-code') }
+  $ccRoots += Get-ChildItem 'C:\Users' -Directory -ErrorAction SilentlyContinue |
+              ForEach-Object { Join-Path $_.FullName 'AppData\Roaming\Claude\claude-code' }
+  $claude = $ccRoots |
+            Where-Object { Test-Path $_ } |
+            ForEach-Object { Get-ChildItem $_ -Directory -ErrorAction SilentlyContinue } |
             Sort-Object LastWriteTime -Descending |
             ForEach-Object { Join-Path $_.FullName 'claude.exe' } |
             Where-Object { Test-Path $_ } |
             Select-Object -First 1
-  if (-not $claude) { Log "claude.exe not found. exit."; exit 1 }
+  if (-not $claude) { Log "claude.exe not found (searched: $($ccRoots -join '; ')). exit."; exit 1 }
   Log "claude: $claude"
 
   # Pull latest first (safe for multi-PC: another PC may have pushed)
