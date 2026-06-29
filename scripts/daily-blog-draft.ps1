@@ -31,22 +31,51 @@ try {
   # Augment PATH (git etc.)
   $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
 
-  # Locate claude.exe (newest version). Robust to scheduled-task profile/env
-  # quirks: try %APPDATA% first, then scan every user profile under C:\Users
-  # (a scheduled task may run with APPDATA pointing at the system profile).
+  # Locate claude.exe. Two install flavors exist on this machine:
+  #   1) npm global:        %APPDATA%\npm\node_modules\@anthropic-ai\claude-code\bin\claude.exe
+  #   2) Claude Desktop:    %APPDATA%\Claude\claude-code\<version>\claude.exe
+  # Try PATH first (handles either), then explicit per-user fallbacks. Scan
+  # every user profile under C:\Users in case a scheduled task runs without
+  # the expected APPDATA/USERPROFILE.
   Log "env APPDATA=$env:APPDATA USERPROFILE=$env:USERPROFILE"
-  $ccRoots = @()
-  if ($env:APPDATA) { $ccRoots += (Join-Path $env:APPDATA 'Claude\claude-code') }
-  $ccRoots += Get-ChildItem 'C:\Users' -Directory -ErrorAction SilentlyContinue |
-              ForEach-Object { Join-Path $_.FullName 'AppData\Roaming\Claude\claude-code' }
-  $claude = $ccRoots |
-            Where-Object { Test-Path $_ } |
-            ForEach-Object { Get-ChildItem $_ -Directory -ErrorAction SilentlyContinue } |
-            Sort-Object LastWriteTime -Descending |
-            ForEach-Object { Join-Path $_.FullName 'claude.exe' } |
-            Where-Object { Test-Path $_ } |
-            Select-Object -First 1
-  if (-not $claude) { Log "claude.exe not found (searched: $($ccRoots -join '; ')). exit."; exit 1 }
+  $candidates = New-Object System.Collections.Generic.List[string]
+
+  $cmd = Get-Command claude -ErrorAction SilentlyContinue
+  if ($cmd) {
+    if ($cmd.Source -like '*.exe') {
+      $candidates.Add($cmd.Source)
+    } else {
+      # .cmd / .ps1 shim — resolve to the real exe next to its node_modules
+      $real = Join-Path (Split-Path $cmd.Source -Parent) 'node_modules\@anthropic-ai\claude-code\bin\claude.exe'
+      if (Test-Path $real) { $candidates.Add($real) }
+    }
+  }
+
+  $userRoots = @()
+  if ($env:USERPROFILE) { $userRoots += $env:USERPROFILE }
+  $userRoots += Get-ChildItem 'C:\Users' -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
+  $userRoots = $userRoots | Sort-Object -Unique
+
+  $searched = @()
+  foreach ($u in $userRoots) {
+    $npmExe = Join-Path $u 'AppData\Roaming\npm\node_modules\@anthropic-ai\claude-code\bin\claude.exe'
+    $searched += $npmExe
+    if (Test-Path $npmExe) { $candidates.Add($npmExe) }
+
+    $ccRoot = Join-Path $u 'AppData\Roaming\Claude\claude-code'
+    $searched += $ccRoot
+    if (Test-Path $ccRoot) {
+      Get-ChildItem $ccRoot -Directory -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending |
+        ForEach-Object {
+          $exe = Join-Path $_.FullName 'claude.exe'
+          if (Test-Path $exe) { $candidates.Add($exe) }
+        }
+    }
+  }
+
+  $claude = $candidates | Select-Object -First 1
+  if (-not $claude) { Log "claude.exe not found (searched: $($searched -join '; ')). exit."; exit 1 }
   Log "claude: $claude"
 
   # Pull latest first (safe for multi-PC: another PC may have pushed)
