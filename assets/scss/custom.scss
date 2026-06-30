@@ -1,0 +1,116 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+:root {
+    --sys-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --base-font-family: "Pretendard Variable", "Pretendard", var(--sys-font-family);
+    --article-font-family: var(--base-font-family);
+
+    --body-background: #fafafa;
+
+    --accent-color: #18181b;
+    --accent-color-darker: #000000;
+    --accent-color-text: #ffffff;
+    --body-text-color: #52525b;
+
+    --card-background: #ffffff;
+    --card-background-selected: #f4f4f5;
+    --card-text-color-main: #18181b;
+    --card-text-color-secondary: #52525b;
+    --card-text-color-tertiary: #71717a;
+    --card-separator-color: rgba(228, 228, 231, 0.8);
+
+    &[data-scheme="dark"] {
+        --body-background: #09090b;
+
+        --accent-color: #fafafa;
+        --accent-color-darker: #e4e4e7;
+        --accent-color-text: #09090b;
+        --body-text-color: #a1a1aa;
+
+        --card-background: #18181b;
+        --card-background-selected: #27272a;
+        --card-text-color-main: #fafafa;
+        --card-text-color-secondary: #a1a1aa;
+        --card-text-color-tertiary: #71717a;
+        --card-separator-color: rgba(39, 39, 42, 0.8);
+    }
+}
+
+.article-list .article-title {
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+
+    @media (min-width: 1300px) {
+        font-size: 2.05rem;
+    }
+}
+
+.article-list .article-subtitle {
+    font-size: 1.5rem;
+    @media (min-width: 1300px) {
+        font-size: 1.6rem;
+    }
+}
+
+.article-list .article-meta,
+.article-list .article-meta a,
+.article-list .article-meta time,
+.article-list .article-meta span {
+    font-size: 1.3rem;
+}
+
+.site-name {
+    letter-spacing: -0.02em;
+}
+
+article.main-article .article-title {
+    letter-spacing: -0.015em;
+}
+
+/* Override Stack's auto-colored category / tag badges so they stay monochrome.
+   Stack inlines style="background-color: ...; color: ...;" on each <a>, so
+   !important is required to win specificity. */
+.article-category a,
+.article-tags a {
+    background-color: var(--card-background-selected) !important;
+    color: var(--card-text-color-secondary) !important;
+    border: 1px solid var(--card-separator-color);
+    font-weight: 500;
+}
+
+.article-category a:hover,
+.article-tags a:hover {
+    background-color: var(--accent-color) !important;
+    color: var(--accent-color-text) !important;
+    border-color: var(--accent-color);
+}
+
+/* Article body: tighten typography for Korean long-form reading. */
+:root {
+    --article-line-height: 1.95;
+}
+
+.article-content {
+    color: #3f3f46;
+
+    h2 {
+        margin-top: 2.4em;
+        margin-bottom: 0.9em;
+    }
+    h3 {
+        margin-top: 1.8em;
+        margin-bottom: 0.6em;
+    }
+    h2 + h3 {
+        margin-top: 1em;
+    }
+    p, li {
+        word-break: keep-all;
+        overflow-wrap: anywhere;
+    }
+}
+
+:root[data-scheme="dark"] .article-content {
+    color: #d4d4d8;
+}

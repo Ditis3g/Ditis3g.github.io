@@ -1,49 +1,26 @@
 baseURL = 'https://ditis3g.github.io/'
-locale = 'ko-kr'
 title = 'Physical AI 드림팀'
-theme = 'PaperMod'
+theme = 'hugo-theme-stack'
 timeZone = 'Asia/Seoul'
 
-# 페이지네이션 (한 페이지에 글 몇 개)
-[pagination]
-  pagerSize = 10
+defaultContentLanguage = 'ko'
+hasCJKLanguage = true
 
-# 검색 기능 등에 필요
 enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
 
-[params]
-  env = 'production'
-  description = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀"
-  author = "Ditis3g"
-  defaultTheme = "auto"        # 방문자 시스템에 맞춰 밝게/어둡게 자동
-  ShowReadingTime = true       # 읽는 데 걸리는 시간 표시
-  ShowShareButtons = true      # 공유 버튼
-  ShowPostNavLinks = true      # 이전/다음 글 이동
-  ShowBreadCrumbs = true       # 상단 경로 표시
-  ShowCodeCopyButtons = true   # 코드 복사 버튼
-  ShowToc = true               # 목차
+[pagination]
+  pagerSize = 10
 
-  [params.homeInfoParams]
-    Title = "Physical AI 드림팀 👋"
-    Content = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀의 기록입니다."
+[taxonomies]
+  category = "categories"
+  tag = "tags"
 
-# 상단 메뉴
-[menu]
-  [[menu.main]]
-    identifier = "posts"
-    name = "글 목록"
-    url = "/posts/"
-    weight = 10
-  [[menu.main]]
-    identifier = "search"
-    name = "검색"
-    url = "/search/"
-    weight = 20
+[outputs]
+  home = ["HTML", "RSS"]
 
-# 코드 하이라이트
 [markup]
   [markup.highlight]
     noClasses = false
@@ -51,7 +28,106 @@ buildExpired = false
     guessSyntax = true
     lineNos = true
     style = "monokai"
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    endLevel = 4
+    ordered = true
+    startLevel = 2
 
-# 검색 기능용 출력 포맷
-[outputs]
-  home = ["HTML", "RSS", "JSON"]
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "글 목록"
+    url = "/posts/"
+    weight = 10
+    [menu.main.params]
+      icon = "archives"
+  [[menu.main]]
+    identifier = "categories"
+    name = "카테고리"
+    url = "/categories/"
+    weight = 20
+    [menu.main.params]
+      icon = "categories"
+  [[menu.main]]
+    identifier = "tags"
+    name = "태그"
+    url = "/tags/"
+    weight = 30
+    [menu.main.params]
+      icon = "tag"
+
+[params]
+  mainSections = ["posts"]
+  featuredImageField = "image"
+  rssFullContent = true
+  description = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀"
+
+  [params.footer]
+    since = 2026
+    customText = ""
+
+  [params.dateFormat]
+    published = "2006-01-02"
+    lastUpdated = "2006-01-02 15:04 MST"
+
+  [params.sidebar]
+    emoji = "🤖"
+    subtitle = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀의 기록"
+    avatar = "/img/avatar.png"
+
+  [params.article]
+    math = false
+    toc = true
+    readingTime = true
+    [params.article.license]
+      enabled = false
+      default = ""
+
+  [params.comments]
+    enabled = false
+
+  [params.widgets]
+    homepage = [
+      { type = "search" },
+      { type = "archives", params = { limit = 5 } },
+      { type = "categories", params = { limit = 10 } },
+      { type = "tag-cloud", params = { limit = 10 } },
+    ]
+    page = [
+      { type = "toc" },
+    ]
+
+  [params.opengraph]
+    [params.opengraph.twitter]
+      site = ""
+      card = "summary_large_image"
+
+  [params.defaultImage]
+    [params.defaultImage.opengraph]
+      enabled = false
+      local = false
+      src = ""
+
+  [params.colorScheme]
+    toggle = true
+    default = "auto"
+
+  [params.imageProcessing]
+    [params.imageProcessing.cover]
+      enabled = true
+    [params.imageProcessing.content]
+      enabled = true
+
+[related]
+  includeNewer = true
+  threshold = 60
+  toLower = false
+
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "categories"
+    weight = 200

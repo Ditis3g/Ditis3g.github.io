@@ -120,13 +120,25 @@ try {
   $raw = $raw -replace '^\s*```(?:markdown|md)?\s*\r?\n', ''
   $raw = $raw -replace '\r?\n```\s*$', ''
 
-  # Strip any chatty preamble before the Hugo front matter delimiter
-  # (model sometimes prepends "I'll follow the instructions..."). Hugo needs
-  # the front matter (--- or +++) on the very first line.
-  $fmStart = [regex]::Match($raw, '(?m)^(---|\+\+\+)\s*$')
-  if ($fmStart.Success -and $fmStart.Index -gt 0) {
-    $raw = $raw.Substring($fmStart.Index).Trim()
+  # Strip any chatty preamble (or stray separators / inner code fences) before
+  # the Hugo front matter. We require the delimiter to be IMMEDIATELY followed
+  # by a YAML key line (e.g. `title:`) so a lone `---` separator isn't mistaken
+  # for the front matter open.
+  $fmStart = [regex]::Match($raw, '(?ms)^(---|\+\+\+)\s*\r?\n[a-zA-Z_][a-zA-Z0-9_-]*\s*:')
+  if ($fmStart.Success) {
+    if ($fmStart.Index -gt 0) { $raw = $raw.Substring($fmStart.Index).Trim() }
+  } else {
+    # Fall back to the old behavior so a malformed-but-present front matter
+    # still gets a chance at trimming chatty preamble.
+    $loose = [regex]::Match($raw, '(?m)^(---|\+\+\+)\s*$')
+    if ($loose.Success -and $loose.Index -gt 0) {
+      $raw = $raw.Substring($loose.Index).Trim()
+    }
   }
+
+  # Also strip an inner ```markdown fence the model may have placed RIGHT AFTER
+  # the (now-leading) front matter open — i.e. `---\n```markdown\n---\n...`.
+  $raw = $raw -replace '^(---|\+\+\+)\s*\r?\n\s*```(?:markdown|md)?\s*\r?\n(---|\+\+\+)', '$1'
 
   # Safety: ensure draft stays true
   if ($raw -match 'draft:\s*false') { $raw = $raw -replace 'draft:\s*false', 'draft: true' }
