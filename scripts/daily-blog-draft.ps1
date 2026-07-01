@@ -110,8 +110,41 @@ try {
 
   Log "calling claude..."
   $pPrompt = 'The input below contains editor instructions (in Korean) followed by study notes. Follow the instructions exactly and output ONLY the resulting Hugo markdown file content.'
-  $raw = $fullInput | & $claude -p $pPrompt --output-format text
-  if ($raw -is [array]) { $raw = $raw -join "`n" }
+
+  # Feed the (UTF-8) prompt to claude via stdin as RAW BYTES.
+  # In PS5.1 `"$str" | & native.exe` re-encodes the string with the console
+  # codepage, which turns Korean into '?'. Writing UTF-8 bytes straight to the
+  # child's stdin BaseStream bypasses that entirely. stdout/stderr are read
+  # asynchronously so a full pipe buffer can't deadlock the write.
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName               = $claude
+  $psi.Arguments              = '-p "' + $pPrompt + '" --output-format text'
+  $psi.WorkingDirectory       = $BlogDir
+  $psi.UseShellExecute        = $false
+  $psi.CreateNoWindow         = $true
+  $psi.RedirectStandardInput  = $true
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError  = $true
+  $psi.StandardOutputEncoding = $utf8
+  $psi.StandardErrorEncoding  = $utf8
+
+  $proc    = [System.Diagnostics.Process]::Start($psi)
+  $outTask = $proc.StandardOutput.ReadToEndAsync()
+  $errTask = $proc.StandardError.ReadToEndAsync()
+
+  $inBytes = [System.Text.Encoding]::UTF8.GetBytes($fullInput)
+  $proc.StandardInput.BaseStream.Write($inBytes, 0, $inBytes.Length)
+  $proc.StandardInput.BaseStream.Flush()
+  $proc.StandardInput.Close()
+
+  if (-not $proc.WaitForExit(600000)) {
+    try { $proc.Kill() } catch {}
+    Log "claude timed out after 600s. exit."; exit 1
+  }
+  $raw     = $outTask.Result
+  $errText = $errTask.Result
+  if ($errText) { Log ("claude stderr: " + $errText.Trim()) }
+  Log "claude exit code: $($proc.ExitCode)"
   $raw = $raw.Trim()
 
   if ([string]::IsNullOrWhiteSpace($raw)) { Log "claude returned empty. exit."; exit 1 }
