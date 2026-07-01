@@ -1,0 +1,51 @@
+{{ define "main" }}
+{{ $cats := slice "VLA" "AI·로봇 동향" "블로그" }}
+{{ $types := slice "논문" "영상" "튜토리얼" "도구" "정리글" "후기" }}
+{{ $totalPosts := len $.Site.RegularPages }}
+<article class="main-article matrix-page">
+    <header class="article-header">
+        <div class="article-details">
+            <div class="article-title-wrapper">
+                <h1 class="article-title">글 목록</h1>
+            </div>
+        </div>
+    </header>
+    <section class="article-content">
+        <p class="toc-intro">
+            현재 <strong>{{ $totalPosts }}편</strong> 정리.
+        </p>
+
+        <div class="book-toc">
+            {{ range $cat := $cats }}
+                {{ $catPages := where $.Site.RegularPages "Params.categories" "intersect" (slice $cat) }}
+                {{ if $catPages }}
+                    <section class="toc-part">
+                        <h2 class="toc-part-h">
+                            <span class="toc-part-name">{{ $cat }}</span>
+                            <span class="toc-part-count">{{ len $catPages }}편</span>
+                        </h2>
+                        <ol class="toc-chapters">
+                            {{ range $type := $types }}
+                                {{ $matches := where $catPages "Params.types" "intersect" (slice $type) }}
+                                {{ if $matches }}
+                                    <li class="toc-ch done">
+                                        <div class="toc-ch-head">
+                                            <span class="toc-ch-type">{{ $type }}</span>
+                                            <span class="toc-ch-count">{{ len $matches }}편</span>
+                                        </div>
+                                        <ul class="toc-ch-list">
+                                            {{ range $matches }}
+                                                <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+                                            {{ end }}
+                                        </ul>
+                                    </li>
+                                {{ end }}
+                            {{ end }}
+                        </ol>
+                    </section>
+                {{ end }}
+            {{ end }}
+        </div>
+    </section>
+</article>
+{{ end }}

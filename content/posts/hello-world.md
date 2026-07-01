@@ -3,7 +3,8 @@ title: "블로그를 열며 — Physical AI 드림팀"
 date: 2026-06-26
 draft: false
 tags: ["소개", "Physical AI"]
-categories: ["메타"]
+categories: ["블로그"]
+types: ["후기"]
 ---
 
 안녕하세요. **Physical AI 드림팀**의 첫 글입니다.
