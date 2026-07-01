@@ -1,51 +1,23 @@
 {{ define "main" }}
-{{ $cats := slice "VLA" "AI·로봇 동향" "블로그" }}
-{{ $types := slice "논문" "영상" "튜토리얼" "도구" "정리글" "후기" }}
-{{ $totalPosts := len $.Site.RegularPages }}
-<article class="main-article matrix-page">
-    <header class="article-header">
-        <div class="article-details">
-            <div class="article-title-wrapper">
-                <h1 class="article-title">글 목록</h1>
-            </div>
-        </div>
-    </header>
-    <section class="article-content">
-        <p class="toc-intro">
-            현재 <strong>{{ $totalPosts }}편</strong> 정리.
-        </p>
+    <style>
+        .book-home-head { margin: 0 0 18px; }
+        .book-home-title { font-size: 30px; font-weight: 700; margin: 0 0 4px; letter-spacing: -.02em; line-height: 1.25; }
+        .book-home-sub { font-size: 16px; color: var(--card-text-color-secondary); margin: 0; }
+        .book-home-intro { margin: 0 0 22px; font-size: 16px; color: var(--card-text-color-secondary); line-height: 1.75; }
+    </style>
 
-        <div class="book-toc">
-            {{ range $cat := $cats }}
-                {{ $catPages := where $.Site.RegularPages "Params.categories" "intersect" (slice $cat) }}
-                {{ if $catPages }}
-                    <section class="toc-part">
-                        <h2 class="toc-part-h">
-                            <span class="toc-part-name">{{ $cat }}</span>
-                            <span class="toc-part-count">{{ len $catPages }}편</span>
-                        </h2>
-                        <ol class="toc-chapters">
-                            {{ range $type := $types }}
-                                {{ $matches := where $catPages "Params.types" "intersect" (slice $type) }}
-                                {{ if $matches }}
-                                    <li class="toc-ch done">
-                                        <div class="toc-ch-head">
-                                            <span class="toc-ch-type">{{ $type }}</span>
-                                            <span class="toc-ch-count">{{ len $matches }}편</span>
-                                        </div>
-                                        <ul class="toc-ch-list">
-                                            {{ range $matches }}
-                                                <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-                                            {{ end }}
-                                        </ul>
-                                    </li>
-                                {{ end }}
-                            {{ end }}
-                        </ol>
-                    </section>
-                {{ end }}
-            {{ end }}
-        </div>
-    </section>
-</article>
+    <header class="book-home-head">
+        <h1 class="book-home-title">{{ default "화면 밖으로 나온 AI" .Title }}</h1>
+        {{ with .Params.subtitle }}<p class="book-home-sub">{{ . }}</p>{{ end }}
+    </header>
+
+    {{ with .Content }}<div class="book-home-intro">{{ . }}</div>{{ end }}
+
+    {{ partial "book-toc.html" . }}
+
+    {{- partial "footer/footer" . -}}
+{{ end }}
+
+{{ define "right-sidebar" }}
+    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
 {{ end }}

@@ -1,0 +1,24 @@
+{{ define "main" }}
+    <header>
+        <div class="section-card">
+            <div class="section-details">
+                <h3 class="section-count">{{ T "list.page" (len .Pages) }}</h3>
+                <h1 class="section-term">{{ .Title }}</h1>
+                {{ with .Params.description }}<h2 class="section-description">{{ . }}</h2>{{ end }}
+            </div>
+        </div>
+    </header>
+
+    {{/* Sort category terms in book order (1부 → 부록) by title, not by latest post date */}}
+    <section class="article-list--compact">
+        {{ range sort .Pages "Title" }}
+            {{ partial "article-list/compact" . }}
+        {{ end }}
+    </section>
+
+    {{ partialCached "footer/footer" . }}
+{{ end }}
+
+{{ define "right-sidebar" }}
+    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+{{ end }}

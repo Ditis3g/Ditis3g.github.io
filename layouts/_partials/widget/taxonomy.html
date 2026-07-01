@@ -1,0 +1,45 @@
+{{- $context := .Context -}}
+
+{{- if not .Params.taxonomy -}}
+    {{- warnf "Taxonomy field is required" -}}
+{{- end -}}
+
+{{- $taxonomy := index $context.Site.Taxonomies .Params.taxonomy -}}
+{{- if not $taxonomy -}}
+    {{- warnf "Taxonomy %s not found" .Params.taxonomy -}}
+{{- end -}}
+
+{{- $taxonomyPage := $taxonomy.Page -}}
+{{- $widgetTitle := .Params.title -}}
+{{- $limit := default 10 .Params.limit -}}
+{{- $icon := default .Params.taxonomy .Params.icon -}}
+{{- $showLink := default true .Params.showLink -}}
+
+{{/* Categories in book order (1부 → 부록); other taxonomies stay by count */}}
+{{- $terms := $taxonomy.ByCount -}}
+{{- if eq .Params.taxonomy "categories" -}}
+    {{- $terms = $taxonomy.Alphabetical -}}
+{{- end -}}
+
+<section class="widget tagCloud">
+    <div class="widget-icon">
+        {{ partial "helper/icon" $icon }}
+    </div>
+    <h2 class="widget-title section-title">
+        {{ if and $showLink $taxonomyPage }}
+            <a href="{{ $taxonomyPage.RelPermalink }}">
+                {{ $widgetTitle }}
+            </a>
+        {{ else }}
+            {{ $widgetTitle }}
+        {{ end }}
+    </h2>
+
+    <div class="tagCloud-tags">
+        {{ range first $limit $terms }}
+            <a href="{{ .Page.RelPermalink }}">
+                {{ .Page.Title }}
+            </a>
+        {{ end }}
+    </div>
+</section>

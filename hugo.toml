@@ -17,7 +17,6 @@ buildExpired = false
 [taxonomies]
   category = "categories"
   tag = "tags"
-  type = "types"
 
 [outputs]
   home = ["HTML", "RSS"]
@@ -38,9 +37,16 @@ buildExpired = false
 
 [menu]
   [[menu.main]]
-    identifier = "home"
-    name = "글 목록"
+    identifier = "book"
+    name = "책으로 읽기"
     url = "/"
+    weight = 5
+    [menu.main.params]
+      icon = "book"
+  [[menu.main]]
+    identifier = "posts"
+    name = "글 목록"
+    url = "/posts/"
     weight = 10
     [menu.main.params]
       icon = "archives"
@@ -51,13 +57,6 @@ buildExpired = false
     weight = 20
     [menu.main.params]
       icon = "categories"
-  [[menu.main]]
-    identifier = "types"
-    name = "타입"
-    url = "/types/"
-    weight = 30
-    [menu.main.params]
-      icon = "hash"
   [[menu.main]]
     identifier = "tags"
     name = "태그"
@@ -101,7 +100,6 @@ buildExpired = false
       { type = "search" },
       { type = "archives", params = { limit = 5 } },
       { type = "categories", params = { limit = 10 } },
-      { type = "tag-cloud", params = { taxonomy = "types", title = "타입", limit = 10 } },
       { type = "tag-cloud", params = { limit = 10 } },
     ]
     page = [

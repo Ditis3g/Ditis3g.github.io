@@ -1,0 +1,33 @@
+{{- if .Params.book_weight -}}
+{{- $chapters := sort (where (where site.RegularPages "Section" "posts") "Params.book_weight" "!=" nil) "Params.book_weight" -}}
+{{- $prev := false -}}
+{{- $next := false -}}
+{{- range $i, $p := $chapters -}}
+    {{- if eq $p.RelPermalink $.RelPermalink -}}
+        {{- if gt $i 0 -}}{{- $prev = index $chapters (sub $i 1) -}}{{- end -}}
+        {{- if lt (add $i 1) (len $chapters) -}}{{- $next = index $chapters (add $i 1) -}}{{- end -}}
+    {{- end -}}
+{{- end -}}
+<style>
+    .book-nav { display: flex; gap: .75rem; margin: 1.75rem 0 .25rem; }
+    .book-nav-item { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: .6rem .85rem; border-radius: 8px; background: var(--card-background); text-decoration: none; }
+    .book-nav-empty { background: transparent; }
+    .book-nav-next { text-align: right; }
+    .book-nav-dir { font-size: .75rem; color: var(--card-text-color-secondary); }
+    .book-nav-title { color: var(--accent-color); font-size: .9rem; }
+</style>
+<nav class="book-nav" aria-label="책 장 넘기기">
+    {{- with $prev }}
+    <a class="book-nav-item book-nav-prev" href="{{ .RelPermalink }}">
+        <span class="book-nav-dir">← 이전 장</span>
+        <span class="book-nav-title">{{ default .LinkTitle .Params.book_chapter }}</span>
+    </a>
+    {{- else }}<span class="book-nav-item book-nav-empty"></span>{{ end }}
+    {{- with $next }}
+    <a class="book-nav-item book-nav-next" href="{{ .RelPermalink }}">
+        <span class="book-nav-dir">다음 장 →</span>
+        <span class="book-nav-title">{{ default .LinkTitle .Params.book_chapter }}</span>
+    </a>
+    {{- else }}<span class="book-nav-item book-nav-empty"></span>{{ end }}
+</nav>
+{{- end -}}
