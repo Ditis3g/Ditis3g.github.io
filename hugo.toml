@@ -115,9 +115,9 @@ buildExpired = false
 
   [params.defaultImage]
     [params.defaultImage.opengraph]
-      enabled = false
-      local = false
-      src = ""
+      enabled = true
+      local = true
+      src = "img/avatar.png"
 
   [params.colorScheme]
     toggle = true
