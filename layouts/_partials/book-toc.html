@@ -67,7 +67,7 @@
     {{/* AI 뉴스 브리핑: 기본 접힘, 최신 3개만 표시 */}}
     {{- $news := where (where site.RegularPages "Section" "posts") "Params.categories" "intersect" (slice "부록. AI 뉴스 브리핑") -}}
     {{- if $news -}}
-    <details class="book-part book-news">
+    <details class="book-part book-news" open>
         <summary class="book-part-head">
             <span class="book-part-badge">부록</span>
             <h2 class="book-part-name">AI 뉴스 브리핑</h2>
