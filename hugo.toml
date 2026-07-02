@@ -71,6 +71,18 @@ buildExpired = false
     url = "https://www.youtube.com/@PhysicalAI-DreamTeam"
     [menu.social.params]
       icon = "brand-youtube"
+  [[menu.social]]
+    identifier = "instagram"
+    name = "Instagram"
+    url = "https://www.instagram.com/physical.ai.news/"
+    [menu.social.params]
+      icon = "brand-instagram"
+  [[menu.social]]
+    identifier = "threads"
+    name = "Threads"
+    url = "https://www.threads.net/@physical.ai.news"
+    [menu.social.params]
+      icon = "brand-threads"
 
 [params]
   mainSections = ["posts"]
