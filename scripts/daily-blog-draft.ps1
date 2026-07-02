@@ -72,6 +72,24 @@ try {
           if (Test-Path $exe) { $candidates.Add($exe) }
         }
     }
+
+    # MSIX-packaged desktop app: AppData\Roaming\Claude is virtualized and
+    # invisible to Task Scheduler processes — search the real package path too
+    $pkgRoot = Join-Path $u 'AppData\Local\Packages'
+    if (Test-Path $pkgRoot) {
+      Get-ChildItem $pkgRoot -Directory -Filter 'Claude_*' -ErrorAction SilentlyContinue | ForEach-Object {
+        $vccRoot = Join-Path $_.FullName 'LocalCache\Roaming\Claude\claude-code'
+        $searched += $vccRoot
+        if (Test-Path $vccRoot) {
+          Get-ChildItem $vccRoot -Directory -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTime -Descending |
+            ForEach-Object {
+              $exe = Join-Path $_.FullName 'claude.exe'
+              if (Test-Path $exe) { $candidates.Add($exe) }
+            }
+        }
+      }
+    }
   }
 
   $claude = $candidates | Select-Object -First 1

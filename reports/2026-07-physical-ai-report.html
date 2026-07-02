@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physical AI · VLA 기술 조사 보고</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #18181b; font-family: "Pretendard", -apple-system, sans-serif; }
+
+  .slide {
+    display: none;
+    width: 100vw; height: 100vh;
+    padding: 56px 72px 72px;
+    background: #fafafa; color: #27272a;
+    flex-direction: column;
+  }
+  .slide.active { display: flex; }
+
+  .kicker { font-size: 15px; font-weight: 600; letter-spacing: 2px; color: #2563eb; margin-bottom: 10px; }
+  h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .subtitle { font-size: 17px; color: #71717a; margin-bottom: 34px; }
+  .body { flex: 1; display: flex; flex-direction: column; }
+
+  /* 카드 그리드 */
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .card {
+    background: #fff; border: 1px solid #e4e4e7; border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #2563eb; color: #fff; font-size: 14px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .card p { font-size: 14.5px; line-height: 1.6; color: #52525b; word-break: keep-all; }
+  .card p b { color: #27272a; }
+
+  .banner {
+    margin-top: 22px; padding: 18px 24px; border-radius: 12px;
+    background: #1e3a8a; color: #fff;
+    font-size: 17px; font-weight: 600; line-height: 1.55; word-break: keep-all;
+  }
+  .banner b { color: #93c5fd; }
+
+  .lead {
+    font-size: 16.5px; line-height: 1.65; color: #3f3f46;
+    background: #eff6ff; border-left: 4px solid #2563eb; border-radius: 0 10px 10px 0;
+    padding: 14px 20px; margin-bottom: 22px; word-break: keep-all;
+  }
+  .lead b { color: #1e3a8a; }
+
+  /* 계획 테이블 */
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px #e4e4e7; }
+  th { background: #1e3a8a; color: #fff; font-size: 14.5px; font-weight: 700; padding: 11px 16px; text-align: left; }
+  td { font-size: 14.5px; padding: 10px 16px; border-top: 1px solid #f0f0f2; line-height: 1.5; color: #3f3f46; word-break: keep-all; }
+  td:first-child { font-weight: 700; color: #27272a; white-space: nowrap; }
+  tr.done td { background: #f0fdf4; }
+  tr.done td:first-child::after { content: " ✅"; }
+  tr.now td { background: #fefce8; }
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; margin-right: 6px; vertical-align: 1px;
+  }
+  .badge.step { background: #dbeafe; color: #1d4ed8; }
+
+  .footnote { margin-top: 16px; font-size: 13.5px; color: #71717a; line-height: 1.6; word-break: keep-all; }
+
+  /* 내비게이션 */
+  .nav {
+    position: fixed; bottom: 22px; right: 28px; z-index: 10;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: #a1a1aa; user-select: none;
+  }
+  .nav button {
+    width: 34px; height: 34px; border-radius: 8px; border: 1px solid #d4d4d8;
+    background: #fff; color: #3f3f46; font-size: 16px; cursor: pointer;
+  }
+  .nav button:hover { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
+
+  .pageno { position: fixed; bottom: 26px; left: 32px; font-size: 13px; color: #a1a1aa; }
+
+  @media print {
+    .slide { display: flex !important; page-break-after: always; height: 100vh; }
+    .nav, .pageno { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 슬라이드 1: 조사 결과 -->
+<section class="slide active">
+  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
+  <h1>VLA는 영상을 어떻게 학습에 쓰는가</h1>
+  <div class="subtitle">조사 결과 요약 — 영상 데이터 학습·활용 기술 서베이</div>
+  <div class="body">
+    <div class="lead">
+      로봇이 직접 만든 행동 데이터는 <b>시간당 $50~100</b>이 드는 희소 자원인 반면, 인터넷 영상은 사실상 무한.
+      따라서 VLA 경쟁력의 본질은 <b>"행동 라벨 없는 영상을 행동 가능한 데이터로 바꾸는 전환 전략"</b>에 있음.
+    </div>
+    <div class="grid grid-2" style="flex:1;">
+      <div class="card">
+        <span class="num">1</span>
+        <h3>잠재 행동 학습 — LAPA</h3>
+        <p>프레임 간 변화를 가짜 행동 라벨로 인코딩. 필요한 행동 라벨을 <b>약 30배 절감</b>하고, 라벨로 학습한 OpenVLA를 평균 성능에서 능가.</p>
+      </div>
+      <div class="card">
+        <span class="num">2</span>
+        <h3>월드모델 — V-JEPA 2 · Cosmos</h3>
+        <p>"행동하면 세상이 어떻게 변할까"를 예측. V-JEPA 2는 <b>100만 시간+ 영상</b>을 라벨 없이 학습, 처음 보는 로봇에서 zero-shot 동작.</p>
+      </div>
+      <div class="card">
+        <span class="num">3</span>
+        <h3>2D 단서 추출</h3>
+        <p>포인트 트랙·마스크·옵티컬 플로우 등 영상 속 2D 단서를 뽑아 행동 학습의 중간 표현으로 활용.</p>
+      </div>
+      <div class="card">
+        <span class="num">4</span>
+        <h3>3D 복원 + 리타게팅 — H2R · X-Humanoid</h3>
+        <p>사람 손 자세·궤적을 3D 복원해 로봇으로 변환. X-Humanoid는 사람 영상을 휴머노이드 영상으로 바꿔 <b>360만 프레임</b>의 학습 데이터 생성.</p>
+      </div>
+    </div>
+    <div class="banner">
+      산업 표준은 <b>"사전학습은 풍부한 영상으로, 파인튜닝은 소량의 로봇 데이터로"</b> 수렴 중 (NVIDIA GR00T·Cosmos, Physical Intelligence π 시리즈).
+      경쟁력은 모델 구조가 아니라 <b>데이터 전환 전략</b>이 가른다.
+    </div>
+  </div>
+</section>
+
+<!-- 슬라이드 2: 왜 휴머노이드인가 -->
+<section class="slide">
+  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
+  <h1>왜 휴머노이드가 주목받는가</h1>
+  <div class="subtitle">형태의 문제가 아니라 데이터와 경제 논리의 문제</div>
+  <div class="body">
+    <div class="grid grid-2" style="flex:1;">
+      <div class="card">
+        <span class="num">1</span>
+        <h3>세상이 사람 몸 기준으로 설계돼 있다</h3>
+        <p>공장 라인·계단·문손잡이·공구가 전부 사람 기준. 사람 형태면 <b>인프라 개조 비용 없이</b> 기존 작업 환경에 그대로 투입 가능 — "전용 로봇 N종 개발"이 "범용 1종 + 소프트웨어" 문제로 바뀜.</p>
+      </div>
+      <div class="card">
+        <span class="num">2</span>
+        <h3>영상 학습에 가장 유리한 몸 (핵심)</h3>
+        <p>인터넷에 무한한 것은 <b>"사람이 일하는 영상"</b>. 영상 학습의 최대 장벽인 신체 구조 차이(embodiment gap)가 사람을 닮은 휴머노이드에서 <b>가장 작다</b>. 1장의 영상 학습 기술이 가장 잘 먹히는 폼팩터.</p>
+      </div>
+      <div class="card">
+        <span class="num">3</span>
+        <h3>범용 모델의 스케일 법칙과 맞물림</h3>
+        <p>VLA는 데이터를 먹일수록 좋아지는 대형 모델. 폼팩터가 통일된 범용 몸이 있어야 데이터가 한곳에 쌓이는 <b>데이터 플라이휠</b>(배치→데이터→모델 개선)이 돈다.</p>
+      </div>
+      <div class="card">
+        <span class="num">4</span>
+        <h3>하드웨어 단가 붕괴 + 자본 유입</h3>
+        <p>EV 공급망 덕에 휴머노이드 BOM이 <b>$20만(2020) → $3만 이하(2026)</b>, Unitree G1은 $1.6만. 2024~25년 휴머노이드 스타트업에 <b>$70억+</b> 투자 유입.</p>
+      </div>
+    </div>
+    <div class="banner">
+      휴머노이드는 가장 어려운 폼팩터지만, <b>사람의 인프라 · 사람의 영상 데이터 · 대형 모델의 스케일 법칙</b>을
+      전부 그대로 물려받을 수 있는 유일한 형태이기 때문에 주목받는다.
+    </div>
+  </div>
+</section>
+
+<!-- 슬라이드 3: 6개월 계획 -->
+<section class="slide">
+  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
+  <h1>6개월 학습 계획 (2026.05 ~ 11)</h1>
+  <div class="subtitle">실습은 '입문 7단계' 로드맵, 이론은 영상 학습 서베이 — 두 축 병행</div>
+  <div class="body">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px;">시기</th>
+          <th>실습 (입문 7단계)</th>
+          <th>이론·조사 (영상 학습 서베이)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="done">
+          <td>5월</td>
+          <td><span class="badge step">1단계</span>LeRobot 튜토리얼 — MuJoCo·Isaac Sim 2종 완료</td>
+          <td>VLA 개념 정리 (블로그 게시 완료)</td>
+        </tr>
+        <tr class="done">
+          <td>6월</td>
+          <td><span class="badge step">2단계</span>강화학습 예제 — 탁구 시뮬레이션 자작·학습 완료</td>
+          <td>VLA 학습 3대 패러다임·기술 계보 정리 (블로그 게시 완료)</td>
+        </tr>
+        <tr class="now">
+          <td>7월</td>
+          <td><span class="badge step">3단계</span>저가 로봇 팔(SO-ARM100) 구매·셋업</td>
+          <td>"왜 휴머노이드인가" 답변 정리 (본 보고 2장)</td>
+        </tr>
+        <tr>
+          <td>8월</td>
+          <td><span class="badge step">4단계</span>원격조종 데모 수집 — 수건 반 접기 100개</td>
+          <td>LAPA — 잠재 행동으로 영상에서 행동 배우기</td>
+        </tr>
+        <tr>
+          <td>9월</td>
+          <td><span class="badge step">5단계</span>오픈 사전학습 모델 파인튜닝 (ACT 우선)</td>
+          <td>V-JEPA 2 — 월드모델 기반 영상 사전학습</td>
+        </tr>
+        <tr>
+          <td>10월</td>
+          <td><span class="badge step">6단계</span>수건 개기 태스크 성공 — 10회 중 7회 목표</td>
+          <td>H2R/X-Humanoid — 사람 영상→로봇 데이터 변환</td>
+        </tr>
+        <tr>
+          <td>11월</td>
+          <td><span class="badge step">7단계</span>결과 영상·코드 공개 → 커뮤니티 진입</td>
+          <td>π*₀.₆(RECAP) — '빨래 개기' RL 논문, 실습 결과와 비교 종합</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footnote">
+      · 현재 진행률: 7단계 중 <b>2단계 완료</b> (계획 대비 정상 — 원 가이드 기준 3~6개월 코스를 1.5개월에 2단계 소화)<br>
+      · 목표 태스크를 기본 예시(블록 쌓기)보다 어려운 <b>수건 개기(변형 물체)</b>로 상향 — 8월 데모 수집(비싼 로봇 데이터)과 8~9월 이론(영상으로 데이터 대체)이 같은 문제의식으로 맞물리는 구성<br>
+      · 11월 종합 보고: 실습 결과 + 영상 학습 서베이 + 최전선 논문(BitVLA·π*₀.₆) 연결
+    </div>
+  </div>
+</section>
+
+<div class="nav">
+  <button id="prev" title="이전 (←)">‹</button>
+  <button id="next" title="다음 (→)">›</button>
+</div>
+<div class="pageno" id="pageno">1 / 3</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+  function show(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === cur));
+    document.getElementById('pageno').textContent = (cur + 1) + ' / ' + slides.length;
+  }
+  document.getElementById('prev').onclick = () => show(cur - 1);
+  document.getElementById('next').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') show(cur + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(cur - 1);
+  });
+</script>
+
+</body>
+</html>
