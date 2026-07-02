@@ -1,7 +1,7 @@
 ---
 title: "블로그 글을 숏폼 영상으로 자동 변환해서 유튜브에 올리기까지"
 date: 2026-07-02
-draft: true
+draft: false
 tags: ["숏폼", "자동화", "유튜브 업로드", "ffmpeg", "TTS", "블로그"]
 categories: ["부록. 블로그 메이킹"]
 book_weight: 930
