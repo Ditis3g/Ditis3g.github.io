@@ -65,6 +65,13 @@ buildExpired = false
     [menu.main.params]
       icon = "tag"
 
+  [[menu.social]]
+    identifier = "youtube"
+    name = "YouTube"
+    url = "https://www.youtube.com/@PhysicalAI-DreamTeam"
+    [menu.social.params]
+      icon = "brand-youtube"
+
 [params]
   mainSections = ["posts"]
   featuredImageField = "image"
