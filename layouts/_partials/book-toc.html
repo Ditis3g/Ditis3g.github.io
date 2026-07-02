@@ -10,6 +10,13 @@
     .book-chapter-name { color: var(--card-text-color-main); font-size: 18px; font-weight: 600; line-height: 1.5; }
     .book-chapter:hover .book-chapter-name { color: var(--accent-color); }
     .book-badge { margin-left: 8px; font-size: 12px; font-weight: 600; padding: 1px 7px; border-radius: 5px; background: var(--card-background-selected); color: var(--card-text-color-secondary); vertical-align: middle; }
+    .book-news > summary { cursor: pointer; list-style: none; }
+    .book-news > summary::-webkit-details-marker { display: none; }
+    .book-news:not([open]) > summary { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
+    .book-news-arrow { margin-left: auto; color: var(--card-text-color-secondary); font-size: 14px; transition: transform .15s ease; }
+    .book-news[open] .book-news-arrow { transform: rotate(90deg); }
+    .book-news-all { display: block; padding: 10px 10px 0; font-size: 14px; color: var(--card-text-color-secondary); text-decoration: none; }
+    .book-news-all:hover { color: var(--accent-color); }
     @media (max-width: 520px) {
         .book-part-name { font-size: 19px; }
         .book-chapter { flex-direction: column; gap: 2px; padding: 11px 8px; }
@@ -56,5 +63,25 @@
     {{- end -}}
     {{- if ne $curCat "" -}}
     </section>
+    {{- end -}}
+    {{/* AI 뉴스 브리핑: 기본 접힘, 최신 3개만 표시 */}}
+    {{- $news := where (where site.RegularPages "Section" "posts") "Params.categories" "intersect" (slice "부록. AI 뉴스 브리핑") -}}
+    {{- if $news -}}
+    <details class="book-part book-news">
+        <summary class="book-part-head">
+            <span class="book-part-badge">부록</span>
+            <h2 class="book-part-name">AI 뉴스 브리핑</h2>
+            <span class="book-news-arrow">▶</span>
+        </summary>
+        {{- range first 3 $news.ByDate.Reverse }}
+        <a class="book-chapter" href="{{ .RelPermalink }}">
+            <span class="book-chapter-num">{{ .Date.Format "2006-01-02" }}</span>
+            <span class="book-chapter-name">{{ strings.TrimPrefix "[AI 뉴스 브리핑] " .Title }}{{ if .Draft }}<span class="book-badge">초안</span>{{ end }}</span>
+        </a>
+        {{- end }}
+        {{- with (index $news 0).GetTerms "categories" }}
+        <a class="book-news-all" href="{{ (index . 0).RelPermalink }}">전체 보기 →</a>
+        {{- end }}
+    </details>
     {{- end -}}
 </div>
