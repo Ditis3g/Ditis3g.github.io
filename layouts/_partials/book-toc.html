@@ -10,13 +10,14 @@
     .book-chapter-name { color: var(--card-text-color-main); font-size: 18px; font-weight: 600; line-height: 1.5; }
     .book-chapter:hover .book-chapter-name { color: var(--accent-color); }
     .book-badge { margin-left: 8px; font-size: 12px; font-weight: 600; padding: 1px 7px; border-radius: 5px; background: var(--card-background-selected); color: var(--card-text-color-secondary); vertical-align: middle; }
-    .book-news > summary { cursor: pointer; list-style: none; }
-    .book-news > summary::-webkit-details-marker { display: none; }
-    .book-news:not([open]) > summary { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
-    .book-news-arrow { margin-left: auto; color: var(--card-text-color-secondary); font-size: 14px; transition: transform .15s ease; }
-    .book-news[open] .book-news-arrow { transform: rotate(90deg); }
-    .book-news-all { display: block; padding: 10px 10px 0; font-size: 14px; color: var(--card-text-color-secondary); text-decoration: none; }
-    .book-news-all:hover { color: var(--accent-color); }
+    .book-fold > summary { cursor: pointer; list-style: none; }
+    .book-fold > summary::-webkit-details-marker { display: none; }
+    .book-fold:not([open]) > summary { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
+    .book-fold-arrow { margin-left: auto; color: var(--card-text-color-secondary); font-size: 14px; transition: transform .15s ease; }
+    .book-fold[open] .book-fold-arrow { transform: rotate(90deg); }
+    .book-fold-all { display: block; padding: 10px 10px 0; font-size: 14px; color: var(--card-text-color-secondary); text-decoration: none; }
+    .book-fold-all:hover { color: var(--accent-color); }
+    .book-hidden { display: none; }
     @media (max-width: 520px) {
         .book-part-name { font-size: 19px; }
         .book-chapter { flex-direction: column; gap: 2px; padding: 11px 8px; }
@@ -26,7 +27,9 @@
 
 {{/* 책 목차: 카테고리(부)로 묶고, book_weight 순으로 정렬하며, 장 번호는 자동 계산.
      새 글은 categories(부) + book_weight 만 있으면 됨. book_chapter는 짧은 제목용 선택 필드. */}}
-{{- $chapters := sort (where (where site.RegularPages "Section" "posts") "Params.book_weight" "!=" nil) "Params.book_weight" -}}
+{{- $withWeight := where (where site.RegularPages "Section" "posts") "Params.book_weight" "!=" nil -}}
+{{- $blogMaking := sort (where $withWeight "Params.categories" "intersect" (slice "부록. 블로그 메이킹")) "Params.book_weight" -}}
+{{- $chapters := sort (complement $blogMaking $withWeight) "Params.book_weight" -}}
 {{- $curCat := "" -}}
 {{- $mainNum := 0 -}}
 {{- $appNum := 0 -}}
@@ -64,14 +67,34 @@
     {{- if ne $curCat "" -}}
     </section>
     {{- end -}}
-    {{/* AI 뉴스 브리핑: 기본 접힘, 최신 3개만 표시 */}}
+    {{/* 블로그 메이킹: 접이식(기본 펼침), GoatCounter 조회수 인기순 상위 5개.
+         통계가 없거나 로딩에 실패하면 책 순서(book_weight)로 폴백. */}}
+    {{- with $blogMaking }}
+    <details class="book-part book-fold book-blog" open>
+        <summary class="book-part-head">
+            <span class="book-part-badge">부록</span>
+            <h2 class="book-part-name">블로그 메이킹</h2>
+            <span class="book-fold-arrow">▶</span>
+        </summary>
+        {{- range $i, $p := . }}
+        <a class="book-chapter" href="{{ $p.RelPermalink }}" data-path="{{ $p.RelPermalink }}">
+            <span class="book-chapter-num">부록 A.{{ add $i 1 }}</span>
+            <span class="book-chapter-name">{{ $p.Params.book_chapter | default $p.Title }}{{ if $p.Draft }}<span class="book-badge">초안</span>{{ end }}</span>
+        </a>
+        {{- end }}
+        {{- with (index . 0).GetTerms "categories" }}
+        <a class="book-fold-all" href="{{ (index . 0).RelPermalink }}">전체 보기 →</a>
+        {{- end }}
+    </details>
+    {{- end }}
+    {{/* AI 뉴스 브리핑: 접이식(기본 펼침), 최신 3개만 표시 */}}
     {{- $news := where (where site.RegularPages "Section" "posts") "Params.categories" "intersect" (slice "부록. AI 뉴스 브리핑") -}}
     {{- if $news -}}
-    <details class="book-part book-news" open>
+    <details class="book-part book-fold book-news" open>
         <summary class="book-part-head">
             <span class="book-part-badge">부록</span>
             <h2 class="book-part-name">AI 뉴스 브리핑</h2>
-            <span class="book-news-arrow">▶</span>
+            <span class="book-fold-arrow">▶</span>
         </summary>
         {{- range first 3 $news.ByDate.Reverse }}
         <a class="book-chapter" href="{{ .RelPermalink }}">
@@ -80,8 +103,48 @@
         </a>
         {{- end }}
         {{- with (index $news 0).GetTerms "categories" }}
-        <a class="book-news-all" href="{{ (index . 0).RelPermalink }}">전체 보기 →</a>
+        <a class="book-fold-all" href="{{ (index . 0).RelPermalink }}">전체 보기 →</a>
         {{- end }}
     </details>
     {{- end -}}
 </div>
+{{- if site.Params.goatcounter }}
+<script>
+(function () {
+    var code = {{ site.Params.goatcounter }};
+    var box = document.querySelector('.book-blog');
+    if (!box) return;
+    var items = Array.prototype.slice.call(box.querySelectorAll('.book-chapter'));
+    var tail = box.querySelector('.book-fold-all');
+    function finish(list) {
+        list.forEach(function (el, i) {
+            if (tail) box.insertBefore(el, tail); else box.appendChild(el);
+            el.classList.toggle('book-hidden', i >= 5);
+        });
+    }
+    if (!window.fetch) { finish(items); return; }
+    Promise.all(items.map(function (el) {
+        var url = 'https://' + code + '.goatcounter.com/counter/' + encodeURI(el.dataset.path) + '.json';
+        return fetch(url)
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .catch(function () { return null; })
+            .then(function (j) {
+                return { el: el, n: j ? (parseInt(String(j.count).replace(/\D/g, ''), 10) || 0) : 0 };
+            });
+    })).then(function (rows) {
+        rows.sort(function (a, b) { return b.n - a.n; });
+        finish(rows.map(function (r) { return r.el; }));
+    });
+})();
+</script>
+{{- else }}
+<script>
+(function () {
+    var box = document.querySelector('.book-blog');
+    if (!box) return;
+    Array.prototype.slice.call(box.querySelectorAll('.book-chapter')).forEach(function (el, i) {
+        el.classList.toggle('book-hidden', i >= 5);
+    });
+})();
+</script>
+{{- end }}

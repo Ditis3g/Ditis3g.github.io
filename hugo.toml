@@ -74,6 +74,8 @@ buildExpired = false
 
 [params]
   mainSections = ["posts"]
+  # GoatCounter 방문자 통계 코드 (https://<code>.goatcounter.com)
+  goatcounter = "physicalai-dreamteam"
   featuredImageField = "image"
   rssFullContent = true
   description = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀"
