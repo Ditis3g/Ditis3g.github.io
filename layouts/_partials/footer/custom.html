@@ -1,0 +1,35 @@
+{{- /* GoatCounter 방문자 집계 + 푸터 방문자 수 표시 (오늘/누적) */ -}}
+<script data-goatcounter="https://ditis3g.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<section class="visitor-stats" id="visitor-stats" hidden>
+    방문자 오늘 <b id="visitor-today">–</b> · 누적 <b id="visitor-total">–</b>
+</section>
+
+<style>
+    .visitor-stats {
+        font-size: 1.4rem;
+        color: var(--body-text-color);
+        opacity: 0.65;
+        margin-top: 5px;
+    }
+</style>
+
+<script>
+    (function () {
+        var base = 'https://ditis3g.goatcounter.com/counter/TOTAL.json';
+        var today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date());
+
+        function fill(url, id) {
+            return fetch(url)
+                .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+                .then(function (d) { document.getElementById(id).textContent = d.count; });
+        }
+
+        Promise.all([
+            fill(base, 'visitor-total'),
+            fill(base + '?start=' + today, 'visitor-today')
+        ]).then(function () {
+            document.getElementById('visitor-stats').hidden = false;
+        }).catch(function () { /* 사이트 코드 미등록/설정 꺼짐이면 표시 안 함 */ });
+    })();
+</script>
