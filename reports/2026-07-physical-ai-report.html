@@ -12,20 +12,72 @@
   .slide {
     display: none;
     width: 100vw; height: 100vh;
-    padding: 56px 72px 72px;
+    padding: 50px 68px 64px;
     background: #fafafa; color: #27272a;
     flex-direction: column;
   }
   .slide.active { display: flex; }
 
-  .kicker { font-size: 15px; font-weight: 600; letter-spacing: 2px; color: #2563eb; margin-bottom: 10px; }
-  h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
-  .subtitle { font-size: 17px; color: #71717a; margin-bottom: 34px; }
-  .body { flex: 1; display: flex; flex-direction: column; }
+  .kicker { font-size: 14px; font-weight: 600; letter-spacing: 2px; color: #2563eb; margin-bottom: 8px; }
+  h1 { font-size: 38px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .subtitle { font-size: 16.5px; color: #71717a; margin-bottom: 26px; }
+  .body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 
-  /* 카드 그리드 */
-  .grid { display: grid; gap: 16px; }
-  .grid-2 { grid-template-columns: 1fr 1fr; }
+  /* ── 계획 테이블 ── */
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px #e4e4e7; }
+  th { background: #1e3a8a; color: #fff; font-size: 14.5px; font-weight: 700; padding: 11px 16px; text-align: left; }
+  td { font-size: 14.5px; padding: 10.5px 16px; border-top: 1px solid #f0f0f2; line-height: 1.5; color: #3f3f46; word-break: keep-all; }
+  td:first-child { font-weight: 700; color: #27272a; white-space: nowrap; }
+  tr.done td { background: #f0fdf4; }
+  tr.done td:first-child::after { content: " ✅"; }
+  tr.now td { background: #fefce8; }
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; margin-right: 6px; vertical-align: 1px;
+    background: #dbeafe; color: #1d4ed8;
+  }
+
+  .status-strip { display: flex; gap: 14px; margin-bottom: 18px; }
+  .status-item {
+    flex: 1; background: #fff; border: 1px solid #e4e4e7; border-radius: 10px;
+    padding: 12px 18px; font-size: 14px; color: #52525b; line-height: 1.5; word-break: keep-all;
+  }
+  .status-item b { display: block; font-size: 17px; color: #1e3a8a; margin-bottom: 2px; }
+
+  .footnote { margin-top: 14px; font-size: 13.5px; color: #71717a; line-height: 1.65; word-break: keep-all; }
+  .footnote b { color: #3f3f46; }
+
+  /* ── 조사 2단 ── */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; flex: 1; min-height: 0; }
+  .col {
+    background: #fff; border: 1px solid #e4e4e7; border-radius: 14px;
+    padding: 22px 26px; display: flex; flex-direction: column;
+  }
+  .col-title { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .col-sub { font-size: 13.5px; color: #71717a; margin-bottom: 14px; }
+  .col-lead {
+    font-size: 14px; line-height: 1.6; color: #3f3f46;
+    background: #eff6ff; border-left: 3px solid #2563eb; border-radius: 0 8px 8px 0;
+    padding: 10px 14px; margin-bottom: 14px; word-break: keep-all;
+  }
+  .col-lead b { color: #1e3a8a; }
+  .item { display: flex; gap: 12px; padding: 9px 0; border-top: 1px solid #f4f4f5; }
+  .item:first-of-type { border-top: none; }
+  .item .n {
+    flex: none; width: 24px; height: 24px; border-radius: 50%;
+    background: #2563eb; color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+  .item p { font-size: 14px; line-height: 1.6; color: #52525b; word-break: keep-all; }
+  .item p b { color: #27272a; }
+  .col-close {
+    margin-top: auto; padding-top: 12px; font-size: 13.5px; font-weight: 600;
+    color: #1e3a8a; line-height: 1.55; word-break: keep-all;
+    border-top: 2px solid #eff6ff;
+  }
+
+  /* ── 카드 그리드 (휴머노이드) ── */
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
   .card {
     background: #fff; border: 1px solid #e4e4e7; border-radius: 12px;
     padding: 20px 22px;
@@ -41,36 +93,13 @@
   .card p b { color: #27272a; }
 
   .banner {
-    margin-top: 22px; padding: 18px 24px; border-radius: 12px;
+    margin-top: 20px; padding: 17px 24px; border-radius: 12px;
     background: #1e3a8a; color: #fff;
-    font-size: 17px; font-weight: 600; line-height: 1.55; word-break: keep-all;
+    font-size: 16.5px; font-weight: 600; line-height: 1.55; word-break: keep-all;
   }
   .banner b { color: #93c5fd; }
 
-  .lead {
-    font-size: 16.5px; line-height: 1.65; color: #3f3f46;
-    background: #eff6ff; border-left: 4px solid #2563eb; border-radius: 0 10px 10px 0;
-    padding: 14px 20px; margin-bottom: 22px; word-break: keep-all;
-  }
-  .lead b { color: #1e3a8a; }
-
-  /* 계획 테이블 */
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px #e4e4e7; }
-  th { background: #1e3a8a; color: #fff; font-size: 14.5px; font-weight: 700; padding: 11px 16px; text-align: left; }
-  td { font-size: 14.5px; padding: 10px 16px; border-top: 1px solid #f0f0f2; line-height: 1.5; color: #3f3f46; word-break: keep-all; }
-  td:first-child { font-weight: 700; color: #27272a; white-space: nowrap; }
-  tr.done td { background: #f0fdf4; }
-  tr.done td:first-child::after { content: " ✅"; }
-  tr.now td { background: #fefce8; }
-  .badge {
-    display: inline-block; padding: 2px 9px; border-radius: 999px;
-    font-size: 12px; font-weight: 700; margin-right: 6px; vertical-align: 1px;
-  }
-  .badge.step { background: #dbeafe; color: #1d4ed8; }
-
-  .footnote { margin-top: 16px; font-size: 13.5px; color: #71717a; line-height: 1.6; word-break: keep-all; }
-
-  /* 내비게이션 */
+  /* ── 내비게이션 ── */
   .nav {
     position: fixed; bottom: 22px; right: 28px; z-index: 10;
     display: flex; align-items: center; gap: 10px;
@@ -81,7 +110,6 @@
     background: #fff; color: #3f3f46; font-size: 16px; cursor: pointer;
   }
   .nav button:hover { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
-
   .pageno { position: fixed; bottom: 26px; left: 32px; font-size: 13px; color: #a1a1aa; }
 
   @media print {
@@ -92,90 +120,21 @@
 </head>
 <body>
 
-<!-- 슬라이드 1: 조사 결과 -->
+<!-- 슬라이드 1: 6개월 계획 -->
 <section class="slide active">
   <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
-  <h1>VLA는 영상을 어떻게 학습에 쓰는가</h1>
-  <div class="subtitle">조사 결과 요약 — 영상 데이터 학습·활용 기술 서베이</div>
+  <h1>Physical AI 6개월 학습 계획 (2026.05 ~ 11)</h1>
+  <div class="subtitle">실습은 '입문 7단계' 로드맵, 이론은 VLA 영상 학습 서베이 — 두 축 병행</div>
   <div class="body">
-    <div class="lead">
-      로봇이 직접 만든 행동 데이터는 <b>시간당 $50~100</b>이 드는 희소 자원인 반면, 인터넷 영상은 사실상 무한.
-      따라서 VLA 경쟁력의 본질은 <b>"행동 라벨 없는 영상을 행동 가능한 데이터로 바꾸는 전환 전략"</b>에 있음.
+    <div class="status-strip">
+      <div class="status-item"><b>진행률 2 / 7 단계</b>원 가이드 3~6개월 코스의 2단계를 1.5개월에 완료 — 일정 여유 확보</div>
+      <div class="status-item"><b>이번 달 (7월)</b>3단계: 양손 로봇팔 구매·셋업 진행</div>
+      <div class="status-item"><b>최종 목표 (11월)</b>수건 개기 태스크 성공(10회 중 7회) + 결과 공개 + 종합 보고</div>
     </div>
-    <div class="grid grid-2" style="flex:1;">
-      <div class="card">
-        <span class="num">1</span>
-        <h3>잠재 행동 학습 — LAPA</h3>
-        <p>프레임 간 변화를 가짜 행동 라벨로 인코딩. 필요한 행동 라벨을 <b>약 30배 절감</b>하고, 라벨로 학습한 OpenVLA를 평균 성능에서 능가.</p>
-      </div>
-      <div class="card">
-        <span class="num">2</span>
-        <h3>월드모델 — V-JEPA 2 · Cosmos</h3>
-        <p>"행동하면 세상이 어떻게 변할까"를 예측. V-JEPA 2는 <b>100만 시간+ 영상</b>을 라벨 없이 학습, 처음 보는 로봇에서 zero-shot 동작.</p>
-      </div>
-      <div class="card">
-        <span class="num">3</span>
-        <h3>2D 단서 추출</h3>
-        <p>포인트 트랙·마스크·옵티컬 플로우 등 영상 속 2D 단서를 뽑아 행동 학습의 중간 표현으로 활용.</p>
-      </div>
-      <div class="card">
-        <span class="num">4</span>
-        <h3>3D 복원 + 리타게팅 — H2R · X-Humanoid</h3>
-        <p>사람 손 자세·궤적을 3D 복원해 로봇으로 변환. X-Humanoid는 사람 영상을 휴머노이드 영상으로 바꿔 <b>360만 프레임</b>의 학습 데이터 생성.</p>
-      </div>
-    </div>
-    <div class="banner">
-      산업 표준은 <b>"사전학습은 풍부한 영상으로, 파인튜닝은 소량의 로봇 데이터로"</b> 수렴 중 (NVIDIA GR00T·Cosmos, Physical Intelligence π 시리즈).
-      경쟁력은 모델 구조가 아니라 <b>데이터 전환 전략</b>이 가른다.
-    </div>
-  </div>
-</section>
-
-<!-- 슬라이드 2: 왜 휴머노이드인가 -->
-<section class="slide">
-  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
-  <h1>왜 휴머노이드가 주목받는가</h1>
-  <div class="subtitle">형태의 문제가 아니라 데이터와 경제 논리의 문제</div>
-  <div class="body">
-    <div class="grid grid-2" style="flex:1;">
-      <div class="card">
-        <span class="num">1</span>
-        <h3>세상이 사람 몸 기준으로 설계돼 있다</h3>
-        <p>공장 라인·계단·문손잡이·공구가 전부 사람 기준. 사람 형태면 <b>인프라 개조 비용 없이</b> 기존 작업 환경에 그대로 투입 가능 — "전용 로봇 N종 개발"이 "범용 1종 + 소프트웨어" 문제로 바뀜.</p>
-      </div>
-      <div class="card">
-        <span class="num">2</span>
-        <h3>영상 학습에 가장 유리한 몸 (핵심)</h3>
-        <p>인터넷에 무한한 것은 <b>"사람이 일하는 영상"</b>. 영상 학습의 최대 장벽인 신체 구조 차이(embodiment gap)가 사람을 닮은 휴머노이드에서 <b>가장 작다</b>. 1장의 영상 학습 기술이 가장 잘 먹히는 폼팩터.</p>
-      </div>
-      <div class="card">
-        <span class="num">3</span>
-        <h3>범용 모델의 스케일 법칙과 맞물림</h3>
-        <p>VLA는 데이터를 먹일수록 좋아지는 대형 모델. 폼팩터가 통일된 범용 몸이 있어야 데이터가 한곳에 쌓이는 <b>데이터 플라이휠</b>(배치→데이터→모델 개선)이 돈다.</p>
-      </div>
-      <div class="card">
-        <span class="num">4</span>
-        <h3>하드웨어 단가 붕괴 + 자본 유입</h3>
-        <p>EV 공급망 덕에 휴머노이드 BOM이 <b>$20만(2020) → $3만 이하(2026)</b>, Unitree G1은 $1.6만. 2024~25년 휴머노이드 스타트업에 <b>$70억+</b> 투자 유입.</p>
-      </div>
-    </div>
-    <div class="banner">
-      휴머노이드는 가장 어려운 폼팩터지만, <b>사람의 인프라 · 사람의 영상 데이터 · 대형 모델의 스케일 법칙</b>을
-      전부 그대로 물려받을 수 있는 유일한 형태이기 때문에 주목받는다.
-    </div>
-  </div>
-</section>
-
-<!-- 슬라이드 3: 6개월 계획 -->
-<section class="slide">
-  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
-  <h1>6개월 학습 계획 (2026.05 ~ 11)</h1>
-  <div class="subtitle">실습은 '입문 7단계' 로드맵, 이론은 영상 학습 서베이 — 두 축 병행</div>
-  <div class="body">
     <table>
       <thead>
         <tr>
-          <th style="width:90px;">시기</th>
+          <th style="width:84px;">시기</th>
           <th>실습 (입문 7단계)</th>
           <th>이론·조사 (영상 학습 서베이)</th>
         </tr>
@@ -183,45 +142,195 @@
       <tbody>
         <tr class="done">
           <td>5월</td>
-          <td><span class="badge step">1단계</span>LeRobot 튜토리얼 — MuJoCo·Isaac Sim 2종 완료</td>
+          <td><span class="badge">1단계</span>LeRobot 튜토리얼 — MuJoCo·Isaac Sim 2종 완료</td>
           <td>VLA 개념 정리 (블로그 게시 완료)</td>
         </tr>
         <tr class="done">
           <td>6월</td>
-          <td><span class="badge step">2단계</span>강화학습 예제 — 탁구 시뮬레이션 자작·학습 완료</td>
+          <td><span class="badge">2단계</span>강화학습 예제 — 탁구 시뮬레이션 자작·학습 완료</td>
           <td>VLA 학습 3대 패러다임·기술 계보 정리 (블로그 게시 완료)</td>
         </tr>
         <tr class="now">
           <td>7월</td>
-          <td><span class="badge step">3단계</span>저가 로봇 팔(SO-ARM100) 구매·셋업</td>
-          <td>"왜 휴머노이드인가" 답변 정리 (본 보고 2장)</td>
+          <td><span class="badge">3단계</span>양손 로봇팔 구매·셋업</td>
+          <td>"왜 휴머노이드인가" 답변 정리 (본 보고 4장)</td>
         </tr>
         <tr>
           <td>8월</td>
-          <td><span class="badge step">4단계</span>원격조종 데모 수집 — 수건 반 접기 100개</td>
+          <td><span class="badge">4단계</span>원격조종 데모 수집 — 수건 반 접기 100개</td>
           <td>LAPA — 잠재 행동으로 영상에서 행동 배우기</td>
         </tr>
         <tr>
           <td>9월</td>
-          <td><span class="badge step">5단계</span>오픈 사전학습 모델 파인튜닝 (ACT 우선)</td>
+          <td><span class="badge">5단계</span>오픈 사전학습 모델 파인튜닝 (ACT 우선)</td>
           <td>V-JEPA 2 — 월드모델 기반 영상 사전학습</td>
         </tr>
         <tr>
           <td>10월</td>
-          <td><span class="badge step">6단계</span>수건 개기 태스크 성공 — 10회 중 7회 목표</td>
+          <td><span class="badge">6단계</span>수건 개기 태스크 성공 — 10회 중 7회 목표</td>
           <td>H2R/X-Humanoid — 사람 영상→로봇 데이터 변환</td>
         </tr>
         <tr>
           <td>11월</td>
-          <td><span class="badge step">7단계</span>결과 영상·코드 공개 → 커뮤니티 진입</td>
+          <td><span class="badge">7단계</span>결과 영상·코드 공개 → 커뮤니티 진입</td>
           <td>π*₀.₆(RECAP) — '빨래 개기' RL 논문, 실습 결과와 비교 종합</td>
         </tr>
       </tbody>
     </table>
     <div class="footnote">
-      · 현재 진행률: 7단계 중 <b>2단계 완료</b> (계획 대비 정상 — 원 가이드 기준 3~6개월 코스를 1.5개월에 2단계 소화)<br>
-      · 목표 태스크를 기본 예시(블록 쌓기)보다 어려운 <b>수건 개기(변형 물체)</b>로 상향 — 8월 데모 수집(비싼 로봇 데이터)과 8~9월 이론(영상으로 데이터 대체)이 같은 문제의식으로 맞물리는 구성<br>
-      · 11월 종합 보고: 실습 결과 + 영상 학습 서베이 + 최전선 논문(BitVLA·π*₀.₆) 연결
+      · 목표 태스크를 기본 예시(블록 쌓기)보다 어려운 <b>수건 개기(변형 물체)</b>로 상향 — 양손 셋업은 빨래 개기 대표 연구(ALOHA·π0)와 동일 구성<br>
+      · 11월 종합 보고에서 실습 결과 + 영상 학습 서베이 + 최전선 논문(BitVLA·π*₀.₆)을 하나로 연결
+    </div>
+  </div>
+</section>
+
+<!-- 슬라이드 2: 조사 ① 기술 흐름 (계보) -->
+<section class="slide">
+  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
+  <h1>조사 ① 기술 흐름 — LLM에서 피지컬 AI까지</h1>
+  <div class="subtitle">최신 모델을 외우지 말고 '계보'를 읽어라 — 각 단계의 남은 한계가 다음 단계를 낳는다</div>
+  <div class="body">
+    <div class="col-lead" style="margin-bottom:18px;">
+      피지컬 AI는 아직 하나의 정답으로 수렴하지 않은 분야 — 오늘의 SOTA가 몇 달 뒤 대체된다.
+      그래서 새 기술은 세 가지 질문으로 읽는다: <b>① 어떤 문제를 풀려 등장했나 → ② 어떤 아이디어로 풀었나 → ③ 무엇을 여전히 못 푸나.</b>
+      ③의 답(남은 한계)이 곧 다음 기술이 태어난 이유다.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:150px;">단계</th>
+          <th>정체 (입력→출력)</th>
+          <th>＋ 더한 능력</th>
+          <th>△ 남은 한계 → 다음 촉발</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LLM</td>
+          <td>텍스트 → 텍스트</td>
+          <td>(출발점) 명령을 작업 순서로 계획</td>
+          <td>장면을 직접 못 봄 → 시각 필요</td>
+        </tr>
+        <tr>
+          <td>VLM</td>
+          <td>텍스트+이미지 → 텍스트</td>
+          <td>＋시각 (이미지 이해)</td>
+          <td>이해만 할 뿐 행동을 못 냄 → 행동 출력 필요</td>
+        </tr>
+        <tr>
+          <td>VLA</td>
+          <td>시각+언어 → 행동</td>
+          <td>＋행동 출력 (관절/그리퍼 직접) — RT-2·OpenVLA·π0</td>
+          <td>정답이 여럿·오차 누적 → 행동 표현 기법 필요</td>
+        </tr>
+        <tr>
+          <td>↳ VLA 내부 기법</td>
+          <td>행동을 어떻게 낼까</td>
+          <td>액션 청크 · 디퓨전/플로우 매칭 · 언어 중간표현 (RT-H·ECoT)</td>
+          <td>장기 계획·재계획 약함 → 상위 층 필요</td>
+        </tr>
+        <tr>
+          <td>계층형 시스템</td>
+          <td>상위(추론) + 하위(제어)</td>
+          <td>＋상위 추론층 — 느린 판단 + 빠른 제어 (Helix·Gemini Robotics)</td>
+          <td>시뮬↔현실 격차·데이터 부족 → 경험 확보 필요</td>
+        </tr>
+        <tr>
+          <td>피지컬 AI 시스템</td>
+          <td>두뇌 + 몸·경험의 순환</td>
+          <td>＋데이터·시뮬레이션·배포·지속학습</td>
+          <td>진행형 — 아직 완성되지 않음</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footnote">
+      · 아래 단계는 위 단계를 <b>대체하지 않고 품고 간다</b> (대체 ✕, 누적 ○) — 계층형 시스템에서도 VLA는 '손발'로 계속 쓰인다<br>
+      · 기회는 모델 자체보다 <b>데이터 평가·시뮬 환경·운영·지속학습</b> 같은 시스템의 빈틈에 더 많이 남아 있다
+    </div>
+    <div class="banner">
+      진화의 동력은 "더 큰 모델"이 아니라 <b>앞 방식의 약점을 메우는 방향</b>이었다 —
+      새 논문·모델은 이름이 아니라 <b>계보 위의 위치</b>로 판단한다.
+    </div>
+  </div>
+</section>
+
+<!-- 슬라이드 3: 조사 ② 로봇은 어떻게 행동을 배우는가 -->
+<section class="slide">
+  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
+  <h1>조사 ② 로봇은 어떻게 '행동'을 배우는가</h1>
+  <div class="subtitle">VLA 학습 3대 패러다임 · 영상→행동 4가지 전환 기술</div>
+  <div class="body">
+    <div class="cols">
+      <div class="col">
+        <div class="col-title">학습 3대 패러다임</div>
+        <div class="col-sub">"비싼 로봇 데이터를 얼마나 덜 쓰느냐"가 방식을 가른다</div>
+        <div class="col-lead">
+          사람이 로봇을 원격조종해 모으는 데이터는 <b>시간당 $50~100</b>.
+          이 비용 구조가 아래 세 갈래의 학습 전략을 만들었다.
+        </div>
+        <div class="item"><div class="n">1</div><p><b>직접 정책 학습 — 지금 가장 실용적</b> — 로봇이 모은 (관찰, 행동) 쌍을 그대로 학습. RT-2·OpenVLA·π0. 성능은 높지만 비싼 로봇 데이터를 가장 많이 소비.</p></div>
+        <div class="item"><div class="n">2</div><p><b>영상 사전학습 — 차세대 R&D 핵심</b> — 행동 라벨 없는 인터넷 영상으로 먼저 '감'을 잡고, 소량의 로봇 데이터로 마무리. LAPA는 행동 라벨을 <b>약 30배 절감</b>, GR-2는 3,800만 영상 학습으로 97% 성공률.</p></div>
+        <div class="item"><div class="n">3</div><p><b>월드모델 — 가장 야심찬 미래형</b> — "행동하면 세상이 어떻게 변하나"를 모델이 직접 상상·시뮬레이션. Dreamer·Genie 2·NVIDIA Cosmos. 잠재력은 크지만 비용도 가장 크다.</p></div>
+        <div class="col-close">
+          → "CCTV 영상으로 그냥 가르치면 안 되나?" — <b>행동·모달리티·도메인·인과성 4가지 갭</b> 때문에 그대로는 불가.
+          이 갭을 줄이는 것이 오른쪽의 전환 기술이다.
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-title">영상→행동, 4가지 전환 기술</div>
+        <div class="col-sub">행동 라벨 없는 영상에서 행동을 뽑아내는 방법</div>
+        <div class="col-lead">
+          영상엔 <b>행동 라벨·물리 신호(힘/관절 상태)가 없고</b>, 사람 손은 로봇 그리퍼와 다르다(embodiment gap).
+          이 결핍을 메우는 방식이 네 갈래로 경쟁 중.
+        </div>
+        <div class="item"><div class="n">1</div><p><b>잠재 행동 학습 (LAPA)</b> — 프레임 간 변화를 가짜 행동 라벨로 인코딩. 무라벨 사전학습이 라벨로 학습한 OpenVLA를 능가(50.1% vs 43.9%).</p></div>
+        <div class="item"><div class="n">2</div><p><b>월드모델 사전학습 (V-JEPA 2 · Cosmos)</b> — 미래 상태 예측으로 동역학을 학습. V-JEPA 2는 <b>100만 시간+ 영상</b>을 라벨 없이 학습, 처음 보는 로봇에서 zero-shot 동작. Cosmos는 인과적 영상 토큰화(과거만 보고 미래 예측)로 Physical AI 파운데이션 지향.</p></div>
+        <div class="item"><div class="n">3</div><p><b>2D 단서 추출</b> — 포인트 트랙·마스크·옵티컬 플로우를 중간 표현으로 사용해 행동 학습을 유도.</p></div>
+        <div class="item"><div class="n">4</div><p><b>3D 복원 + 리타게팅 (H2R · X-Humanoid)</b> — 사람 손 자세·궤적을 3D 복원해 로봇으로 변환. 사람 영상을 휴머노이드 영상으로 바꿔 <b>360만 프레임</b> 학습 데이터 생성.</p></div>
+        <div class="col-close">
+          → 산업 표준은 <b>"사전학습은 풍부한 영상, 파인튜닝은 소량 로봇 데이터"</b>로 수렴 중 (NVIDIA GR00T·Cosmos, π 시리즈).
+        </div>
+      </div>
+    </div>
+    <div class="banner">
+      실무 적용 로드맵: <b>A)</b> 시뮬 사전학습 + OpenVLA 파인튜닝으로 1~2주 PoC →
+      <b>B)</b> 영상 잠재행동 사전학습을 얹어 라벨링 비용 <b>30~40% 절감</b> →
+      <b>C)</b> 월드모델 결합은 R&D 동향 관찰. 경쟁력은 모델 구조가 아니라 <b>데이터 전환 전략</b>이 가른다.
+    </div>
+  </div>
+</section>
+
+<!-- 슬라이드 4: 조사 ③ 왜 휴머노이드인가 -->
+<section class="slide">
+  <div class="kicker">PHYSICAL AI · VLA 기술 조사 보고 — 2026. 07</div>
+  <h1>조사 ③ 왜 휴머노이드가 주목받는가</h1>
+  <div class="subtitle">형태의 문제가 아니라 데이터와 경제 논리의 문제</div>
+  <div class="body">
+    <div class="grid" style="flex:1;">
+      <div class="card">
+        <span class="num">1</span>
+        <h3>세상이 사람 몸 기준으로 설계돼 있다</h3>
+        <p>공장 라인·계단·문손잡이·공구가 전부 사람 기준. 사람 형태면 <b>인프라 개조 비용 없이</b> 기존 작업 환경에 그대로 투입 가능 — "전용 로봇 N종 개발"이 "범용 1종 + 소프트웨어" 문제로 바뀜.</p>
+      </div>
+      <div class="card">
+        <span class="num">2</span>
+        <h3>영상 학습에 가장 유리한 몸 (조사 ②와 직결)</h3>
+        <p>인터넷에 무한한 것은 <b>"사람이 일하는 영상"</b>. 영상 학습의 최대 장벽인 신체 구조 차이(embodiment gap)가 사람을 닮은 휴머노이드에서 <b>가장 작다</b>. 조사 ②의 전환 기술이 가장 잘 먹히는 폼팩터.</p>
+      </div>
+      <div class="card">
+        <span class="num">3</span>
+        <h3>범용 모델의 스케일 법칙과 맞물림</h3>
+        <p>VLA는 데이터를 먹일수록 좋아지는 대형 모델. 폼팩터가 통일된 범용 몸이 있어야 데이터가 한곳에 쌓이는 <b>데이터 플라이휠</b>(배치→데이터→모델 개선)이 돈다. Tesla·Figure·1X가 자사 공장을 플라이휠로 운영 중.</p>
+      </div>
+      <div class="card">
+        <span class="num">4</span>
+        <h3>하드웨어 단가 붕괴 + 자본 유입</h3>
+        <p>EV 공급망 덕에 휴머노이드 BOM이 <b>$20만(2020) → $3만 이하(2026)</b>, Unitree G1은 $1.6만. 2024~25년 휴머노이드 스타트업에 <b>$70억+</b> 투자 유입 (OpenAI·NVIDIA·Samsung 직접 출자).</p>
+      </div>
+    </div>
+    <div class="banner">
+      휴머노이드는 가장 어려운 폼팩터지만, <b>사람의 인프라 · 사람의 영상 데이터 · 대형 모델의 스케일 법칙</b>을
+      전부 그대로 물려받을 수 있는 유일한 형태다 — <b>영상 사전학습이 표준이 되는 시대</b>일수록 이 이점은 커진다.
     </div>
   </div>
 </section>
@@ -230,7 +339,7 @@
   <button id="prev" title="이전 (←)">‹</button>
   <button id="next" title="다음 (→)">›</button>
 </div>
-<div class="pageno" id="pageno">1 / 3</div>
+<div class="pageno" id="pageno">1 / 4</div>
 
 <script>
   const slides = document.querySelectorAll('.slide');
@@ -246,6 +355,15 @@
     if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') show(cur + 1);
     if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(cur - 1);
   });
+
+  // 마우스 휠로 페이지 넘김 (연속 스크롤 방지용 잠금)
+  let wheelLock = false;
+  window.addEventListener('wheel', e => {
+    if (wheelLock || Math.abs(e.deltaY) < 10) return;
+    wheelLock = true;
+    show(cur + (e.deltaY > 0 ? 1 : -1));
+    setTimeout(() => { wheelLock = false; }, 600);
+  }, { passive: true });
 </script>
 
 </body>
