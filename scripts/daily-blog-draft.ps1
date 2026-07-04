@@ -20,6 +20,78 @@ function Log($msg) {
   Add-Content -Path $LogFile -Value "[$ts] $msg" -Encoding UTF8
 }
 
+# Send one prompt to claude (headless) and return cleaned Hugo markdown, or
+# $null on timeout / empty output. One call = one post, so a multi-memo day
+# never merges several memos (and stray commentary) into a single broken file.
+function Get-ClaudeDraft($claudeExe, $blogDir, $inputText, $utf8) {
+  $pPrompt = 'The input below contains editor instructions (in Korean) followed by study notes. Follow the instructions exactly and output ONLY the resulting Hugo markdown file content.'
+
+  # Feed the (UTF-8) prompt to claude via stdin as RAW BYTES.
+  # In PS5.1 `"$str" | & native.exe` re-encodes the string with the console
+  # codepage, which turns Korean into '?'. Writing UTF-8 bytes straight to the
+  # child's stdin BaseStream bypasses that entirely. stdout/stderr are read
+  # asynchronously so a full pipe buffer can't deadlock the write.
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName               = $claudeExe
+  $psi.Arguments              = '-p "' + $pPrompt + '" --output-format text'
+  $psi.WorkingDirectory       = $blogDir
+  $psi.UseShellExecute        = $false
+  $psi.CreateNoWindow         = $true
+  $psi.RedirectStandardInput  = $true
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError  = $true
+  $psi.StandardOutputEncoding = $utf8
+  $psi.StandardErrorEncoding  = $utf8
+
+  $proc    = [System.Diagnostics.Process]::Start($psi)
+  $outTask = $proc.StandardOutput.ReadToEndAsync()
+  $errTask = $proc.StandardError.ReadToEndAsync()
+
+  $inBytes = [System.Text.Encoding]::UTF8.GetBytes($inputText)
+  $proc.StandardInput.BaseStream.Write($inBytes, 0, $inBytes.Length)
+  $proc.StandardInput.BaseStream.Flush()
+  $proc.StandardInput.Close()
+
+  if (-not $proc.WaitForExit(600000)) {
+    try { $proc.Kill() } catch {}
+    Log "claude timed out after 600s."
+    return $null
+  }
+  $raw     = $outTask.Result
+  $errText = $errTask.Result
+  if ($errText) { Log ("claude stderr: " + $errText.Trim()) }
+  Log "claude exit code: $($proc.ExitCode)"
+  $raw = $raw.Trim()
+  if ([string]::IsNullOrWhiteSpace($raw)) { return $null }
+
+  # Strip code fences if the model wrapped output
+  $raw = $raw -replace '^\s*```(?:markdown|md)?\s*\r?\n', ''
+  $raw = $raw -replace '\r?\n```\s*$', ''
+
+  # Strip any chatty preamble (or stray separators / inner code fences) before
+  # the Hugo front matter. We require the delimiter to be IMMEDIATELY followed
+  # by a YAML key line (e.g. `title:`) so a lone `---` separator isn't mistaken
+  # for the front matter open.
+  $fmStart = [regex]::Match($raw, '(?ms)^(---|\+\+\+)\s*\r?\n[a-zA-Z_][a-zA-Z0-9_-]*\s*:')
+  if ($fmStart.Success) {
+    if ($fmStart.Index -gt 0) { $raw = $raw.Substring($fmStart.Index).Trim() }
+  } else {
+    $loose = [regex]::Match($raw, '(?m)^(---|\+\+\+)\s*$')
+    if ($loose.Success -and $loose.Index -gt 0) {
+      $raw = $raw.Substring($loose.Index).Trim()
+    }
+  }
+
+  # Also strip an inner ```markdown fence the model may have placed RIGHT AFTER
+  # the (now-leading) front matter open — i.e. `---\n```markdown\n---\n...`.
+  $raw = $raw -replace '^(---|\+\+\+)\s*\r?\n\s*```(?:markdown|md)?\s*\r?\n(---|\+\+\+)', '$1'
+
+  # Safety: ensure draft stays true
+  if ($raw -match 'draft:\s*false') { $raw = $raw -replace 'draft:\s*false', 'draft: true' }
+
+  return $raw
+}
+
 try {
   Log "===== run start ====="
 
@@ -111,101 +183,41 @@ try {
   }
   Log ("found {0} memo file(s): {1}" -f $memoFiles.Count, ($memoFiles.Name -join ', '))
 
-  # Concatenate memo contents (read as UTF-8)
-  $sb = New-Object System.Text.StringBuilder
-  foreach ($f in $memoFiles) {
-    [void]$sb.AppendLine("----- $($f.Name) -----")
-    [void]$sb.AppendLine((Get-Content $f.FullName -Raw -Encoding UTF8))
-    [void]$sb.AppendLine("")
-  }
-  $memoText = $sb.ToString()
-
-  $today = Get-Date -Format 'yyyy-MM-dd'
-
-  # Build full prompt from the (UTF-8) instruction template
+  $today    = Get-Date -Format 'yyyy-MM-dd'
   $template = Get-Content $PromptFile -Raw -Encoding UTF8
-  $fullInput = $template.Replace('{DATE}', $today).Replace('{MEMO}', $memoText)
+  $archDir  = Join-Path $MemoDir "_archive\$today"
 
-  Log "calling claude..."
-  $pPrompt = 'The input below contains editor instructions (in Korean) followed by study notes. Follow the instructions exactly and output ONLY the resulting Hugo markdown file content.'
+  # One post per memo: a multi-memo day yields several drafts instead of one
+  # merged (and easily broken) file. A memo whose claude call fails is left in
+  # place so the next run retries it.
+  $made = 0
+  foreach ($f in $memoFiles) {
+    Log ("processing memo: {0}" -f $f.Name)
+    $memoText  = Get-Content $f.FullName -Raw -Encoding UTF8
+    $fullInput = $template.Replace('{DATE}', $today).Replace('{MEMO}', $memoText)
 
-  # Feed the (UTF-8) prompt to claude via stdin as RAW BYTES.
-  # In PS5.1 `"$str" | & native.exe` re-encodes the string with the console
-  # codepage, which turns Korean into '?'. Writing UTF-8 bytes straight to the
-  # child's stdin BaseStream bypasses that entirely. stdout/stderr are read
-  # asynchronously so a full pipe buffer can't deadlock the write.
-  $psi = New-Object System.Diagnostics.ProcessStartInfo
-  $psi.FileName               = $claude
-  $psi.Arguments              = '-p "' + $pPrompt + '" --output-format text'
-  $psi.WorkingDirectory       = $BlogDir
-  $psi.UseShellExecute        = $false
-  $psi.CreateNoWindow         = $true
-  $psi.RedirectStandardInput  = $true
-  $psi.RedirectStandardOutput = $true
-  $psi.RedirectStandardError  = $true
-  $psi.StandardOutputEncoding = $utf8
-  $psi.StandardErrorEncoding  = $utf8
-
-  $proc    = [System.Diagnostics.Process]::Start($psi)
-  $outTask = $proc.StandardOutput.ReadToEndAsync()
-  $errTask = $proc.StandardError.ReadToEndAsync()
-
-  $inBytes = [System.Text.Encoding]::UTF8.GetBytes($fullInput)
-  $proc.StandardInput.BaseStream.Write($inBytes, 0, $inBytes.Length)
-  $proc.StandardInput.BaseStream.Flush()
-  $proc.StandardInput.Close()
-
-  if (-not $proc.WaitForExit(600000)) {
-    try { $proc.Kill() } catch {}
-    Log "claude timed out after 600s. exit."; exit 1
-  }
-  $raw     = $outTask.Result
-  $errText = $errTask.Result
-  if ($errText) { Log ("claude stderr: " + $errText.Trim()) }
-  Log "claude exit code: $($proc.ExitCode)"
-  $raw = $raw.Trim()
-
-  if ([string]::IsNullOrWhiteSpace($raw)) { Log "claude returned empty. exit."; exit 1 }
-
-  # Strip code fences if the model wrapped output
-  $raw = $raw -replace '^\s*```(?:markdown|md)?\s*\r?\n', ''
-  $raw = $raw -replace '\r?\n```\s*$', ''
-
-  # Strip any chatty preamble (or stray separators / inner code fences) before
-  # the Hugo front matter. We require the delimiter to be IMMEDIATELY followed
-  # by a YAML key line (e.g. `title:`) so a lone `---` separator isn't mistaken
-  # for the front matter open.
-  $fmStart = [regex]::Match($raw, '(?ms)^(---|\+\+\+)\s*\r?\n[a-zA-Z_][a-zA-Z0-9_-]*\s*:')
-  if ($fmStart.Success) {
-    if ($fmStart.Index -gt 0) { $raw = $raw.Substring($fmStart.Index).Trim() }
-  } else {
-    # Fall back to the old behavior so a malformed-but-present front matter
-    # still gets a chance at trimming chatty preamble.
-    $loose = [regex]::Match($raw, '(?m)^(---|\+\+\+)\s*$')
-    if ($loose.Success -and $loose.Index -gt 0) {
-      $raw = $raw.Substring($loose.Index).Trim()
+    $raw = Get-ClaudeDraft $claude $BlogDir $fullInput $utf8
+    if ([string]::IsNullOrWhiteSpace($raw)) {
+      Log ("claude produced nothing for {0}; leaving memo for retry." -f $f.Name)
+      continue
     }
+
+    # Save post (UTF-8, no BOM). Collision-safe: 1st -> DATE-study.md,
+    # then DATE-study-2.md, -3.md ... (also covers another PC same day).
+    $postPath = Join-Path $PostsDir "$today-study.md"
+    $n = 2
+    while (Test-Path $postPath) { $postPath = Join-Path $PostsDir "$today-study-$n.md"; $n++ }
+    [System.IO.File]::WriteAllText($postPath, $raw, $utf8)
+    Log ("draft saved: {0}" -f $postPath)
+
+    # Archive this memo now that its post exists
+    New-Item -ItemType Directory -Force -Path $archDir | Out-Null
+    Move-Item $f.FullName (Join-Path $archDir $f.Name) -Force
+    $made++
   }
 
-  # Also strip an inner ```markdown fence the model may have placed RIGHT AFTER
-  # the (now-leading) front matter open — i.e. `---\n```markdown\n---\n...`.
-  $raw = $raw -replace '^(---|\+\+\+)\s*\r?\n\s*```(?:markdown|md)?\s*\r?\n(---|\+\+\+)', '$1'
-
-  # Safety: ensure draft stays true
-  if ($raw -match 'draft:\s*false') { $raw = $raw -replace 'draft:\s*false', 'draft: true' }
-
-  # Save post (UTF-8, no BOM). Avoid filename collision (e.g. another PC same day).
-  $postPath = Join-Path $PostsDir "$today-study.md"
-  $n = 2
-  while (Test-Path $postPath) { $postPath = Join-Path $PostsDir "$today-study-$n.md"; $n++ }
-  [System.IO.File]::WriteAllText($postPath, $raw, $utf8)
-  Log "draft saved: $postPath"
-
-  # Archive processed memos to _archive\DATE\
-  $archDir = Join-Path $MemoDir "_archive\$today"
-  New-Item -ItemType Directory -Force -Path $archDir | Out-Null
-  foreach ($f in $memoFiles) { Move-Item $f.FullName (Join-Path $archDir $f.Name) -Force }
-  Log ("archived {0} memo file(s)" -f $memoFiles.Count)
+  if ($made -eq 0) { Log "no drafts produced. exit."; exit 0 }
+  Log ("created {0} draft(s)" -f $made)
 
   # Commit & push (draft -> not published publicly)
   Set-Location $BlogDir
