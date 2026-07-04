@@ -1,7 +1,7 @@
 ---
 title: "대본만 쓰면 강의 영상이 나온다 — 버튜버 자동 제작 파이프라인 구축기"
 date: 2026-07-02
-draft: true
+draft: false
 tags: ["영상 자동화", "TTS", "OBS", "AITuber"]
 categories: ["부록. 블로그 메이킹"]
 ---
