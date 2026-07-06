@@ -86,8 +86,19 @@ function Get-ClaudeDraft($claudeExe, $blogDir, $inputText, $utf8) {
   # the (now-leading) front matter open — i.e. `---\n```markdown\n---\n...`.
   $raw = $raw -replace '^(---|\+\+\+)\s*\r?\n\s*```(?:markdown|md)?\s*\r?\n(---|\+\+\+)', '$1'
 
-  # Safety: ensure draft stays true
-  if ($raw -match 'draft:\s*false') { $raw = $raw -replace 'draft:\s*false', 'draft: true' }
+  # Draft policy:
+  #  - "부록. AI 뉴스 브리핑" posts are auto-curated news roundups (low
+  #    editorial risk, no book_weight needed -- the book-toc template picks
+  #    them up by category alone) -> publish immediately, no review gate.
+  #  - Everything else keeps the safety net -> force draft: true. These need
+  #    a human pass (and book_weight/book_chapter via the blog-memo skill)
+  #    before they enter the book TOC, so never auto-publish them.
+  $isNewsBriefing = $raw -match 'categories:\s*\[\s*"부록\. AI 뉴스 브리핑"\s*\]'
+  if ($isNewsBriefing) {
+    if ($raw -match 'draft:\s*true') { $raw = $raw -replace 'draft:\s*true', 'draft: false' }
+  } else {
+    if ($raw -match 'draft:\s*false') { $raw = $raw -replace 'draft:\s*false', 'draft: true' }
+  }
 
   return $raw
 }
