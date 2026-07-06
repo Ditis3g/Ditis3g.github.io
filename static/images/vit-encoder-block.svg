@@ -1,0 +1,37 @@
+<svg width="100%" viewBox="0 0 680 456" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Transformer Encoder 블록 구조</title>
+<desc>임베딩 시퀀스가 LayerNorm과 멀티헤드 셀프 어텐션을 거쳐 잔차 합산되고, 다시 LayerNorm과 MLP를 거쳐 잔차 합산된다. 이 블록이 L번 반복되며, 마지막에 클래스 토큰의 출력이 이미지 표현으로 MLP Head에 전달된다.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<style>
+.lbl{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:14px;fill:#3d3d3a;}
+.lblm{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:12px;fill:#6f6e69;}
+.wt{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:13px;fill:#ffffff;}
+.dk{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:13px;fill:#2c2c2a;}
+.plus{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:15px;fill:#2c2c2a;}
+@media (prefers-color-scheme:dark){.lbl{fill:#e8e7e2;}.lblm{fill:#a9a8a2;}}
+</style>
+</defs>
+<rect x="214" y="60" width="228" height="330" rx="14" fill="none" stroke="#9c9a92" stroke-width="1" stroke-dasharray="4 4"/>
+<path d="M418 78 L422 78 L422 372 L418 372" fill="none" stroke="#8a8984" stroke-width="1"/>
+<text class="lbl" x="438" y="212">Transformer</text>
+<text class="lbl" x="438" y="230">Encoder</text>
+<text class="lblm" x="438" y="249">(L번 반복)</text>
+<rect x="250" y="18" width="160" height="30" rx="6" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/><text class="dk" x="330" y="33" text-anchor="middle" dominant-baseline="central">임베딩 시퀀스</text>
+<path d="M330 66 L228 66 L228 210 L318 210" fill="none" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path d="M330 232 L228 232 L228 360 L318 360" fill="none" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="330" y1="48" x2="330" y2="78" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="250" y="78" width="160" height="32" rx="6" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/><text class="dk" x="330" y="94" text-anchor="middle" dominant-baseline="central">LayerNorm</text>
+<line x1="330" y1="110" x2="330" y2="136" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="250" y="136" width="160" height="42" rx="6" fill="#1D9E75"/><text class="wt" x="330" y="151" text-anchor="middle">Multi-Head</text><text class="wt" x="330" y="169" text-anchor="middle">Self-Attention</text>
+<line x1="330" y1="178" x2="330" y2="197" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<circle cx="330" cy="210" r="12" fill="#ffffff" stroke="#8a8984" stroke-width="1"/><text class="plus" x="330" y="210" text-anchor="middle" dominant-baseline="central">+</text>
+<line x1="330" y1="222" x2="330" y2="240" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="250" y="240" width="160" height="32" rx="6" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/><text class="dk" x="330" y="256" text-anchor="middle" dominant-baseline="central">LayerNorm</text>
+<line x1="330" y1="272" x2="330" y2="298" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="250" y="298" width="160" height="34" rx="6" fill="#1D9E75"/><text class="wt" x="330" y="315" text-anchor="middle" dominant-baseline="central">MLP (GELU)</text>
+<line x1="330" y1="332" x2="330" y2="347" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<circle cx="330" cy="360" r="12" fill="#ffffff" stroke="#8a8984" stroke-width="1"/><text class="plus" x="330" y="360" text-anchor="middle" dominant-baseline="central">+</text>
+<line x1="330" y1="372" x2="330" y2="402" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="232" y="402" width="196" height="34" rx="6" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/><text class="dk" x="330" y="419" text-anchor="middle" dominant-baseline="central">이미지 표현 → MLP Head</text>
+</svg>
