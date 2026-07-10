@@ -20,6 +20,22 @@ function Log($msg) {
   Add-Content -Path $LogFile -Value "[$ts] $msg" -Encoding UTF8
 }
 
+# Run git and report success/failure ($true/$false), logging output on failure.
+# The 2026-07-09 run froze mid-rebase because git exit codes were never
+# checked and the log claimed "push done" anyway — every git call that can
+# fail must go through here. EAP is dropped to Continue around 2>&1 because
+# PS5.1 turns native stderr into terminating errors under EAP=Stop.
+function Invoke-Git([string[]]$gitArgs) {
+  $eap = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try { $out = & git @gitArgs 2>&1 | ForEach-Object { "$_" } }
+  finally { $ErrorActionPreference = $eap }
+  if ($LASTEXITCODE -ne 0) {
+    Log ("git {0} failed (exit {1}): {2}" -f ($gitArgs -join ' '), $LASTEXITCODE, (($out | Select-Object -Last 5) -join ' | '))
+  }
+  return ($LASTEXITCODE -eq 0)
+}
+
 # Send one prompt to claude (headless) and return cleaned Hugo markdown, or
 # $null on timeout / empty output. One call = one post, so a multi-memo day
 # never merges several memos (and stray commentary) into a single broken file.
@@ -179,9 +195,23 @@ try {
   if (-not $claude) { Log "claude.exe not found (searched: $($searched -join '; ')). exit."; exit 1 }
   Log "claude: $claude"
 
-  # Pull latest first (safe for multi-PC: another PC may have pushed)
   Set-Location $BlogDir
-  git pull --rebase origin main | Out-Null
+
+  # Recover if an earlier run died mid-rebase (every git op would fail)
+  if ((Test-Path '.git\rebase-merge') -or (Test-Path '.git\rebase-apply')) {
+    Log "leftover rebase state detected; aborting it"
+    Invoke-Git @('rebase','--abort') | Out-Null
+  }
+
+  # Pull latest first (safe for multi-PC: another PC may have pushed)
+  if (-not (Invoke-Git @('pull','--rebase','origin','main'))) {
+    Invoke-Git @('rebase','--abort') | Out-Null
+    Log "ERROR: initial git pull failed; repo restored to clean state. exit."
+    exit 1
+  }
+  # Push any commit a previous failed run left behind (its memos were already
+  # archived, so no later run would otherwise ever push it)
+  Invoke-Git @('push','origin','main') | Out-Null
   Log "git pull done"
 
   # Collect memo files (.txt/.md, exclude README)
@@ -202,6 +232,7 @@ try {
   # merged (and easily broken) file. A memo whose claude call fails is left in
   # place so the next run retries it.
   $made = 0
+  $newPosts = @()
   foreach ($f in $memoFiles) {
     Log ("processing memo: {0}" -f $f.Name)
     $memoText  = Get-Content $f.FullName -Raw -Encoding UTF8
@@ -219,6 +250,7 @@ try {
     $n = 2
     while (Test-Path $postPath) { $postPath = Join-Path $PostsDir "$today-study-$n.md"; $n++ }
     [System.IO.File]::WriteAllText($postPath, $raw, $utf8)
+    $newPosts += $postPath
     Log ("draft saved: {0}" -f $postPath)
 
     # Archive this memo now that its post exists
@@ -230,12 +262,49 @@ try {
   if ($made -eq 0) { Log "no drafts produced. exit."; exit 0 }
   Log ("created {0} draft(s)" -f $made)
 
-  # Commit & push (draft -> not published publicly)
+  # Commit & push. Another PC/session may have pushed a post with the same
+  # generated filename while claude was running (minutes-long window) — that
+  # both-added conflict froze the 2026-07-09 run mid-rebase. So: on a rebase
+  # conflict, abort, rename OUR new drafts to suffixes free on both sides,
+  # amend, and retry. Never leave the repo mid-rebase.
   Set-Location $BlogDir
-  git add -A
-  git commit -m "study draft: $today" | Out-Null
-  git pull --rebase origin main | Out-Null
-  git push origin main
+  Invoke-Git @('add','-A') | Out-Null
+  Invoke-Git @('commit','-m',"study draft: $today") | Out-Null
+
+  $pushed = $false
+  for ($try = 1; $try -le 3; $try++) {
+    if (Invoke-Git @('pull','--rebase','origin','main')) {
+      if (Invoke-Git @('push','origin','main')) { $pushed = $true; break }
+      Log "push rejected (attempt $try); re-syncing"
+      continue
+    }
+    Log "pull --rebase conflicted (attempt $try); renaming colliding drafts"
+    Invoke-Git @('rebase','--abort') | Out-Null
+    Invoke-Git @('fetch','origin','main') | Out-Null
+    $eap = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    try { $remote = & git ls-tree -r --name-only origin/main -- content/posts 2>&1 | ForEach-Object { "$_" } }
+    finally { $ErrorActionPreference = $eap }
+    $renamed = $false
+    for ($i = 0; $i -lt $newPosts.Count; $i++) {
+      $rel = 'content/posts/' + (Split-Path $newPosts[$i] -Leaf)
+      if ($remote -contains $rel) {
+        $n = 2
+        do { $leaf = "$today-study-$n.md"; $n++ }
+        while ((Test-Path (Join-Path $PostsDir $leaf)) -or ($remote -contains "content/posts/$leaf"))
+        $newPath = Join-Path $PostsDir $leaf
+        Invoke-Git @('mv', $newPosts[$i], $newPath) | Out-Null
+        Log ("renamed colliding draft: {0} -> {1}" -f $rel, $leaf)
+        $newPosts[$i] = $newPath
+        $renamed = $true
+      }
+    }
+    if ($renamed) { Invoke-Git @('commit','--amend','--no-edit') | Out-Null }
+  }
+
+  if (-not $pushed) {
+    Log "ERROR: could not push after 3 attempts. Commit kept locally; repo left clean (no rebase in progress). Next run will retry the push."
+    exit 1
+  }
   Log "git push done (draft, not public)."
 
   Log "===== run done ====="
