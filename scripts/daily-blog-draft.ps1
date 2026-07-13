@@ -109,7 +109,10 @@ function Get-ClaudeDraft($claudeExe, $blogDir, $inputText, $utf8) {
   #  - Everything else keeps the safety net -> force draft: true. These need
   #    a human pass (and book_weight/book_chapter via the blog-memo skill)
   #    before they enter the book TOC, so never auto-publish them.
-  $isNewsBriefing = $raw -match 'categories:\s*\[\s*"부록\. AI 뉴스 브리핑"\s*\]'
+  # "부록. AI 뉴스 브리핑" via \uXXXX escapes: PS5.1 reads this BOM-less file
+  # as ANSI, so a raw Korean literal is mojibake at runtime and the match
+  # silently never fires (that left the 07-10..07-12 briefings stuck as drafts).
+  $isNewsBriefing = $raw -match 'categories:\s*\[\s*"\uBD80\uB85D\. AI \uB274\uC2A4 \uBE0C\uB9AC\uD551"\s*\]'
   if ($isNewsBriefing) {
     if ($raw -match 'draft:\s*true') { $raw = $raw -replace 'draft:\s*true', 'draft: false' }
   } else {
