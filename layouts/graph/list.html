@@ -328,15 +328,22 @@
             return Object.assign({ index: index }, item);
         });
         const center = { x: width / 2, y: height / 2 };
+        // Start from a collision-free grid. The force pass below then bends
+        // related nodes together without making the whole graph collapse into
+        // a single central pile on the first render.
+        const columns = Math.max(1, Math.ceil(Math.sqrt(nodes.length * width / height)));
+        const rows = Math.max(1, Math.ceil(nodes.length / columns));
+        const gapX = Math.min(112, (width - 110) / Math.max(1, columns - 1));
+        const gapY = Math.min(92, (height - 110) / Math.max(1, rows - 1));
         nodes.forEach(function (node, index) {
-            const angle = index * 2.39996;
-            const radius = 120 + (index % 5) * 45;
+            const column = index % columns;
+            const row = Math.floor(index / columns);
             positions[node.id] = {
-                x: center.x + Math.cos(angle) * radius,
-                y: center.y + Math.sin(angle) * radius * 0.72
+                x: center.x + (column - (columns - 1) / 2) * gapX,
+                y: center.y + (row - (rows - 1) / 2) * gapY
             };
         });
-        for (let tick = 0; tick < 150; tick += 1) {
+        for (let tick = 0; tick < 220; tick += 1) {
             const force = {};
             nodes.forEach(function (node) { force[node.id] = { x: 0, y: 0 }; });
             for (let i = 0; i < nodes.length; i += 1) {
@@ -346,7 +353,7 @@
                     let dx = a.x - b.x;
                     let dy = a.y - b.y;
                     const distance = Math.max(24, Math.sqrt(dx * dx + dy * dy));
-                    const repulsion = 2300 / (distance * distance);
+                    const repulsion = 5200 / (distance * distance);
                     dx /= distance;
                     dy /= distance;
                     force[nodes[i].id].x += dx * repulsion;
@@ -363,7 +370,7 @@
                 let dx = b.x - a.x;
                 let dy = b.y - a.y;
                 const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-                const spring = (distance - 115) * 0.003 * Math.min(edge.score, 8);
+                const spring = (distance - 145) * 0.0025 * Math.min(edge.score, 8);
                 dx /= distance;
                 dy /= distance;
                 force[aNode.id].x += dx * spring;

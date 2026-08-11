@@ -508,8 +508,6 @@ article.main-article .article-title {
 .graph-node {
     cursor: pointer;
     outline: none;
-    transform-box: fill-box;
-    transform-origin: center;
     animation: graph-node-in .48s cubic-bezier(.22, .8, .28, 1) var(--node-delay, 0ms) both;
     transition: opacity .2s ease;
 }
@@ -845,8 +843,8 @@ article.main-article .article-title {
 }
 
 @keyframes graph-node-in {
-    from { opacity: 0; transform: scale(.72); }
-    to { opacity: 1; transform: scale(1); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes graph-edge-in {
