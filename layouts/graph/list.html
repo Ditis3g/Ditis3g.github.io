@@ -45,6 +45,19 @@
     <div class="graph-workspace">
         <div class="graph-stage-wrap">
             <div class="graph-stage" id="graph-stage">
+                <div class="graph-stage-topbar">
+                    <div class="graph-stage-status" aria-live="polite">
+                        <span class="graph-stage-status-dot"></span>
+                        <span id="graph-visible-count">전체 글을 표시합니다</span>
+                    </div>
+                    <div class="graph-controls" aria-label="그래프 조작">
+                        <button type="button" class="graph-control" data-graph-action="zoom-out" aria-label="축소">−</button>
+                        <span class="graph-zoom-value" id="graph-zoom-value">100%</span>
+                        <button type="button" class="graph-control" data-graph-action="zoom-in" aria-label="확대">+</button>
+                        <span class="graph-control-divider" aria-hidden="true"></span>
+                        <button type="button" class="graph-control graph-control-reset" data-graph-action="reset" aria-label="그래프 위치 초기화">↺<span>초기화</span></button>
+                    </div>
+                </div>
                 <svg id="graph-svg" viewBox="0 0 1000 680" role="img" aria-label="게시글 연결 그래프">
                     <g id="graph-viewport">
                         <g id="graph-edges"></g>
@@ -56,7 +69,7 @@
                     <strong></strong>
                     <span></span>
                 </div>
-                <div class="graph-stage-help">스크롤로 확대·축소 · 노드를 클릭해 연결된 글 확인</div>
+                <div class="graph-stage-help"><span>스크롤</span> 확대·축소 <i>·</i> <span>드래그</span> 이동 <i>·</i> 노드 클릭</div>
             </div>
             <div class="graph-legend" id="graph-legend" aria-label="카테고리 범례"></div>
         </div>
@@ -91,6 +104,9 @@
     const search = document.getElementById('graph-search');
     const empty = document.getElementById('graph-empty');
     const hoverInfo = document.getElementById('graph-hover-info');
+    const stage = document.getElementById('graph-stage');
+    const visibleCountLabel = document.getElementById('graph-visible-count');
+    const zoomValue = document.getElementById('graph-zoom-value');
     const ns = 'http://www.w3.org/2000/svg';
     const width = 1000;
     const height = 680;
@@ -108,30 +124,67 @@
     let dragMoved = false;
     let suppressClick = false;
     let panStart = null;
+    let zoomAnimation = null;
 
     function applyZoom() {
         viewport.setAttribute('transform', 'translate(' + zoom.x + ' ' + zoom.y + ') scale(' + zoom.scale + ')');
+        zoomValue.textContent = Math.round(zoom.scale * 100) + '%';
+    }
+
+    function pointerInSvg(event) {
+        const bounds = svg.getBoundingClientRect();
+        return {
+            x: ((event.clientX - bounds.left) / bounds.width) * width,
+            y: ((event.clientY - bounds.top) / bounds.height) * height
+        };
+    }
+
+    function animateZoom(nextScale, pointer, duration) {
+        const clampedScale = Math.max(.65, Math.min(3.5, nextScale));
+        const anchor = pointer || { x: width / 2, y: height / 2 };
+        const ratio = clampedScale / zoom.scale;
+        const target = {
+            scale: clampedScale,
+            x: anchor.x - (anchor.x - zoom.x) * ratio,
+            y: anchor.y - (anchor.y - zoom.y) * ratio
+        };
+        if (zoomAnimation) cancelAnimationFrame(zoomAnimation);
+        const start = { scale: zoom.scale, x: zoom.x, y: zoom.y };
+        const started = performance.now();
+        const ease = function (value) { return 1 - Math.pow(1 - value, 3); };
+        function step(now) {
+            const progress = Math.min(1, (now - started) / (duration || 180));
+            const eased = ease(progress);
+            zoom.scale = start.scale + (target.scale - start.scale) * eased;
+            zoom.x = start.x + (target.x - start.x) * eased;
+            zoom.y = start.y + (target.y - start.y) * eased;
+            applyZoom();
+            if (progress < 1) zoomAnimation = requestAnimationFrame(step);
+            else zoomAnimation = null;
+        }
+        zoomAnimation = requestAnimationFrame(step);
+    }
+
+    function resetView() {
+        animateZoom(1, { x: width / 2, y: height / 2 }, 260);
     }
 
     svg.addEventListener('wheel', function (event) {
         event.preventDefault();
-        const bounds = svg.getBoundingClientRect();
-        const pointer = {
-            x: ((event.clientX - bounds.left) / bounds.width) * width,
-            y: ((event.clientY - bounds.top) / bounds.height) * height
-        };
-        const factor = event.deltaY < 0 ? 1.12 : 0.89;
-        const nextScale = Math.max(.65, Math.min(3.5, zoom.scale * factor));
-        const ratio = nextScale / zoom.scale;
-        zoom.x = pointer.x - (pointer.x - zoom.x) * ratio;
-        zoom.y = pointer.y - (pointer.y - zoom.y) * ratio;
-        zoom.scale = nextScale;
-        applyZoom();
+        const factor = event.deltaY < 0 ? 1.14 : 0.88;
+        animateZoom(zoom.scale * factor, pointerInSvg(event), 120);
     }, { passive: false });
+
+    svg.addEventListener('dblclick', function (event) {
+        if (event.target.closest && event.target.closest('.graph-node')) return;
+        event.preventDefault();
+        animateZoom(zoom.scale * 1.25, pointerInSvg(event), 220);
+    });
 
     svg.addEventListener('pointerdown', function (event) {
         if (event.button !== 0) return;
         const bounds = svg.getBoundingClientRect();
+        event.preventDefault();
         panStart = {
             pointerX: event.clientX,
             pointerY: event.clientY,
@@ -152,7 +205,7 @@
             isPanning = true;
             dragMoved = true;
             svg.setPointerCapture(event.pointerId);
-            document.getElementById('graph-stage').classList.add('is-panning');
+            stage.classList.add('is-panning');
         }
         if (!isPanning) return;
         zoom.x = panStart.x + dx * panStart.scaleX;
@@ -166,12 +219,41 @@
         isPanning = false;
         suppressClick = dragMoved;
         panStart = null;
-        document.getElementById('graph-stage').classList.remove('is-panning');
+        stage.classList.remove('is-panning');
         if (wasPanning && event && svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
     }
 
     svg.addEventListener('pointerup', stopPanning);
     svg.addEventListener('pointercancel', stopPanning);
+
+    svg.addEventListener('click', function (event) {
+        if (suppressClick) {
+            suppressClick = false;
+            return;
+        }
+        if (event.target === svg) {
+            selectedId = null;
+            renderDetail(null);
+            draw();
+        }
+    });
+
+    document.querySelectorAll('[data-graph-action]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const action = button.dataset.graphAction;
+            if (action === 'zoom-in') animateZoom(zoom.scale * 1.25, null, 220);
+            if (action === 'zoom-out') animateZoom(zoom.scale * .8, null, 220);
+            if (action === 'reset') resetView();
+        });
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && selectedId) {
+            selectedId = null;
+            renderDetail(null);
+            draw();
+        }
+    });
 
     data.forEach(function (item) {
         (item.categories || []).forEach(function (category) {
@@ -196,6 +278,7 @@
         button.addEventListener('click', function () {
             activeCategory = value;
             selectedId = null;
+            renderDetail(null);
             Array.prototype.forEach.call(filters.children, function (item) {
                 item.classList.toggle('is-active', item.dataset.category === activeCategory);
             });
@@ -323,19 +406,20 @@
     }
 
     function updateHoverStyles() {
-        const related = hoveredId ? connectedIds(hoveredId) : new Set();
+        const focusId = hoveredId || selectedId;
+        const related = focusId ? connectedIds(focusId) : new Set();
         nodeLayer.querySelectorAll('.graph-node').forEach(function (element) {
-            const relatedToHover = !hoveredId || element.dataset.nodeId === hoveredId || related.has(element.dataset.nodeId);
-            element.classList.toggle('is-related', Boolean(hoveredId) && relatedToHover);
-            element.classList.toggle('is-dimmed', Boolean(hoveredId) && !relatedToHover);
+            const relatedToFocus = !focusId || element.dataset.nodeId === focusId || related.has(element.dataset.nodeId);
+            element.classList.toggle('is-related', Boolean(focusId) && relatedToFocus);
+            element.classList.toggle('is-dimmed', Boolean(focusId) && !relatedToFocus);
             element.classList.toggle('is-hovered', Boolean(hoveredId) && element.dataset.nodeId === hoveredId);
         });
         edgeLayer.querySelectorAll('.graph-edge').forEach(function (element) {
-            const relatedToHover = !hoveredId ||
-                element.dataset.edgeA === hoveredId ||
-                element.dataset.edgeB === hoveredId;
-            element.classList.toggle('is-highlight', Boolean(hoveredId) && relatedToHover);
-            element.classList.toggle('is-dimmed', Boolean(hoveredId) && !relatedToHover);
+            const relatedToFocus = !focusId ||
+                element.dataset.edgeA === focusId ||
+                element.dataset.edgeB === focusId;
+            element.classList.toggle('is-highlight', Boolean(focusId) && relatedToFocus);
+            element.classList.toggle('is-dimmed', Boolean(focusId) && !relatedToFocus);
         });
     }
 
@@ -350,8 +434,8 @@
 
     function showHoverInfo(node, event) {
         const count = connectedIds(node.id).size;
-        hoverInfo.querySelector('strong').textContent = '연결된 글 ' + count + '개';
-        hoverInfo.querySelector('span').textContent = count ? '연결된 노드가 강조 표시됩니다' : '연결된 노드가 없습니다';
+        hoverInfo.querySelector('strong').textContent = node.title;
+        hoverInfo.querySelector('span').textContent = '연결된 글 ' + count + '개';
         hoverInfo.hidden = false;
         moveHoverInfo(event);
     }
@@ -371,22 +455,32 @@
         const relatedHtml = related.length
             ? related.map(function (item) { return '<li><a href="' + item.url + '">' + item.title + '</a></li>'; }).join('')
             : '<li class="graph-related-empty">현재 필터에서 연결된 글이 없습니다.</li>';
-        detail.innerHTML = '<div class="graph-detail-top"><span class="graph-detail-dot" style="background:' + categoryColor[category] + '"></span><span>' + shortCategory(category) + '</span><time>' + node.date + '</time></div>' +
+        detail.innerHTML = '<button type="button" class="graph-detail-close" aria-label="선택 해제">×</button><div class="graph-detail-top"><span class="graph-detail-dot" style="background:' + categoryColor[category] + '"></span><span>' + shortCategory(category) + '</span><time>' + node.date + '</time></div>' +
             '<h2>' + node.title + '</h2><p>' + (node.summary || '요약이 등록되지 않은 글입니다.') + '</p>' +
             '<div class="graph-tags">' + tags + '</div><a class="graph-read-link" href="' + node.url + '">글 읽기 <span>↗</span></a>' +
             '<div class="graph-related"><h3>연결된 글 <em>' + related.length + '</em></h3><ul>' + relatedHtml + '</ul></div>';
+        detail.querySelector('.graph-detail-close').addEventListener('click', function () {
+            selectedId = null;
+            renderDetail(null);
+            draw();
+        });
+        detail.classList.remove('is-updating');
+        requestAnimationFrame(function () { detail.classList.add('is-updating'); });
     }
 
     function draw() {
         edgeLayer.replaceChildren();
         nodeLayer.replaceChildren();
-        let visibleCount = 0;
+        let visibleNodes = 0;
         const visible = {};
         nodes.forEach(function (node) {
             visible[node.id] = isVisible(node);
-            if (visible[node.id]) visibleCount += 1;
+            if (visible[node.id]) visibleNodes += 1;
         });
-        empty.hidden = visibleCount > 0;
+        empty.hidden = visibleNodes > 0;
+        visibleCountLabel.textContent = visibleNodes === nodes.length
+            ? '전체 글 ' + visibleNodes + '개'
+            : visibleNodes + '개 글 표시 중';
         edges.forEach(function (edge) {
             const aNode = nodes[edge.a];
             const bNode = nodes[edge.b];
@@ -399,6 +493,7 @@
                 'data-edge-a': aNode.id,
                 'data-edge-b': bNode.id
             });
+            line.style.animationDelay = Math.min(320, edgeLayer.children.length * 4) + 'ms';
             edgeLayer.appendChild(line);
         });
         nodes.forEach(function (node) {
@@ -421,13 +516,15 @@
             group.appendChild(circle);
             group.appendChild(label);
             group.appendChild(title);
+            group.style.setProperty('--node-delay', Math.min(420, node.index * 7) + 'ms');
             group.addEventListener('click', function () {
                 if (suppressClick) {
                     suppressClick = false;
                     return;
                 }
-                selectedId = node.id;
+                selectedId = selectedId === node.id ? null : node.id;
                 renderDetail(node);
+                if (!selectedId) renderDetail(null);
                 draw();
             });
             group.addEventListener('mouseenter', function (event) {

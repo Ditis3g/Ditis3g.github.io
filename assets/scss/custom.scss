@@ -177,7 +177,7 @@ article.main-article .article-title {
     align-items: center;
     flex-wrap: wrap;
     gap: .65rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.15rem;
 }
 
 .graph-filter-label {
@@ -196,7 +196,8 @@ article.main-article .article-title {
     cursor: pointer;
     font: inherit;
     font-size: .82rem;
-    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, .04);
+    transition: transform .18s ease, background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 
 .graph-filter:hover,
@@ -204,6 +205,8 @@ article.main-article .article-title {
     border-color: var(--accent-color);
     background: var(--accent-color);
     color: var(--accent-color-text);
+    box-shadow: 0 5px 12px color-mix(in srgb, var(--accent-color) 22%, transparent);
+    transform: translateY(-1px);
 }
 
 .graph-search {
@@ -256,6 +259,111 @@ article.main-article .article-title {
     background-image: radial-gradient(var(--card-separator-color) .75px, transparent .75px);
     background-size: 18px 18px;
     cursor: grab;
+    isolation: isolate;
+    user-select: none;
+}
+
+.graph-stage::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent-color) 7%, transparent), transparent 45%);
+    content: "";
+    pointer-events: none;
+}
+
+.graph-stage-topbar {
+    position: absolute;
+    z-index: 3;
+    top: .85rem;
+    right: .85rem;
+    left: .85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    pointer-events: none;
+}
+
+.graph-stage-status,
+.graph-controls {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.05rem;
+    border: 1px solid color-mix(in srgb, var(--graph-border) 82%, transparent);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--card-background) 86%, transparent);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, .08);
+    backdrop-filter: blur(12px);
+    pointer-events: auto;
+}
+
+.graph-stage-status {
+    gap: .45rem;
+    padding: 0 .7rem;
+    color: var(--graph-muted);
+    font-size: .72rem;
+}
+
+.graph-stage-status-dot {
+    width: .45rem;
+    height: .45rem;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 3px color-mix(in srgb, #22c55e 16%, transparent);
+}
+
+.graph-controls {
+    gap: .1rem;
+    padding: .2rem;
+}
+
+.graph-control {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.8rem;
+    height: 1.65rem;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--card-text-color-main);
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: background-color .16s ease, color .16s ease, transform .16s ease;
+}
+
+.graph-control:hover,
+.graph-control:focus-visible {
+    background: var(--card-background-selected);
+    color: var(--accent-color);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.graph-zoom-value {
+    min-width: 3.1rem;
+    color: var(--graph-muted);
+    font-size: .68rem;
+    text-align: center;
+}
+
+.graph-control-divider {
+    width: 1px;
+    height: 1rem;
+    margin: 0 .18rem;
+    background: var(--graph-border);
+}
+
+.graph-control-reset {
+    gap: .28rem;
+    padding: 0 .45rem;
+    font-size: .9rem;
+}
+
+.graph-control-reset span {
+    font-size: .68rem;
 }
 
 /* Book chapter visualizations */
@@ -371,13 +479,16 @@ article.main-article .article-title {
     display: block;
     width: 100%;
     height: 590px;
+    touch-action: none;
 }
 
 .graph-edge {
     stroke: var(--card-text-color-tertiary);
     stroke-width: 1.2;
     opacity: .34;
-    transition: opacity .15s ease;
+    transform-origin: center;
+    transition: opacity .2s ease, stroke .2s ease, stroke-width .2s ease;
+    animation: graph-edge-in .5s ease both;
 }
 
 .graph-edge.is-muted {
@@ -397,12 +508,16 @@ article.main-article .article-title {
 .graph-node {
     cursor: pointer;
     outline: none;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: graph-node-in .48s cubic-bezier(.22, .8, .28, 1) var(--node-delay, 0ms) both;
+    transition: opacity .2s ease;
 }
 
 .graph-node circle {
     stroke: var(--card-background);
     stroke-width: 3;
-    transition: stroke-width .15s ease, filter .15s ease, opacity .15s ease;
+    transition: r .22s ease, stroke-width .18s ease, filter .18s ease, opacity .18s ease;
 }
 
 .graph-node text {
@@ -414,7 +529,7 @@ article.main-article .article-title {
 
 .graph-node:hover circle,
 .graph-node:focus circle {
-    filter: brightness(.82);
+    filter: brightness(.86) drop-shadow(0 4px 7px rgba(15, 23, 42, .2));
     stroke-width: 5;
 }
 
@@ -436,6 +551,7 @@ article.main-article .article-title {
 .graph-node.is-hovered circle {
     stroke: var(--accent-color);
     stroke-width: 6;
+    filter: drop-shadow(0 0 0.45rem color-mix(in srgb, var(--accent-color) 48%, transparent));
 }
 
 .graph-node.is-dimmed {
@@ -445,6 +561,7 @@ article.main-article .article-title {
 .graph-node.is-muted {
     opacity: .16;
     pointer-events: none;
+    animation: none;
 }
 
 .graph-stage-help {
@@ -454,6 +571,17 @@ article.main-article .article-title {
     color: var(--graph-muted);
     font-size: .75rem;
     opacity: .78;
+}
+
+.graph-stage-help span {
+    color: var(--card-text-color-main);
+    font-weight: 600;
+}
+
+.graph-stage-help i {
+    margin: 0 .22rem;
+    color: var(--card-text-color-tertiary);
+    font-style: normal;
 }
 
 .graph-empty {
@@ -476,7 +604,8 @@ article.main-article .article-title {
     display: flex;
     flex-direction: column;
     gap: .12rem;
-    min-width: 160px;
+    max-width: 245px;
+    min-width: 170px;
     border: 1px solid var(--graph-border);
     border-radius: 9px;
     padding: .55rem .7rem;
@@ -484,6 +613,8 @@ article.main-article .article-title {
     box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
     pointer-events: none;
     backdrop-filter: blur(8px);
+    transform: translateY(-2px);
+    animation: graph-tooltip-in .16s ease both;
 }
 
 .graph-hover-info[hidden] {
@@ -493,6 +624,7 @@ article.main-article .article-title {
 .graph-hover-info strong {
     color: var(--card-text-color-main);
     font-size: .78rem;
+    line-height: 1.35;
 }
 
 .graph-hover-info span {
@@ -522,11 +654,45 @@ article.main-article .article-title {
 }
 
 .graph-detail {
+    position: relative;
     min-width: 0;
     border: 1px solid var(--graph-border);
     border-radius: 18px;
     padding: 1.25rem;
     background: var(--card-background);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, .05);
+    transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.graph-detail.is-updating {
+    border-color: color-mix(in srgb, var(--accent-color) 38%, var(--graph-border));
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 10%, transparent);
+}
+
+.graph-detail-close {
+    position: absolute;
+    top: .8rem;
+    right: .8rem;
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--card-background-selected);
+    color: var(--graph-muted);
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: background-color .16s ease, color .16s ease, transform .16s ease;
+}
+
+.graph-detail-close:hover,
+.graph-detail-close:focus-visible {
+    background: var(--accent-color);
+    color: var(--accent-color-text);
+    outline: none;
+    transform: rotate(90deg);
 }
 
 .graph-detail-empty {
@@ -673,6 +839,29 @@ article.main-article .article-title {
     font-size: .76rem;
 }
 
+@keyframes graph-node-in {
+    from { opacity: 0; transform: scale(.72); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes graph-edge-in {
+    from { opacity: 0; }
+    to { opacity: .34; }
+}
+
+@keyframes graph-tooltip-in {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .graph-node,
+    .graph-edge,
+    .graph-hover-info {
+        animation: none;
+    }
+}
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -707,6 +896,23 @@ article.main-article .article-title {
     .graph-search {
         flex-basis: 100%;
         margin-left: 0;
+    }
+
+    .graph-stage-topbar {
+        top: .65rem;
+        right: .65rem;
+        left: .65rem;
+    }
+
+    .graph-stage-status {
+        max-width: 8.8rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .graph-control-reset span {
+        display: none;
     }
 
     .graph-stage,
