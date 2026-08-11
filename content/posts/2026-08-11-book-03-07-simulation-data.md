@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["시뮬레이션", "로봇 데이터", "강화학습"]
 categories: ["3부. 로봇은 어떻게 배우고 움직이는가"]
-book_weight: 190
+book_weight: 200
 book_chapter: "시뮬레이션은 경험을 확장하는 데이터 공장이다"
 ---
 

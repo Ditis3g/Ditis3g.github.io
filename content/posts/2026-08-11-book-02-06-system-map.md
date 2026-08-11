@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["피지컬 AI", "센서", "로봇 시스템"]
 categories: ["2부. 피지컬 AI는 어떻게 배우고 움직이는가"]
-book_weight: 120
+book_weight: 125
 book_chapter: "피지컬 AI 시스템 전체 지도"
 ---
 

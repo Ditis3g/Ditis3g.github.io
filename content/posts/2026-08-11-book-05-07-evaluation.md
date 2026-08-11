@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["시뮬레이션", "평가", "로봇 데이터"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 370
+book_weight: 560
 book_chapter: "시뮬레이션은 테스트장이자 데이터 공장이다"
 ---
 

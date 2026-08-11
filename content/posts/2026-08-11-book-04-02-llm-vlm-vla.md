@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["LLM", "VLM", "VLA"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 220
+book_weight: 310
 book_chapter: "LLM에서 VLM, 그리고 VLA로"
 ---
 

@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["Sim-to-Real", "시뮬레이션", "현장 적용"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 350
+book_weight: 540
 book_chapter: "세 가지 전략은 중간에서 만난다"
 ---
 

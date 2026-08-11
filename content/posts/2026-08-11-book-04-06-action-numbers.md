@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["VLA", "행동 표현", "로봇 제어"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 260
+book_weight: 350
 book_chapter: "행동은 문장이 아니라 숫자다"
 ---
 

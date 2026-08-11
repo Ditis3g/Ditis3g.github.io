@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["모방학습", "정책", "로봇 학습"]
 categories: ["3부. 로봇은 어떻게 배우고 움직이는가"]
-book_weight: 150
+book_weight: 160
 book_chapter: "모방학습 — 시범에서 정책으로"
 ---
 

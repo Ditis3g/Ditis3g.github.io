@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["Sim-to-Real", "Reality Gap", "시뮬레이션"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 310
+book_weight: 500
 book_chapter: "시뮬레이션과 현실의 차이 — Reality Gap"
 ---
 

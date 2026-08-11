@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["VLA", "한계", "피지컬 AI"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 300
+book_weight: 390
 book_chapter: "VLA가 할 수 있는 일과 할 수 없는 일"
 ---
 

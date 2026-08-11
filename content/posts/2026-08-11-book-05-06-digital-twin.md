@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["디지털 트윈", "생성형 시뮬레이션", "Sim-to-Real"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 360
+book_weight: 550
 book_chapter: "디지털 트윈과 생성형 시뮬레이션"
 ---
 

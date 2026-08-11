@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["VLA", "RT-1", "RT-2", "OpenVLA"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 250
+book_weight: 340
 book_chapter: "RT-1에서 RT-2, OpenVLA, π0까지"
 ---
 

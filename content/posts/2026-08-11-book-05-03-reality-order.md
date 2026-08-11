@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["현장 설계", "Sim-to-Real", "자동화"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 330
+book_weight: 520
 book_chapter: "현실을 모델이 다루기 쉽게 만드는 방법"
 ---
 

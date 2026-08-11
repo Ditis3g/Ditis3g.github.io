@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["VLA", "Action Token", "Diffusion", "Flow"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 270
+book_weight: 360
 book_chapter: "Action Token, 연속 행동, Diffusion과 Flow"
 ---
 

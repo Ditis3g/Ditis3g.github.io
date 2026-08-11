@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["도메인 랜덤화", "Sim-to-Real", "강건성"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 340
+book_weight: 530
 book_chapter: "도메인 랜덤화와 강건한 정책"
 ---
 

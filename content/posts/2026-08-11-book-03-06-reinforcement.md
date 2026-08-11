@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["강화학습", "정책", "로봇 학습"]
 categories: ["3부. 로봇은 어떻게 배우고 움직이는가"]
-book_weight: 180
+book_weight: 190
 book_chapter: "강화학습은 어떤 빈틈을 메우는가"
 ---
 

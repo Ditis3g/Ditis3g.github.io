@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["현장 적용", "Sim-to-Real", "운영"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 400
+book_weight: 590
 book_chapter: "현장은 끝이 아니라 학습의 시작이다"
 ---
 
