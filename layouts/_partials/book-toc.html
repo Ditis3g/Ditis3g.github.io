@@ -18,6 +18,7 @@
     .book-fold-all { display: block; padding: 10px 10px 0; font-size: 14px; color: var(--card-text-color-secondary); text-decoration: none; }
     .book-fold-all:hover { color: var(--accent-color); }
     .book-hidden { display: none; }
+    .book-prologue { border: 1px solid var(--accent-color); }
     @media (max-width: 520px) {
         .book-part-name { font-size: 19px; }
         .book-chapter { flex-direction: column; gap: 2px; padding: 11px 8px; }
@@ -29,11 +30,27 @@
      새 글은 categories(부) + book_weight 만 있으면 됨. book_chapter는 짧은 제목용 선택 필드. */}}
 {{- $withWeight := where (where site.RegularPages "Section" "posts") "Params.book_weight" "!=" nil -}}
 {{- $blogMaking := sort (where $withWeight "Params.categories" "intersect" (slice "부록. 블로그 메이킹")) "Params.book_weight" -}}
-{{- $chapters := sort (complement $blogMaking $withWeight) "Params.book_weight" -}}
+{{- $bookPages := complement $blogMaking $withWeight -}}
+{{- $prologue := sort (where $bookPages "Params.book_kind" "eq" "prologue") "Params.book_weight" -}}
+{{- $chapters := sort (complement $prologue $bookPages) "Params.book_weight" -}}
 {{- $curCat := "" -}}
 {{- $mainNum := 0 -}}
 {{- $appNum := 0 -}}
 <div class="book-toc">
+    {{- with $prologue }}
+    <section class="book-part book-prologue">
+        <div class="book-part-head">
+            <span class="book-part-badge">프롤로그</span>
+            <h2 class="book-part-name">화면 밖으로 나온 AI</h2>
+        </div>
+        {{- range . }}
+        <a class="book-chapter" href="{{ .RelPermalink }}">
+            <span class="book-chapter-num">서문</span>
+            <span class="book-chapter-name">{{ .Params.book_chapter | default .Title }}{{ if .Draft }}<span class="book-badge">초안</span>{{ end }}</span>
+        </a>
+        {{- end }}
+    </section>
+    {{- end }}
     {{- range $chapters -}}
         {{- $cat := index .Params.categories 0 -}}
         {{- if ne $cat $curCat -}}

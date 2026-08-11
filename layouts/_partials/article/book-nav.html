@@ -1,5 +1,7 @@
 {{- if .Params.book_weight -}}
-{{- $chapters := sort (where (where site.RegularPages "Section" "posts") "Params.book_weight" "!=" nil) "Params.book_weight" -}}
+{{- $withWeight := where (where site.RegularPages "Section" "posts") "Params.book_weight" "!=" nil -}}
+{{- $blogMaking := where $withWeight "Params.categories" "intersect" (slice "부록. 블로그 메이킹") -}}
+{{- $chapters := sort (complement $blogMaking $withWeight) "Params.book_weight" -}}
 {{- $prev := false -}}
 {{- $next := false -}}
 {{- range $i, $p := $chapters -}}

@@ -4,7 +4,7 @@ date: 2026-07-23
 draft: false
 tags: ["Physical AI", "Robot Learning", "RT-Trajectory", "Task Generalization"]
 categories: ["부록. 최전선 논문 읽기"]
-book_weight: 90
+book_weight: 1030
 book_chapter: "RT-Trajectory 읽기 — 궤적 스케치로 새 동작 가르치기"
 ---
 
