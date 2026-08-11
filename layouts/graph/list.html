@@ -5,6 +5,7 @@
 {{- $excludedCategories := slice "부록. 최전선 논문 읽기" "부록. 블로그 메이킹" "부록. AI 뉴스 브리핑" -}}
 {{- $excludedPosts := where $allPosts "Params.categories" "intersect" $excludedCategories -}}
 {{- $posts := complement $excludedPosts $allPosts -}}
+{{- $posts = where $posts "Title" "!=" "" -}}
 {{- $items := slice -}}
 {{- range $posts -}}
     {{- $tags := .Params.tags | default (slice) -}}
@@ -39,6 +40,7 @@
             <span class="sr-only">글 검색</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
             <input id="graph-search" type="search" placeholder="글 제목이나 태그 검색" autocomplete="off">
+            <button type="button" class="graph-search-clear" id="graph-search-clear" aria-label="검색어 지우기" hidden>×</button>
         </label>
     </div>
 
@@ -56,9 +58,39 @@
                         <button type="button" class="graph-control" data-graph-action="zoom-in" aria-label="확대">+</button>
                         <span class="graph-control-divider" aria-hidden="true"></span>
                         <button type="button" class="graph-control graph-control-reset" data-graph-action="reset" aria-label="그래프 위치 초기화">↺<span>초기화</span></button>
+                        <button type="button" class="graph-control" data-graph-action="settings" aria-label="그래프 설정" aria-expanded="false">⚙</button>
                     </div>
                 </div>
+                <section class="graph-settings" id="graph-settings" hidden aria-label="그래프 설정">
+                    <div class="graph-settings-header">
+                        <strong>그래프 설정</strong>
+                        <button type="button" class="graph-settings-close" data-graph-action="settings" aria-label="설정 닫기">×</button>
+                    </div>
+                    <div class="graph-settings-group">
+                        <span class="graph-settings-label">필터</span>
+                        <label><input type="checkbox" id="graph-show-orphans" checked> 연결 없는 글 표시</label>
+                        <label><input type="checkbox" id="graph-show-labels"> 노드 이름 항상 표시</label>
+                        <label><input type="checkbox" id="graph-show-arrows"> 연결 방향 표시</label>
+                    </div>
+                    <div class="graph-settings-group graph-settings-ranges">
+                        <label for="graph-node-size">노드 크기 <output id="graph-node-size-value">100%</output></label>
+                        <input type="range" id="graph-node-size" min="70" max="145" value="100" step="5">
+                        <label for="graph-link-thickness">연결선 두께 <output id="graph-link-thickness-value">100%</output></label>
+                        <input type="range" id="graph-link-thickness" min="60" max="180" value="100" step="5">
+                    </div>
+                    <div class="graph-settings-group graph-settings-ranges">
+                        <label for="graph-center-force">중심력 <output id="graph-center-force-value">기본</output></label>
+                        <input type="range" id="graph-center-force" min="0" max="100" value="25" step="5">
+                        <label for="graph-repel-force">반발력 <output id="graph-repel-force-value">기본</output></label>
+                        <input type="range" id="graph-repel-force" min="40" max="180" value="100" step="5">
+                    </div>
+                </section>
                 <svg id="graph-svg" viewBox="0 0 1000 680" role="img" aria-label="게시글 연결 그래프">
+                    <defs>
+                        <marker id="graph-arrow-marker" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L7,3.5 L0,7 z"></path>
+                        </marker>
+                    </defs>
                     <g id="graph-viewport">
                         <g id="graph-edges"></g>
                         <g id="graph-nodes"></g>
@@ -70,6 +102,12 @@
                     <span></span>
                 </div>
                 <div class="graph-stage-help"><span>스크롤</span> 확대·축소 <i>·</i> <span>빈 공간 드래그</span> 이동 <i>·</i> <span>노드 드래그</span> 배치</div>
+                <div class="graph-context-menu" id="graph-context-menu" hidden role="menu">
+                    <button type="button" data-context-action="select" role="menuitem">노드 선택</button>
+                    <button type="button" data-context-action="read" role="menuitem">글 읽기</button>
+                    <button type="button" data-context-action="new-tab" role="menuitem">새 탭에서 열기</button>
+                    <button type="button" data-context-action="copy" role="menuitem">글 링크 복사</button>
+                </div>
             </div>
             <div class="graph-legend" id="graph-legend" aria-label="카테고리 범례"></div>
         </div>
@@ -104,9 +142,12 @@
     const search = document.getElementById('graph-search');
     const empty = document.getElementById('graph-empty');
     const hoverInfo = document.getElementById('graph-hover-info');
+    const searchClear = document.getElementById('graph-search-clear');
     const stage = document.getElementById('graph-stage');
     const visibleCountLabel = document.getElementById('graph-visible-count');
     const zoomValue = document.getElementById('graph-zoom-value');
+    const settings = document.getElementById('graph-settings');
+    const contextMenu = document.getElementById('graph-context-menu');
     const ns = 'http://www.w3.org/2000/svg';
     const width = 1000;
     const height = 680;
@@ -120,6 +161,17 @@
     let velocities = {};
     let nodes = [];
     let edges = [];
+    const options = {
+        showOrphans: true,
+        showLabels: false,
+        showArrows: false,
+        nodeScale: 1,
+        linkScale: 1,
+        centerForce: .0025,
+        repelForce: 5200,
+        linkDistance: 145
+    };
+    let contextNode = null;
     const zoom = { scale: 1, x: 0, y: 0 };
     let isPanning = false;
     let dragMoved = false;
@@ -135,6 +187,14 @@
     }
 
     function pointerInSvg(event) {
+        const matrix = svg.getScreenCTM();
+        if (matrix) {
+            const point = svg.createSVGPoint();
+            point.x = event.clientX;
+            point.y = event.clientY;
+            const local = point.matrixTransform(matrix.inverse());
+            return { x: local.x, y: local.y };
+        }
         const bounds = svg.getBoundingClientRect();
         return {
             x: ((event.clientX - bounds.left) / bounds.width) * width,
@@ -211,6 +271,41 @@
         animateZoom(1, { x: width / 2, y: height / 2 }, 260);
     }
 
+    function panBy(x, y) {
+        animateTransform({ scale: zoom.scale, x: zoom.x + x, y: zoom.y + y }, 140);
+    }
+
+    function toggleSettings(force) {
+        const nextHidden = typeof force === 'boolean' ? !force : !settings.hidden;
+        settings.hidden = nextHidden;
+        document.querySelectorAll('[data-graph-action="settings"]').forEach(function (button) {
+            button.setAttribute('aria-expanded', String(!nextHidden));
+        });
+    }
+
+    function closeContextMenu() {
+        contextMenu.hidden = true;
+        contextNode = null;
+    }
+
+    function showContextMenu(node, event) {
+        const bounds = stage.getBoundingClientRect();
+        const menuWidth = 170;
+        const menuHeight = 176;
+        contextNode = node;
+        contextMenu.style.left = Math.min(bounds.width - menuWidth - 12, Math.max(12, event.clientX - bounds.left + 8)) + 'px';
+        contextMenu.style.top = Math.min(bounds.height - menuHeight - 12, Math.max(52, event.clientY - bounds.top + 8)) + 'px';
+        contextMenu.hidden = false;
+    }
+
+    function selectNode(node) {
+        if (!node) return;
+        selectedId = node.id;
+        renderDetail(node);
+        draw();
+        focusNode(node);
+    }
+
     svg.addEventListener('wheel', function (event) {
         event.preventDefault();
         const factor = event.deltaY < 0 ? 1.14 : 0.88;
@@ -225,15 +320,15 @@
 
     svg.addEventListener('pointerdown', function (event) {
         if (event.button !== 0) return;
-        const bounds = svg.getBoundingClientRect();
+        const matrix = svg.getScreenCTM();
         event.preventDefault();
         panStart = {
             pointerX: event.clientX,
             pointerY: event.clientY,
             x: zoom.x,
             y: zoom.y,
-            scaleX: width / bounds.width,
-            scaleY: height / bounds.height
+            scaleX: matrix ? 1 / Math.abs(matrix.a) : width / svg.getBoundingClientRect().width,
+            scaleY: matrix ? 1 / Math.abs(matrix.d) : height / svg.getBoundingClientRect().height
         };
         dragMoved = false;
         isPanning = false;
@@ -309,15 +404,92 @@
             if (action === 'zoom-in') animateZoom(zoom.scale * 1.25, null, 220);
             if (action === 'zoom-out') animateZoom(zoom.scale * .8, null, 220);
             if (action === 'reset') resetView();
+            if (action === 'settings') toggleSettings();
         });
     });
 
     document.addEventListener('keydown', function (event) {
+        const editing = event.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName);
+        if (event.key === 'Escape') {
+            closeContextMenu();
+            toggleSettings(false);
+        }
+        if (editing) return;
+        if (event.key === '+' || event.key === '=') {
+            event.preventDefault();
+            animateZoom(zoom.scale * 1.25, null, 180);
+        }
+        if (event.key === '-' || event.key === '_') {
+            event.preventDefault();
+            animateZoom(zoom.scale * .8, null, 180);
+        }
+        const step = event.shiftKey ? 90 : 35;
+        if (event.key === 'ArrowLeft') { event.preventDefault(); panBy(step, 0); }
+        if (event.key === 'ArrowRight') { event.preventDefault(); panBy(-step, 0); }
+        if (event.key === 'ArrowUp') { event.preventDefault(); panBy(0, step); }
+        if (event.key === 'ArrowDown') { event.preventDefault(); panBy(0, -step); }
         if (event.key === 'Escape' && selectedId) {
             selectedId = null;
             renderDetail(null);
             draw();
         }
+    });
+
+    searchClear.addEventListener('click', function () {
+        search.value = '';
+        searchClear.hidden = true;
+        search.focus();
+        draw();
+    });
+
+    document.getElementById('graph-show-orphans').addEventListener('change', function (event) {
+        options.showOrphans = event.target.checked;
+        draw();
+    });
+    document.getElementById('graph-show-labels').addEventListener('change', function (event) {
+        options.showLabels = event.target.checked;
+        updateNodeLabels();
+    });
+    document.getElementById('graph-show-arrows').addEventListener('change', function (event) {
+        options.showArrows = event.target.checked;
+        draw();
+    });
+
+    function bindRange(id, outputId, update) {
+        const input = document.getElementById(id);
+        const output = document.getElementById(outputId);
+        input.addEventListener('input', function () {
+            update(Number(input.value));
+            output.textContent = id === 'graph-center-force' ? Math.round(Number(input.value) / 25 * 100) + '%' :
+                id === 'graph-repel-force' ? Math.round(Number(input.value)) + '%' : input.value + '%';
+            draw();
+        });
+    }
+    bindRange('graph-node-size', 'graph-node-size-value', function (value) { options.nodeScale = value / 100; });
+    bindRange('graph-link-thickness', 'graph-link-thickness-value', function (value) { options.linkScale = value / 100; });
+    bindRange('graph-center-force', 'graph-center-force-value', function (value) {
+        options.centerForce = value / 10000;
+        buildGraph();
+    });
+    bindRange('graph-repel-force', 'graph-repel-force-value', function (value) {
+        options.repelForce = value * 52;
+        buildGraph();
+    });
+
+    document.querySelectorAll('[data-context-action]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            if (!contextNode) return;
+            const node = contextNode;
+            const action = button.dataset.contextAction;
+            if (action === 'select') selectNode(node);
+            if (action === 'read') window.location.href = node.url;
+            if (action === 'new-tab') window.open(node.url, '_blank', 'noopener');
+            if (action === 'copy' && navigator.clipboard) navigator.clipboard.writeText(new URL(node.url, window.location.origin).href);
+            closeContextMenu();
+        });
+    });
+    document.addEventListener('click', function (event) {
+        if (!contextMenu.hidden && !contextMenu.contains(event.target)) closeContextMenu();
     });
 
     data.forEach(function (item) {
@@ -421,7 +593,7 @@
                     let dx = a.x - b.x;
                     let dy = a.y - b.y;
                     const distance = Math.max(24, Math.sqrt(dx * dx + dy * dy));
-                    const repulsion = 5200 / (distance * distance);
+                    const repulsion = options.repelForce / (distance * distance);
                     dx /= distance;
                     dy /= distance;
                     force[nodes[i].id].x += dx * repulsion;
@@ -438,7 +610,7 @@
                 let dx = b.x - a.x;
                 let dy = b.y - a.y;
                 const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-                const spring = (distance - 145) * 0.0025 * Math.min(edge.score, 8);
+                const spring = (distance - options.linkDistance) * 0.0025 * Math.min(edge.score, 8);
                 dx /= distance;
                 dy /= distance;
                 force[aNode.id].x += dx * spring;
@@ -448,7 +620,7 @@
             });
             nodes.forEach(function (node) {
                 const point = positions[node.id];
-                const pull = 0.0025;
+                const pull = options.centerForce;
                 force[node.id].x += (center.x - point.x) * pull;
                 force[node.id].y += (center.y - point.y) * pull;
                 point.x = Math.max(35, Math.min(width - 35, point.x + force[node.id].x));
@@ -469,7 +641,7 @@
                     let dx = a.x - b.x;
                     let dy = a.y - b.y;
                     const distance = Math.max(24, Math.sqrt(dx * dx + dy * dy));
-                    const repulsion = 650 / (distance * distance);
+                    const repulsion = options.repelForce * .125 / (distance * distance);
                     dx /= distance;
                     dy /= distance;
                     force[nodes[i].id].x += dx * repulsion;
@@ -486,7 +658,7 @@
                 let dx = b.x - a.x;
                 let dy = b.y - a.y;
                 const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-                const spring = (distance - 145) * 0.0006 * Math.min(edge.score, 8);
+                const spring = (distance - options.linkDistance) * 0.0006 * Math.min(edge.score, 8);
                 dx /= distance;
                 dy /= distance;
                 force[aNode.id].x += dx * spring;
@@ -501,8 +673,8 @@
                     return;
                 }
                 const point = positions[node.id];
-                force[node.id].x += (center.x - point.x) * 0.0007;
-                force[node.id].y += (center.y - point.y) * 0.0007;
+                force[node.id].x += (center.x - point.x) * options.centerForce * .28;
+                force[node.id].y += (center.y - point.y) * options.centerForce * .28;
                 const velocity = velocities[node.id];
                 velocity.x = (velocity.x + force[node.id].x) * 0.58;
                 velocity.y = (velocity.y + force[node.id].y) * 0.58;
@@ -512,11 +684,16 @@
         }
     }
 
+    function degreeFor(node) {
+        return edges.filter(function (edge) { return edge.a === node.index || edge.b === node.index; }).length;
+    }
+
     function isVisible(node) {
         const query = search.value.trim().toLocaleLowerCase();
         const categoryMatch = activeCategory === 'all' || (node.categories || []).includes(activeCategory);
         const haystack = [node.title].concat(node.tags || [], node.categories || []).join(' ').toLocaleLowerCase();
-        return categoryMatch && (!query || haystack.includes(query));
+        const orphanMatch = options.showOrphans || degreeFor(node) > 0;
+        return categoryMatch && orphanMatch && (!query || haystack.includes(query));
     }
 
     function svgElement(type, attributes) {
@@ -568,7 +745,7 @@
         const related = focusId ? connectedIds(focusId) : new Set();
         nodeLayer.querySelectorAll('.graph-node').forEach(function (element) {
             const nodeId = element.dataset.nodeId;
-            const showLabel = zoom.scale > 1.05 || nodeId === focusId || related.has(nodeId);
+            const showLabel = options.showLabels || zoom.scale > 1.05 || nodeId === focusId || related.has(nodeId);
             const label = element.querySelector('.graph-node-label');
             if (label) label.classList.toggle('is-hidden', !showLabel);
         });
@@ -644,6 +821,9 @@
                 'data-edge-a': aNode.id,
                 'data-edge-b': bNode.id
             });
+            const edgeWidth = Math.max(.7, (1 + Math.min(2.5, (edge.score - 2) * .12)) * options.linkScale);
+            line.style.strokeWidth = edgeWidth;
+            if (options.showArrows) line.setAttribute('marker-end', 'url(#graph-arrow-marker)');
             line.style.animationDelay = Math.min(320, edgeLayer.children.length * 4) + 'ms';
             edgeLayer.appendChild(line);
         });
@@ -658,8 +838,8 @@
                 'data-node-id': node.id
             });
             const category = (node.categories || [])[0] || '미분류';
-            const degree = edges.filter(function (edge) { return edge.a === node.index || edge.b === node.index; }).length;
-            const baseRadius = 4.8 + Math.min(6.5, Math.sqrt(degree + 1) * 1.45);
+            const degree = degreeFor(node);
+            const baseRadius = (4.8 + Math.min(6.5, Math.sqrt(degree + 1) * 1.45)) * options.nodeScale;
             const circle = svgElement('circle', { r: baseRadius.toFixed(2), fill: categoryColor[category] || '#64748b', 'data-base-radius': baseRadius.toFixed(2) });
             const label = svgElement('text', { y: baseRadius + 5, 'text-anchor': 'middle', class: 'graph-node-label is-hidden' });
             label.textContent = node.title.length > 19 ? node.title.slice(0, 19) + '…' : node.title;
@@ -695,10 +875,17 @@
                     suppressClick = false;
                     return;
                 }
-                selectedId = node.id;
-                renderDetail(node);
-                draw();
-                focusNode(node);
+                selectNode(node);
+            });
+            group.addEventListener('dblclick', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                window.location.href = node.url;
+            });
+            group.addEventListener('contextmenu', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                showContextMenu(node, event);
             });
             group.addEventListener('mouseenter', function (event) {
                 hoveredId = node.id;
@@ -717,10 +904,7 @@
             group.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault();
-                    selectedId = node.id;
-                    renderDetail(node);
-                    draw();
-                    focusNode(node);
+                    selectNode(node);
                 }
             });
             nodeLayer.appendChild(group);
@@ -735,7 +919,10 @@
         }
     }
 
-    search.addEventListener('input', draw);
+    search.addEventListener('input', function () {
+        searchClear.hidden = !search.value.trim();
+        draw();
+    });
     buildGraph();
     draw();
 })();

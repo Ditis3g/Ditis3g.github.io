@@ -238,6 +238,27 @@ article.main-article .article-title {
     font-size: .88rem;
 }
 
+.graph-search-clear {
+    display: grid;
+    place-items: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--graph-muted);
+    cursor: pointer;
+    font: inherit;
+    line-height: 1;
+}
+
+.graph-search-clear:hover,
+.graph-search-clear:focus-visible {
+    background: var(--card-background-selected);
+    color: var(--card-text-color-main);
+    outline: none;
+}
+
 .graph-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 285px;
@@ -364,6 +385,140 @@ article.main-article .article-title {
 
 .graph-control-reset span {
     font-size: .68rem;
+}
+
+.graph-settings {
+    position: absolute;
+    z-index: 5;
+    top: 3.45rem;
+    right: .85rem;
+    width: 285px;
+    max-width: calc(100% - 1.7rem);
+    border: 1px solid color-mix(in srgb, var(--graph-border) 88%, transparent);
+    border-radius: 12px;
+    padding: .85rem;
+    background: color-mix(in srgb, var(--card-background) 95%, transparent);
+    box-shadow: 0 16px 38px rgba(15, 23, 42, .16);
+    backdrop-filter: blur(16px);
+}
+
+.graph-settings[hidden],
+.graph-context-menu[hidden] {
+    display: none;
+}
+
+.graph-settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: .75rem;
+    color: var(--card-text-color-main);
+    font-size: .82rem;
+}
+
+.graph-settings-close {
+    display: grid;
+    place-items: center;
+    width: 1.45rem;
+    height: 1.45rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--graph-muted);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.graph-settings-close:hover,
+.graph-settings-close:focus-visible {
+    background: var(--card-background-selected);
+    color: var(--card-text-color-main);
+    outline: none;
+}
+
+.graph-settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: .42rem;
+    margin-top: .8rem;
+    border-top: 1px solid var(--graph-border);
+    padding-top: .7rem;
+}
+
+.graph-settings-group:first-of-type {
+    margin-top: 0;
+    border-top: 0;
+    padding-top: 0;
+}
+
+.graph-settings-label {
+    color: var(--graph-muted);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.graph-settings-group label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    color: var(--graph-muted);
+    font-size: .74rem;
+}
+
+.graph-settings-group input[type="checkbox"] {
+    accent-color: var(--accent-color);
+}
+
+.graph-settings-ranges label {
+    color: var(--card-text-color-main);
+    font-size: .72rem;
+}
+
+.graph-settings-ranges output {
+    color: var(--graph-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.graph-settings-ranges input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-color);
+}
+
+.graph-context-menu {
+    position: absolute;
+    z-index: 7;
+    display: flex;
+    flex-direction: column;
+    width: 170px;
+    overflow: hidden;
+    border: 1px solid var(--graph-border);
+    border-radius: 10px;
+    padding: .25rem;
+    background: color-mix(in srgb, var(--card-background) 96%, transparent);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, .18);
+    backdrop-filter: blur(14px);
+}
+
+.graph-context-menu button {
+    border: 0;
+    border-radius: 7px;
+    padding: .52rem .6rem;
+    background: transparent;
+    color: var(--card-text-color-main);
+    cursor: pointer;
+    font: inherit;
+    font-size: .74rem;
+    text-align: left;
+}
+
+.graph-context-menu button:hover,
+.graph-context-menu button:focus-visible {
+    background: var(--card-background-selected);
+    color: var(--accent-color);
+    outline: none;
 }
 
 /* Book chapter visualizations */
@@ -503,6 +658,10 @@ article.main-article .article-title {
     stroke: var(--accent-color);
     stroke-width: 2.2;
     opacity: .82;
+}
+
+#graph-arrow-marker path {
+    fill: var(--card-text-color-tertiary);
 }
 
 .graph-node {
