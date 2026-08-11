@@ -49,6 +49,10 @@
                     </g>
                 </svg>
                 <div class="graph-empty" id="graph-empty" hidden>조건에 맞는 글이 없습니다.</div>
+                <div class="graph-hover-info" id="graph-hover-info" hidden>
+                    <strong></strong>
+                    <span></span>
+                </div>
                 <div class="graph-stage-help">스크롤로 확대·축소 · 노드를 클릭해 연결된 글 확인</div>
             </div>
             <div class="graph-legend" id="graph-legend" aria-label="카테고리 범례"></div>
@@ -83,6 +87,7 @@
     const detail = document.getElementById('graph-detail');
     const search = document.getElementById('graph-search');
     const empty = document.getElementById('graph-empty');
+    const hoverInfo = document.getElementById('graph-hover-info');
     const ns = 'http://www.w3.org/2000/svg';
     const width = 1000;
     const height = 680;
@@ -91,10 +96,15 @@
     const categoryColor = {};
     let activeCategory = 'all';
     let selectedId = null;
+    let hoveredId = null;
     let positions = {};
     let nodes = [];
     let edges = [];
     const zoom = { scale: 1, x: 0, y: 0 };
+    let isPanning = false;
+    let dragMoved = false;
+    let suppressClick = false;
+    let panStart = null;
 
     function applyZoom() {
         viewport.setAttribute('transform', 'translate(' + zoom.x + ' ' + zoom.y + ') scale(' + zoom.scale + ')');
@@ -115,6 +125,45 @@
         zoom.scale = nextScale;
         applyZoom();
     }, { passive: false });
+
+    svg.addEventListener('pointerdown', function (event) {
+        if (event.button !== 0) return;
+        const bounds = svg.getBoundingClientRect();
+        panStart = {
+            pointerX: event.clientX,
+            pointerY: event.clientY,
+            x: zoom.x,
+            y: zoom.y,
+            scaleX: width / bounds.width,
+            scaleY: height / bounds.height
+        };
+        dragMoved = false;
+        isPanning = true;
+        svg.setPointerCapture(event.pointerId);
+        document.getElementById('graph-stage').classList.add('is-panning');
+    });
+
+    svg.addEventListener('pointermove', function (event) {
+        if (!isPanning || !panStart) return;
+        const dx = event.clientX - panStart.pointerX;
+        const dy = event.clientY - panStart.pointerY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
+        zoom.x = panStart.x + dx * panStart.scaleX;
+        zoom.y = panStart.y + dy * panStart.scaleY;
+        applyZoom();
+    });
+
+    function stopPanning(event) {
+        if (!isPanning) return;
+        isPanning = false;
+        suppressClick = dragMoved;
+        panStart = null;
+        document.getElementById('graph-stage').classList.remove('is-panning');
+        if (event && svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
+    }
+
+    svg.addEventListener('pointerup', stopPanning);
+    svg.addEventListener('pointercancel', stopPanning);
 
     data.forEach(function (item) {
         (item.categories || []).forEach(function (category) {
@@ -254,6 +303,51 @@
         return element;
     }
 
+    function connectedIds(nodeId) {
+        const ids = new Set();
+        edges.forEach(function (edge) {
+            const a = nodes[edge.a].id;
+            const b = nodes[edge.b].id;
+            if (a === nodeId) ids.add(b);
+            if (b === nodeId) ids.add(a);
+        });
+        return ids;
+    }
+
+    function updateHoverStyles() {
+        const related = hoveredId ? connectedIds(hoveredId) : new Set();
+        nodeLayer.querySelectorAll('.graph-node').forEach(function (element) {
+            const relatedToHover = !hoveredId || element.dataset.nodeId === hoveredId || related.has(element.dataset.nodeId);
+            element.classList.toggle('is-related', Boolean(hoveredId) && relatedToHover);
+            element.classList.toggle('is-dimmed', Boolean(hoveredId) && !relatedToHover);
+            element.classList.toggle('is-hovered', Boolean(hoveredId) && element.dataset.nodeId === hoveredId);
+        });
+        edgeLayer.querySelectorAll('.graph-edge').forEach(function (element) {
+            const relatedToHover = !hoveredId ||
+                element.dataset.edgeA === hoveredId ||
+                element.dataset.edgeB === hoveredId;
+            element.classList.toggle('is-highlight', Boolean(hoveredId) && relatedToHover);
+            element.classList.toggle('is-dimmed', Boolean(hoveredId) && !relatedToHover);
+        });
+    }
+
+    function moveHoverInfo(event) {
+        const stage = document.getElementById('graph-stage');
+        const bounds = stage.getBoundingClientRect();
+        const x = Math.min(bounds.width - 185, Math.max(12, event.clientX - bounds.left + 14));
+        const y = Math.min(bounds.height - 58, Math.max(12, event.clientY - bounds.top - 48));
+        hoverInfo.style.left = x + 'px';
+        hoverInfo.style.top = y + 'px';
+    }
+
+    function showHoverInfo(node, event) {
+        const count = connectedIds(node.id).size;
+        hoverInfo.querySelector('strong').textContent = '연결된 글 ' + count + '개';
+        hoverInfo.querySelector('span').textContent = count ? '연결된 노드가 강조 표시됩니다' : '연결된 노드가 없습니다';
+        hoverInfo.hidden = false;
+        moveHoverInfo(event);
+    }
+
     function renderDetail(node) {
         if (!node) {
             detail.innerHTML = '<div class="graph-detail-empty"><span class="graph-detail-icon">✦</span><h2>노드를 선택해보세요</h2><p>연결 관계를 보고 싶은 글을 클릭하면 제목, 카테고리, 관련 글이 여기에 표시됩니다.</p></div>';
@@ -293,7 +387,9 @@
                 y1: positions[aNode.id].y,
                 x2: positions[bNode.id].x,
                 y2: positions[bNode.id].y,
-                class: 'graph-edge' + (visible[aNode.id] && visible[bNode.id] ? '' : ' is-muted')
+                class: 'graph-edge' + (visible[aNode.id] && visible[bNode.id] ? '' : ' is-muted'),
+                'data-edge-a': aNode.id,
+                'data-edge-b': bNode.id
             });
             edgeLayer.appendChild(line);
         });
@@ -304,11 +400,12 @@
                 transform: 'translate(' + point.x + ' ' + point.y + ')',
                 tabindex: visible[node.id] ? '0' : '-1',
                 role: 'button',
-                'aria-label': node.title
+                'aria-label': node.title,
+                'data-node-id': node.id
             });
             const category = (node.categories || [])[0] || '미분류';
             const degree = edges.filter(function (edge) { return edge.a === node.index || edge.b === node.index; }).length;
-            const circle = svgElement('circle', { r: 8 + Math.min(6, degree), fill: categoryColor[category] || '#64748b' });
+            const circle = svgElement('circle', { r: 9 + Math.min(13, degree * 1.35), fill: categoryColor[category] || '#64748b' });
             const label = svgElement('text', { y: 28, 'text-anchor': 'middle' });
             label.textContent = node.title.length > 19 ? node.title.slice(0, 19) + '…' : node.title;
             const title = svgElement('title', {});
@@ -317,9 +414,27 @@
             group.appendChild(label);
             group.appendChild(title);
             group.addEventListener('click', function () {
+                if (suppressClick) {
+                    suppressClick = false;
+                    return;
+                }
                 selectedId = node.id;
                 renderDetail(node);
                 draw();
+            });
+            group.addEventListener('mouseenter', function (event) {
+                hoveredId = node.id;
+                updateHoverStyles();
+                showHoverInfo(node, event);
+            });
+            group.addEventListener('mousemove', function (event) {
+                if (hoveredId === node.id) moveHoverInfo(event);
+            });
+            group.addEventListener('mouseleave', function () {
+                if (hoveredId !== node.id) return;
+                hoveredId = null;
+                hoverInfo.hidden = true;
+                updateHoverStyles();
             });
             group.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter' || event.key === ' ') {
@@ -331,6 +446,7 @@
             });
             nodeLayer.appendChild(group);
         });
+        updateHoverStyles();
         if (selectedId) {
             const selected = nodes.find(function (node) { return node.id === selectedId; });
             if (selected && !isVisible(selected)) {

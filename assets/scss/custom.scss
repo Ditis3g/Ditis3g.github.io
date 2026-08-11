@@ -255,6 +255,11 @@ article.main-article .article-title {
     background-color: var(--card-background);
     background-image: radial-gradient(var(--card-separator-color) .75px, transparent .75px);
     background-size: 18px 18px;
+    cursor: grab;
+}
+
+.graph-stage.is-panning {
+    cursor: grabbing;
 }
 
 .graph-stage svg {
@@ -272,6 +277,16 @@ article.main-article .article-title {
 
 .graph-edge.is-muted {
     opacity: .06;
+}
+
+.graph-edge.is-dimmed {
+    opacity: .035;
+}
+
+.graph-edge.is-highlight {
+    stroke: var(--accent-color);
+    stroke-width: 2.2;
+    opacity: .82;
 }
 
 .graph-node {
@@ -309,6 +324,19 @@ article.main-article .article-title {
     font-weight: 700;
 }
 
+.graph-node.is-related circle {
+    stroke-width: 4;
+}
+
+.graph-node.is-hovered circle {
+    stroke: var(--accent-color);
+    stroke-width: 6;
+}
+
+.graph-node.is-dimmed {
+    opacity: .12;
+}
+
 .graph-node.is-muted {
     opacity: .16;
     pointer-events: none;
@@ -335,6 +363,36 @@ article.main-article .article-title {
 
 .graph-empty[hidden] {
     display: none;
+}
+
+.graph-hover-info {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: .12rem;
+    min-width: 160px;
+    border: 1px solid var(--graph-border);
+    border-radius: 9px;
+    padding: .55rem .7rem;
+    background: color-mix(in srgb, var(--card-background) 94%, transparent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+}
+
+.graph-hover-info[hidden] {
+    display: none;
+}
+
+.graph-hover-info strong {
+    color: var(--card-text-color-main);
+    font-size: .78rem;
+}
+
+.graph-hover-info span {
+    color: var(--graph-muted);
+    font-size: .68rem;
 }
 
 .graph-legend {
