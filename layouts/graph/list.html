@@ -138,28 +138,33 @@
             scaleY: height / bounds.height
         };
         dragMoved = false;
-        isPanning = true;
-        svg.setPointerCapture(event.pointerId);
-        document.getElementById('graph-stage').classList.add('is-panning');
+        isPanning = false;
     });
 
     svg.addEventListener('pointermove', function (event) {
-        if (!isPanning || !panStart) return;
+        if (!panStart) return;
         const dx = event.clientX - panStart.pointerX;
         const dy = event.clientY - panStart.pointerY;
-        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
+        if (!isPanning && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+            isPanning = true;
+            dragMoved = true;
+            svg.setPointerCapture(event.pointerId);
+            document.getElementById('graph-stage').classList.add('is-panning');
+        }
+        if (!isPanning) return;
         zoom.x = panStart.x + dx * panStart.scaleX;
         zoom.y = panStart.y + dy * panStart.scaleY;
         applyZoom();
     });
 
     function stopPanning(event) {
-        if (!isPanning) return;
+        if (!panStart) return;
+        const wasPanning = isPanning;
         isPanning = false;
         suppressClick = dragMoved;
         panStart = null;
         document.getElementById('graph-stage').classList.remove('is-panning');
-        if (event && svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
+        if (wasPanning && event && svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
     }
 
     svg.addEventListener('pointerup', stopPanning);
