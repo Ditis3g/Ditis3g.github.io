@@ -43,11 +43,13 @@
         <div class="graph-stage-wrap">
             <div class="graph-stage" id="graph-stage">
                 <svg id="graph-svg" viewBox="0 0 1000 680" role="img" aria-label="게시글 연결 그래프">
-                    <g id="graph-edges"></g>
-                    <g id="graph-nodes"></g>
+                    <g id="graph-viewport">
+                        <g id="graph-edges"></g>
+                        <g id="graph-nodes"></g>
+                    </g>
                 </svg>
                 <div class="graph-empty" id="graph-empty" hidden>조건에 맞는 글이 없습니다.</div>
-                <div class="graph-stage-help">노드를 클릭하면 연결된 글을 확인할 수 있습니다.</div>
+                <div class="graph-stage-help">스크롤로 확대·축소 · 노드를 클릭해 연결된 글 확인</div>
             </div>
             <div class="graph-legend" id="graph-legend" aria-label="카테고리 범례"></div>
         </div>
@@ -73,6 +75,7 @@
     // Normalize both the string and array forms before building the graph.
     if (typeof data === 'string') data = JSON.parse(data);
     const svg = document.getElementById('graph-svg');
+    const viewport = document.getElementById('graph-viewport');
     const edgeLayer = document.getElementById('graph-edges');
     const nodeLayer = document.getElementById('graph-nodes');
     const filters = document.getElementById('graph-filters');
@@ -91,6 +94,27 @@
     let positions = {};
     let nodes = [];
     let edges = [];
+    const zoom = { scale: 1, x: 0, y: 0 };
+
+    function applyZoom() {
+        viewport.setAttribute('transform', 'translate(' + zoom.x + ' ' + zoom.y + ') scale(' + zoom.scale + ')');
+    }
+
+    svg.addEventListener('wheel', function (event) {
+        event.preventDefault();
+        const bounds = svg.getBoundingClientRect();
+        const pointer = {
+            x: ((event.clientX - bounds.left) / bounds.width) * width,
+            y: ((event.clientY - bounds.top) / bounds.height) * height
+        };
+        const factor = event.deltaY < 0 ? 1.12 : 0.89;
+        const nextScale = Math.max(.65, Math.min(3.5, zoom.scale * factor));
+        const ratio = nextScale / zoom.scale;
+        zoom.x = pointer.x - (pointer.x - zoom.x) * ratio;
+        zoom.y = pointer.y - (pointer.y - zoom.y) * ratio;
+        zoom.scale = nextScale;
+        applyZoom();
+    }, { passive: false });
 
     data.forEach(function (item) {
         (item.categories || []).forEach(function (category) {
