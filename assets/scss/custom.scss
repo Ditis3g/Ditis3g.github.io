@@ -516,12 +516,6 @@ article.main-article .article-title {
     cursor: grabbing;
 }
 
-.graph-node.is-following circle {
-    stroke: var(--accent-color);
-    stroke-width: 2;
-    filter: drop-shadow(0 0 .35rem color-mix(in srgb, var(--accent-color) 34%, transparent));
-}
-
 .graph-node circle {
     stroke: var(--card-background);
     stroke-width: 1.5;

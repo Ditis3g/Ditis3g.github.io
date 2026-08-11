@@ -117,6 +117,7 @@
     let selectedId = null;
     let hoveredId = null;
     let positions = {};
+    let velocities = {};
     let nodes = [];
     let edges = [];
     const zoom = { scale: 1, x: 0, y: 0 };
@@ -174,6 +175,10 @@
             x: anchor.x - (anchor.x - zoom.x) * ratio,
             y: anchor.y - (anchor.y - zoom.y) * ratio
         };
+        animateTransform(target, duration);
+    }
+
+    function animateTransform(target, duration) {
         if (zoomAnimation) cancelAnimationFrame(zoomAnimation);
         const start = { scale: zoom.scale, x: zoom.x, y: zoom.y };
         const started = performance.now();
@@ -189,6 +194,17 @@
             else zoomAnimation = null;
         }
         zoomAnimation = requestAnimationFrame(step);
+    }
+
+    function focusNode(node) {
+        const point = positions[node.id];
+        if (!point) return;
+        const scale = 1.8;
+        animateTransform({
+            scale: scale,
+            x: width / 2 - point.x * scale,
+            y: height / 2 - point.y * scale
+        }, 400);
     }
 
     function resetView() {
@@ -232,24 +248,9 @@
                 nodeDrag.moved = true;
                 nodeDrag.group.classList.add('is-dragging');
             }
-            const deltaX = nextX - positions[nodeDrag.nodeId].x;
-            const deltaY = nextY - positions[nodeDrag.nodeId].y;
             positions[nodeDrag.nodeId].x = nextX;
             positions[nodeDrag.nodeId].y = nextY;
-            nodeDrag.connectedIds.forEach(function (connectedId) {
-                const connectedPosition = positions[connectedId];
-                if (!connectedPosition) return;
-                const distance = Math.hypot(
-                    connectedPosition.x - nextX,
-                    connectedPosition.y - nextY
-                );
-                const followStrength = .18 + Math.max(0, 1 - distance / 360) * .14;
-                connectedPosition.x = Math.max(35, Math.min(width - 35, connectedPosition.x + deltaX * followStrength));
-                connectedPosition.y = Math.max(35, Math.min(height - 35, connectedPosition.y + deltaY * followStrength));
-                nodeLayer.querySelectorAll('.graph-node').forEach(function (connectedGroup) {
-                    if (connectedGroup.dataset.nodeId === connectedId) connectedGroup.classList.add('is-following');
-                });
-            });
+            relaxDraggedGraph(nodeDrag.nodeId);
             updateGraphGeometry();
             return;
         }
@@ -272,9 +273,6 @@
         if (nodeDrag) {
             const wasDragging = nodeDrag.moved;
             nodeDrag.group.classList.remove('is-dragging');
-            nodeLayer.querySelectorAll('.graph-node.is-following').forEach(function (group) {
-                group.classList.remove('is-following');
-            });
             suppressClick = wasDragging;
             nodeDrag = null;
             if (event && svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
@@ -392,6 +390,10 @@
         nodes = data.map(function (item, index) {
             return Object.assign({ index: index }, item);
         });
+        velocities = {};
+        nodes.forEach(function (node) {
+            velocities[node.id] = { x: 0, y: 0 };
+        });
         const center = { x: width / 2, y: height / 2 };
         // Start from a collision-free grid. The force pass below then bends
         // related nodes together without making the whole graph collapse into
@@ -450,6 +452,61 @@
                 force[node.id].y += (center.y - point.y) * pull;
                 point.x = Math.max(35, Math.min(width - 35, point.x + force[node.id].x));
                 point.y = Math.max(35, Math.min(height - 35, point.y + force[node.id].y));
+            });
+        }
+    }
+
+    function relaxDraggedGraph(anchorId) {
+        const center = { x: width / 2, y: height / 2 };
+        for (let tick = 0; tick < 5; tick += 1) {
+            const force = {};
+            nodes.forEach(function (node) { force[node.id] = { x: 0, y: 0 }; });
+            for (let i = 0; i < nodes.length; i += 1) {
+                for (let j = i + 1; j < nodes.length; j += 1) {
+                    const a = positions[nodes[i].id];
+                    const b = positions[nodes[j].id];
+                    let dx = a.x - b.x;
+                    let dy = a.y - b.y;
+                    const distance = Math.max(24, Math.sqrt(dx * dx + dy * dy));
+                    const repulsion = 2600 / (distance * distance);
+                    dx /= distance;
+                    dy /= distance;
+                    force[nodes[i].id].x += dx * repulsion;
+                    force[nodes[i].id].y += dy * repulsion;
+                    force[nodes[j].id].x -= dx * repulsion;
+                    force[nodes[j].id].y -= dy * repulsion;
+                }
+            }
+            edges.forEach(function (edge) {
+                const aNode = nodes[edge.a];
+                const bNode = nodes[edge.b];
+                const a = positions[aNode.id];
+                const b = positions[bNode.id];
+                let dx = b.x - a.x;
+                let dy = b.y - a.y;
+                const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+                const spring = (distance - 145) * 0.004 * Math.min(edge.score, 8);
+                dx /= distance;
+                dy /= distance;
+                force[aNode.id].x += dx * spring;
+                force[aNode.id].y += dy * spring;
+                force[bNode.id].x -= dx * spring;
+                force[bNode.id].y -= dy * spring;
+            });
+            nodes.forEach(function (node) {
+                if (node.id === anchorId) {
+                    velocities[node.id].x = 0;
+                    velocities[node.id].y = 0;
+                    return;
+                }
+                const point = positions[node.id];
+                force[node.id].x += (center.x - point.x) * 0.0007;
+                force[node.id].y += (center.y - point.y) * 0.0007;
+                const velocity = velocities[node.id];
+                velocity.x = (velocity.x + force[node.id].x) * 0.78;
+                velocity.y = (velocity.y + force[node.id].y) * 0.78;
+                point.x = Math.max(35, Math.min(width - 35, point.x + velocity.x * 3));
+                point.y = Math.max(35, Math.min(height - 35, point.y + velocity.y * 3));
             });
         }
     }
@@ -623,7 +680,6 @@
                     offsetY: point.y - positions[node.id].y,
                     startX: positions[node.id].x,
                     startY: positions[node.id].y,
-                    connectedIds: connectedIds(node.id),
                     moved: false
                 };
                 svg.setPointerCapture(event.pointerId);
@@ -633,10 +689,10 @@
                     suppressClick = false;
                     return;
                 }
-                selectedId = selectedId === node.id ? null : node.id;
+                selectedId = node.id;
                 renderDetail(node);
-                if (!selectedId) renderDetail(null);
                 draw();
+                focusNode(node);
             });
             group.addEventListener('mouseenter', function (event) {
                 hoveredId = node.id;
@@ -658,6 +714,7 @@
                     selectedId = node.id;
                     renderDetail(node);
                     draw();
+                    focusNode(node);
                 }
             });
             nodeLayer.appendChild(group);
