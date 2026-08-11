@@ -258,6 +258,111 @@ article.main-article .article-title {
     cursor: grab;
 }
 
+/* Book chapter visualizations */
+.book-flow {
+    display: flex;
+    align-items: stretch;
+    gap: .55rem;
+    margin: 1.8rem 0 2.2rem;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--card-separator-color);
+    border-radius: 14px;
+    background: var(--card-background-selected);
+}
+
+.book-flow-step {
+    flex: 1 1 0;
+    min-width: 130px;
+    padding: .9rem .8rem;
+    border: 1px solid var(--card-separator-color);
+    border-radius: 10px;
+    background: var(--card-background);
+    text-align: center;
+}
+
+.book-flow-step strong,
+.book-flow-step span {
+    display: block;
+}
+
+.book-flow-step strong {
+    color: var(--card-text-color-main);
+    font-size: .98rem;
+}
+
+.book-flow-step span {
+    margin-top: .3rem;
+    color: var(--card-text-color-secondary);
+    font-size: .82rem;
+    line-height: 1.45;
+}
+
+.book-flow-arrow {
+    align-self: center;
+    color: var(--card-text-color-tertiary);
+    font-size: 1.25rem;
+}
+
+.book-figure-caption {
+    margin: -.9rem 0 2rem;
+    color: var(--card-text-color-tertiary);
+    font-size: .82rem;
+    text-align: center;
+}
+
+.book-bar-chart {
+    margin: 1.8rem 0 2.2rem;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--card-separator-color);
+    border-radius: 14px;
+    background: var(--card-background-selected);
+}
+
+.book-bar-row {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr) 5rem;
+    align-items: center;
+    gap: .7rem;
+    margin: .7rem 0;
+    color: var(--card-text-color-secondary);
+    font-size: .82rem;
+}
+
+.book-bar-track {
+    height: .75rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--card-background);
+}
+
+.book-bar-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--accent-color);
+}
+
+.book-bar-note {
+    color: var(--card-text-color-tertiary);
+    font-size: .76rem;
+    text-align: right;
+}
+
+.book-callout {
+    margin: 1.8rem 0;
+    padding: 1rem 1.15rem;
+    border-left: 4px solid var(--accent-color);
+    border-radius: 0 10px 10px 0;
+    background: var(--card-background-selected);
+}
+
+@media (max-width: 600px) {
+    .book-flow { align-items: stretch; }
+    .book-flow-step { min-width: 112px; }
+    .book-flow-arrow { font-size: 1rem; }
+    .book-bar-row { grid-template-columns: 5rem minmax(0, 1fr) 4rem; gap: .45rem; }
+}
+
 .graph-stage.is-panning {
     cursor: grabbing;
 }
