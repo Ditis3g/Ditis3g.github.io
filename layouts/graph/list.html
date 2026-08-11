@@ -459,7 +459,7 @@
 
     function relaxDraggedGraph(anchorId) {
         const center = { x: width / 2, y: height / 2 };
-        for (let tick = 0; tick < 5; tick += 1) {
+        for (let tick = 0; tick < 3; tick += 1) {
             const force = {};
             nodes.forEach(function (node) { force[node.id] = { x: 0, y: 0 }; });
             for (let i = 0; i < nodes.length; i += 1) {
@@ -469,7 +469,7 @@
                     let dx = a.x - b.x;
                     let dy = a.y - b.y;
                     const distance = Math.max(24, Math.sqrt(dx * dx + dy * dy));
-                    const repulsion = 2600 / (distance * distance);
+                    const repulsion = 650 / (distance * distance);
                     dx /= distance;
                     dy /= distance;
                     force[nodes[i].id].x += dx * repulsion;
@@ -486,7 +486,7 @@
                 let dx = b.x - a.x;
                 let dy = b.y - a.y;
                 const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-                const spring = (distance - 145) * 0.004 * Math.min(edge.score, 8);
+                const spring = (distance - 145) * 0.0006 * Math.min(edge.score, 8);
                 dx /= distance;
                 dy /= distance;
                 force[aNode.id].x += dx * spring;
@@ -504,10 +504,10 @@
                 force[node.id].x += (center.x - point.x) * 0.0007;
                 force[node.id].y += (center.y - point.y) * 0.0007;
                 const velocity = velocities[node.id];
-                velocity.x = (velocity.x + force[node.id].x) * 0.78;
-                velocity.y = (velocity.y + force[node.id].y) * 0.78;
-                point.x = Math.max(35, Math.min(width - 35, point.x + velocity.x * 3));
-                point.y = Math.max(35, Math.min(height - 35, point.y + velocity.y * 3));
+                velocity.x = (velocity.x + force[node.id].x) * 0.58;
+                velocity.y = (velocity.y + force[node.id].y) * 0.58;
+                point.x = Math.max(35, Math.min(width - 35, point.x + velocity.x * 1.5));
+                point.y = Math.max(35, Math.min(height - 35, point.y + velocity.y * 1.5));
             });
         }
     }
@@ -683,6 +683,11 @@
                     startY: positions[node.id].y,
                     moved: false
                 };
+                nodes.forEach(function (item) {
+                    if (!velocities[item.id]) velocities[item.id] = { x: 0, y: 0 };
+                    velocities[item.id].x *= .2;
+                    velocities[item.id].y *= .2;
+                });
             });
             group.addEventListener('click', function (event) {
                 event.stopPropagation();
