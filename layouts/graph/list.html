@@ -232,8 +232,24 @@
                 nodeDrag.moved = true;
                 nodeDrag.group.classList.add('is-dragging');
             }
+            const deltaX = nextX - positions[nodeDrag.nodeId].x;
+            const deltaY = nextY - positions[nodeDrag.nodeId].y;
             positions[nodeDrag.nodeId].x = nextX;
             positions[nodeDrag.nodeId].y = nextY;
+            nodeDrag.connectedIds.forEach(function (connectedId) {
+                const connectedPosition = positions[connectedId];
+                if (!connectedPosition) return;
+                const distance = Math.hypot(
+                    connectedPosition.x - nextX,
+                    connectedPosition.y - nextY
+                );
+                const followStrength = .18 + Math.max(0, 1 - distance / 360) * .14;
+                connectedPosition.x = Math.max(35, Math.min(width - 35, connectedPosition.x + deltaX * followStrength));
+                connectedPosition.y = Math.max(35, Math.min(height - 35, connectedPosition.y + deltaY * followStrength));
+                nodeLayer.querySelectorAll('.graph-node').forEach(function (connectedGroup) {
+                    if (connectedGroup.dataset.nodeId === connectedId) connectedGroup.classList.add('is-following');
+                });
+            });
             updateGraphGeometry();
             return;
         }
@@ -256,6 +272,9 @@
         if (nodeDrag) {
             const wasDragging = nodeDrag.moved;
             nodeDrag.group.classList.remove('is-dragging');
+            nodeLayer.querySelectorAll('.graph-node.is-following').forEach(function (group) {
+                group.classList.remove('is-following');
+            });
             suppressClick = wasDragging;
             nodeDrag = null;
             if (event && svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
@@ -604,6 +623,7 @@
                     offsetY: point.y - positions[node.id].y,
                     startX: positions[node.id].x,
                     startY: positions[node.id].y,
+                    connectedIds: connectedIds(node.id),
                     moved: false
                 };
                 svg.setPointerCapture(event.pointerId);
