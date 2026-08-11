@@ -333,6 +333,10 @@ article.main-article .article-title {
     pointer-events: none;
 }
 
+.graph-empty[hidden] {
+    display: none;
+}
+
 .graph-legend {
     display: flex;
     flex-wrap: wrap;
