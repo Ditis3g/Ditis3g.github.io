@@ -69,7 +69,7 @@
                     <strong></strong>
                     <span></span>
                 </div>
-                <div class="graph-stage-help"><span>스크롤</span> 확대·축소 <i>·</i> <span>드래그</span> 이동 <i>·</i> 노드 클릭</div>
+                <div class="graph-stage-help"><span>스크롤</span> 확대·축소 <i>·</i> <span>빈 공간 드래그</span> 이동 <i>·</i> <span>노드 드래그</span> 배치</div>
             </div>
             <div class="graph-legend" id="graph-legend" aria-label="카테고리 범례"></div>
         </div>
@@ -124,6 +124,7 @@
     let dragMoved = false;
     let suppressClick = false;
     let panStart = null;
+    let nodeDrag = null;
     let zoomAnimation = null;
 
     function applyZoom() {
@@ -138,6 +139,30 @@
             x: ((event.clientX - bounds.left) / bounds.width) * width,
             y: ((event.clientY - bounds.top) / bounds.height) * height
         };
+    }
+
+    function graphPoint(event) {
+        const pointer = pointerInSvg(event);
+        return {
+            x: (pointer.x - zoom.x) / zoom.scale,
+            y: (pointer.y - zoom.y) / zoom.scale
+        };
+    }
+
+    function updateGraphGeometry() {
+        edgeLayer.querySelectorAll('.graph-edge').forEach(function (line) {
+            const a = positions[line.dataset.edgeA];
+            const b = positions[line.dataset.edgeB];
+            if (!a || !b) return;
+            line.setAttribute('x1', a.x);
+            line.setAttribute('y1', a.y);
+            line.setAttribute('x2', b.x);
+            line.setAttribute('y2', b.y);
+        });
+        nodeLayer.querySelectorAll('.graph-node').forEach(function (group) {
+            const point = positions[group.dataset.nodeId];
+            if (point) group.setAttribute('transform', 'translate(' + point.x + ' ' + point.y + ')');
+        });
     }
 
     function animateZoom(nextScale, pointer, duration) {
@@ -199,6 +224,19 @@
     });
 
     svg.addEventListener('pointermove', function (event) {
+        if (nodeDrag) {
+            const point = graphPoint(event);
+            const nextX = Math.max(35, Math.min(width - 35, point.x + nodeDrag.offsetX));
+            const nextY = Math.max(35, Math.min(height - 35, point.y + nodeDrag.offsetY));
+            if (!nodeDrag.moved && Math.hypot(nextX - nodeDrag.startX, nextY - nodeDrag.startY) > 4) {
+                nodeDrag.moved = true;
+                nodeDrag.group.classList.add('is-dragging');
+            }
+            positions[nodeDrag.nodeId].x = nextX;
+            positions[nodeDrag.nodeId].y = nextY;
+            updateGraphGeometry();
+            return;
+        }
         if (!panStart) return;
         const dx = event.clientX - panStart.pointerX;
         const dy = event.clientY - panStart.pointerY;
@@ -215,6 +253,14 @@
     });
 
     function stopPanning(event) {
+        if (nodeDrag) {
+            const wasDragging = nodeDrag.moved;
+            nodeDrag.group.classList.remove('is-dragging');
+            suppressClick = wasDragging;
+            nodeDrag = null;
+            if (event && svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
+            return;
+        }
         if (!panStart) return;
         const wasPanning = isPanning;
         isPanning = false;
@@ -546,6 +592,22 @@
             group.appendChild(label);
             group.appendChild(title);
             group.style.setProperty('--node-delay', Math.min(420, node.index * 7) + 'ms');
+            group.addEventListener('pointerdown', function (event) {
+                if (event.button !== 0) return;
+                event.preventDefault();
+                event.stopPropagation();
+                const point = graphPoint(event);
+                nodeDrag = {
+                    nodeId: node.id,
+                    group: group,
+                    offsetX: point.x - positions[node.id].x,
+                    offsetY: point.y - positions[node.id].y,
+                    startX: positions[node.id].x,
+                    startY: positions[node.id].y,
+                    moved: false
+                };
+                svg.setPointerCapture(event.pointerId);
+            });
             group.addEventListener('click', function () {
                 if (suppressClick) {
                     suppressClick = false;

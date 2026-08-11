@@ -512,6 +512,10 @@ article.main-article .article-title {
     transition: opacity .2s ease;
 }
 
+.graph-node.is-dragging {
+    cursor: grabbing;
+}
+
 .graph-node circle {
     stroke: var(--card-background);
     stroke-width: 1.5;
