@@ -1,0 +1,324 @@
+{{ define "body-class" }}graph-page{{ end }}
+
+{{ define "main" }}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $items := slice -}}
+{{- range $posts -}}
+    {{- $tags := .Params.tags | default (slice) -}}
+    {{- $categories := .Params.categories | default (slice) -}}
+    {{- $items = $items | append (dict
+        "id" .RelPermalink
+        "title" .Title
+        "url" .RelPermalink
+        "date" (.Date.Format "2006-01-02")
+        "categories" $categories
+        "tags" $tags
+        "summary" (.Summary | plainify | htmlUnescape | truncate 170)
+    ) -}}
+{{- end -}}
+<section class="graph-explorer" aria-labelledby="graph-title">
+    <header class="graph-header">
+        <div>
+            <p class="graph-eyebrow">PHYSICAL AI KNOWLEDGE MAP</p>
+            <h1 id="graph-title">그래프 탐색</h1>
+            <p class="graph-lede">지금까지 게시한 글들을 주제와 키워드의 연결 관계로 한눈에 살펴보세요.</p>
+        </div>
+        <div class="graph-stat">
+            <strong>{{ len $posts }}</strong>
+            <span>개의 글</span>
+        </div>
+    </header>
+
+    <div class="graph-toolbar">
+        <div class="graph-filter-label">주제 필터</div>
+        <div class="graph-filters" id="graph-filters" role="group" aria-label="주제 필터"></div>
+        <label class="graph-search">
+            <span class="sr-only">글 검색</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+            <input id="graph-search" type="search" placeholder="글 제목이나 태그 검색" autocomplete="off">
+        </label>
+    </div>
+
+    <div class="graph-workspace">
+        <div class="graph-stage-wrap">
+            <div class="graph-stage" id="graph-stage">
+                <svg id="graph-svg" viewBox="0 0 1000 680" role="img" aria-label="게시글 연결 그래프">
+                    <g id="graph-edges"></g>
+                    <g id="graph-nodes"></g>
+                </svg>
+                <div class="graph-empty" id="graph-empty" hidden>조건에 맞는 글이 없습니다.</div>
+                <div class="graph-stage-help">노드를 클릭하면 연결된 글을 확인할 수 있습니다.</div>
+            </div>
+            <div class="graph-legend" id="graph-legend" aria-label="카테고리 범례"></div>
+        </div>
+
+        <aside class="graph-detail" id="graph-detail" aria-live="polite">
+            <div class="graph-detail-empty">
+                <span class="graph-detail-icon">✦</span>
+                <h2>노드를 선택해보세요</h2>
+                <p>연결 관계를 보고 싶은 글을 클릭하면 제목, 카테고리, 관련 글이 여기에 표시됩니다.</p>
+            </div>
+        </aside>
+    </div>
+
+    <p class="graph-note">선은 같은 카테고리 또는 공통 태그를 가진 글 사이에 자동으로 생성됩니다. 카테고리 필터와 검색을 함께 사용할 수 있습니다.</p>
+</section>
+
+<script type="application/json" id="graph-data">{{ $items | jsonify | safeHTML }}</script>
+<script>
+(function () {
+    const data = JSON.parse(document.getElementById('graph-data').textContent);
+    const svg = document.getElementById('graph-svg');
+    const edgeLayer = document.getElementById('graph-edges');
+    const nodeLayer = document.getElementById('graph-nodes');
+    const filters = document.getElementById('graph-filters');
+    const legend = document.getElementById('graph-legend');
+    const detail = document.getElementById('graph-detail');
+    const search = document.getElementById('graph-search');
+    const empty = document.getElementById('graph-empty');
+    const ns = 'http://www.w3.org/2000/svg';
+    const width = 1000;
+    const height = 680;
+    const palette = ['#2563eb', '#7c3aed', '#0f766e', '#c2410c', '#be185d', '#4f46e5', '#15803d', '#a16207', '#475569'];
+    const categories = [];
+    const categoryColor = {};
+    let activeCategory = 'all';
+    let selectedId = null;
+    let positions = {};
+    let nodes = [];
+    let edges = [];
+
+    data.forEach(function (item) {
+        (item.categories || []).forEach(function (category) {
+            if (!categories.includes(category)) categories.push(category);
+        });
+    });
+    categories.sort(function (a, b) { return a.localeCompare(b, 'ko'); });
+    categories.forEach(function (category, index) {
+        categoryColor[category] = palette[index % palette.length];
+    });
+
+    function shortCategory(category) {
+        return category.replace(/^\d+부\.\s*/, '').replace(/^부록\.\s*/, '부록 · ');
+    }
+
+    function makeButton(label, value, active) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'graph-filter' + (active ? ' is-active' : '');
+        button.dataset.category = value;
+        button.textContent = label;
+        button.addEventListener('click', function () {
+            activeCategory = value;
+            selectedId = null;
+            Array.prototype.forEach.call(filters.children, function (item) {
+                item.classList.toggle('is-active', item.dataset.category === activeCategory);
+            });
+            draw();
+        });
+        return button;
+    }
+
+    filters.appendChild(makeButton('전체', 'all', true));
+    categories.forEach(function (category) {
+        filters.appendChild(makeButton(shortCategory(category), category, false));
+        const swatch = document.createElement('span');
+        swatch.className = 'graph-legend-item';
+        swatch.innerHTML = '<i></i><span></span>';
+        swatch.querySelector('i').style.backgroundColor = categoryColor[category];
+        swatch.querySelector('span').textContent = shortCategory(category);
+        legend.appendChild(swatch);
+    });
+
+    function shared(a, b) {
+        return (a || []).filter(function (value) { return (b || []).includes(value); });
+    }
+
+    function buildGraph() {
+        const candidates = [];
+        for (let i = 0; i < data.length; i += 1) {
+            for (let j = i + 1; j < data.length; j += 1) {
+                const categoryMatches = shared(data[i].categories, data[j].categories);
+                const tagMatches = shared(data[i].tags, data[j].tags);
+                const score = categoryMatches.length * 4 + tagMatches.length;
+                if (score >= 2) {
+                    candidates.push({ a: i, b: j, score: score });
+                }
+            }
+        }
+        const keep = new Set();
+        data.forEach(function (_, index) {
+            candidates
+                .filter(function (edge) { return edge.a === index || edge.b === index; })
+                .sort(function (a, b) { return b.score - a.score; })
+                .slice(0, 6)
+                .forEach(function (edge) { keep.add(edge.a + ':' + edge.b); });
+        });
+        edges = candidates.filter(function (edge) { return keep.has(edge.a + ':' + edge.b); });
+        nodes = data.map(function (item, index) {
+            return Object.assign({ index: index }, item);
+        });
+        const center = { x: width / 2, y: height / 2 };
+        nodes.forEach(function (node, index) {
+            const angle = index * 2.39996;
+            const radius = 120 + (index % 5) * 45;
+            positions[node.id] = {
+                x: center.x + Math.cos(angle) * radius,
+                y: center.y + Math.sin(angle) * radius * 0.72
+            };
+        });
+        for (let tick = 0; tick < 150; tick += 1) {
+            const force = {};
+            nodes.forEach(function (node) { force[node.id] = { x: 0, y: 0 }; });
+            for (let i = 0; i < nodes.length; i += 1) {
+                for (let j = i + 1; j < nodes.length; j += 1) {
+                    const a = positions[nodes[i].id];
+                    const b = positions[nodes[j].id];
+                    let dx = a.x - b.x;
+                    let dy = a.y - b.y;
+                    const distance = Math.max(24, Math.sqrt(dx * dx + dy * dy));
+                    const repulsion = 2300 / (distance * distance);
+                    dx /= distance;
+                    dy /= distance;
+                    force[nodes[i].id].x += dx * repulsion;
+                    force[nodes[i].id].y += dy * repulsion;
+                    force[nodes[j].id].x -= dx * repulsion;
+                    force[nodes[j].id].y -= dy * repulsion;
+                }
+            }
+            edges.forEach(function (edge) {
+                const aNode = nodes[edge.a];
+                const bNode = nodes[edge.b];
+                const a = positions[aNode.id];
+                const b = positions[bNode.id];
+                let dx = b.x - a.x;
+                let dy = b.y - a.y;
+                const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+                const spring = (distance - 115) * 0.003 * Math.min(edge.score, 8);
+                dx /= distance;
+                dy /= distance;
+                force[aNode.id].x += dx * spring;
+                force[aNode.id].y += dy * spring;
+                force[bNode.id].x -= dx * spring;
+                force[bNode.id].y -= dy * spring;
+            });
+            nodes.forEach(function (node) {
+                const point = positions[node.id];
+                const pull = 0.0025;
+                force[node.id].x += (center.x - point.x) * pull;
+                force[node.id].y += (center.y - point.y) * pull;
+                point.x = Math.max(35, Math.min(width - 35, point.x + force[node.id].x));
+                point.y = Math.max(35, Math.min(height - 35, point.y + force[node.id].y));
+            });
+        }
+    }
+
+    function isVisible(node) {
+        const query = search.value.trim().toLocaleLowerCase();
+        const categoryMatch = activeCategory === 'all' || (node.categories || []).includes(activeCategory);
+        const haystack = [node.title].concat(node.tags || [], node.categories || []).join(' ').toLocaleLowerCase();
+        return categoryMatch && (!query || haystack.includes(query));
+    }
+
+    function svgElement(type, attributes) {
+        const element = document.createElementNS(ns, type);
+        Object.keys(attributes).forEach(function (key) { element.setAttribute(key, attributes[key]); });
+        return element;
+    }
+
+    function renderDetail(node) {
+        if (!node) {
+            detail.innerHTML = '<div class="graph-detail-empty"><span class="graph-detail-icon">✦</span><h2>노드를 선택해보세요</h2><p>연결 관계를 보고 싶은 글을 클릭하면 제목, 카테고리, 관련 글이 여기에 표시됩니다.</p></div>';
+            return;
+        }
+        const related = edges
+            .filter(function (edge) { return edge.a === node.index || edge.b === node.index; })
+            .map(function (edge) { return nodes[edge.a === node.index ? edge.b : edge.a]; })
+            .filter(function (item) { return item && isVisible(item); })
+            .sort(function (a, b) { return a.title.localeCompare(b.title, 'ko'); });
+        const category = (node.categories || [])[0] || '미분류';
+        const tags = (node.tags || []).map(function (tag) { return '<span>' + tag + '</span>'; }).join('');
+        const relatedHtml = related.length
+            ? related.map(function (item) { return '<li><a href="' + item.url + '">' + item.title + '</a></li>'; }).join('')
+            : '<li class="graph-related-empty">현재 필터에서 연결된 글이 없습니다.</li>';
+        detail.innerHTML = '<div class="graph-detail-top"><span class="graph-detail-dot" style="background:' + categoryColor[category] + '"></span><span>' + shortCategory(category) + '</span><time>' + node.date + '</time></div>' +
+            '<h2>' + node.title + '</h2><p>' + (node.summary || '요약이 등록되지 않은 글입니다.') + '</p>' +
+            '<div class="graph-tags">' + tags + '</div><a class="graph-read-link" href="' + node.url + '">글 읽기 <span>↗</span></a>' +
+            '<div class="graph-related"><h3>연결된 글 <em>' + related.length + '</em></h3><ul>' + relatedHtml + '</ul></div>';
+    }
+
+    function draw() {
+        edgeLayer.replaceChildren();
+        nodeLayer.replaceChildren();
+        let visibleCount = 0;
+        const visible = {};
+        nodes.forEach(function (node) {
+            visible[node.id] = isVisible(node);
+            if (visible[node.id]) visibleCount += 1;
+        });
+        empty.hidden = visibleCount > 0;
+        edges.forEach(function (edge) {
+            const aNode = nodes[edge.a];
+            const bNode = nodes[edge.b];
+            const line = svgElement('line', {
+                x1: positions[aNode.id].x,
+                y1: positions[aNode.id].y,
+                x2: positions[bNode.id].x,
+                y2: positions[bNode.id].y,
+                class: 'graph-edge' + (visible[aNode.id] && visible[bNode.id] ? '' : ' is-muted')
+            });
+            edgeLayer.appendChild(line);
+        });
+        nodes.forEach(function (node) {
+            const point = positions[node.id];
+            const group = svgElement('g', {
+                class: 'graph-node' + (visible[node.id] ? '' : ' is-muted') + (selectedId === node.id ? ' is-selected' : ''),
+                transform: 'translate(' + point.x + ' ' + point.y + ')',
+                tabindex: visible[node.id] ? '0' : '-1',
+                role: 'button',
+                'aria-label': node.title
+            });
+            const category = (node.categories || [])[0] || '미분류';
+            const degree = edges.filter(function (edge) { return edge.a === node.index || edge.b === node.index; }).length;
+            const circle = svgElement('circle', { r: 8 + Math.min(6, degree), fill: categoryColor[category] || '#64748b' });
+            const label = svgElement('text', { y: 28, 'text-anchor': 'middle' });
+            label.textContent = node.title.length > 19 ? node.title.slice(0, 19) + '…' : node.title;
+            const title = svgElement('title', {});
+            title.textContent = node.title;
+            group.appendChild(circle);
+            group.appendChild(label);
+            group.appendChild(title);
+            group.addEventListener('click', function () {
+                selectedId = node.id;
+                renderDetail(node);
+                draw();
+            });
+            group.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    selectedId = node.id;
+                    renderDetail(node);
+                    draw();
+                }
+            });
+            nodeLayer.appendChild(group);
+        });
+        if (selectedId) {
+            const selected = nodes.find(function (node) { return node.id === selectedId; });
+            if (selected && !isVisible(selected)) {
+                selectedId = null;
+                renderDetail(null);
+            }
+        }
+    }
+
+    search.addEventListener('input', draw);
+    buildGraph();
+    draw();
+})();
+</script>
+
+{{ partialCached "footer/footer" . }}
+{{ end }}
+
+{{ define "right-sidebar" }}{{ end }}

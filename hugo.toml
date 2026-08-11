@@ -64,6 +64,13 @@ buildExpired = false
     weight = 40
     [menu.main.params]
       icon = "tag"
+  [[menu.main]]
+    identifier = "graph"
+    name = "그래프 탐색"
+    url = "/graph/"
+    weight = 50
+    [menu.main.params]
+      icon = "graph"
 
   [[menu.social]]
     identifier = "youtube"
