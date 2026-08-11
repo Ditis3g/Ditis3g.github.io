@@ -247,6 +247,7 @@
             if (!nodeDrag.moved && Math.hypot(nextX - nodeDrag.startX, nextY - nodeDrag.startY) > 4) {
                 nodeDrag.moved = true;
                 nodeDrag.group.classList.add('is-dragging');
+                svg.setPointerCapture(event.pointerId);
             }
             positions[nodeDrag.nodeId].x = nextX;
             positions[nodeDrag.nodeId].y = nextY;
@@ -682,9 +683,9 @@
                     startY: positions[node.id].y,
                     moved: false
                 };
-                svg.setPointerCapture(event.pointerId);
             });
-            group.addEventListener('click', function () {
+            group.addEventListener('click', function (event) {
+                event.stopPropagation();
                 if (suppressClick) {
                     suppressClick = false;
                     return;
