@@ -516,7 +516,7 @@ article.main-article .article-title {
 
 .graph-node circle {
     stroke: var(--card-background);
-    stroke-width: 3;
+    stroke-width: 1.5;
     transition: r .22s ease, stroke-width .18s ease, filter .18s ease, opacity .18s ease;
 }
 
@@ -525,17 +525,22 @@ article.main-article .article-title {
     font-family: var(--base-font-family);
     font-size: 11px;
     pointer-events: none;
+    transition: opacity .18s ease, fill .18s ease;
+}
+
+.graph-node text.is-hidden {
+    opacity: 0;
 }
 
 .graph-node:hover circle,
 .graph-node:focus circle {
     filter: brightness(.86) drop-shadow(0 4px 7px rgba(15, 23, 42, .2));
-    stroke-width: 5;
+    stroke-width: 2;
 }
 
 .graph-node.is-selected circle {
-    stroke: var(--accent-color);
-    stroke-width: 5;
+    stroke: var(--card-text-color-main);
+    stroke-width: 2;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .18));
 }
 
@@ -545,12 +550,12 @@ article.main-article .article-title {
 }
 
 .graph-node.is-related circle {
-    stroke-width: 4;
+    filter: brightness(1.08);
 }
 
 .graph-node.is-hovered circle {
-    stroke: var(--accent-color);
-    stroke-width: 6;
+    stroke: var(--card-text-color-main);
+    stroke-width: 2;
     filter: drop-shadow(0 0 0.45rem color-mix(in srgb, var(--accent-color) 48%, transparent));
 }
 

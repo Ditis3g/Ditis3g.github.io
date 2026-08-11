@@ -129,6 +129,7 @@
     function applyZoom() {
         viewport.setAttribute('transform', 'translate(' + zoom.x + ' ' + zoom.y + ') scale(' + zoom.scale + ')');
         zoomValue.textContent = Math.round(zoom.scale * 100) + '%';
+        updateNodeLabels();
     }
 
     function pointerInSvg(event) {
@@ -410,6 +411,14 @@
         const related = focusId ? connectedIds(focusId) : new Set();
         nodeLayer.querySelectorAll('.graph-node').forEach(function (element) {
             const relatedToFocus = !focusId || element.dataset.nodeId === focusId || related.has(element.dataset.nodeId);
+            const isActive = Boolean(focusId) && element.dataset.nodeId === focusId;
+            const circle = element.querySelector('circle');
+            if (circle) {
+                const baseRadius = Number(circle.dataset.baseRadius || circle.getAttribute('r'));
+                circle.setAttribute('r', (isActive ? baseRadius * 1.3 : baseRadius).toFixed(2));
+                const label = element.querySelector('.graph-node-label');
+                if (label) label.setAttribute('y', (baseRadius * (isActive ? 1.3 : 1) + 5).toFixed(2));
+            }
             element.classList.toggle('is-related', Boolean(focusId) && relatedToFocus);
             element.classList.toggle('is-dimmed', Boolean(focusId) && !relatedToFocus);
             element.classList.toggle('is-hovered', Boolean(hoveredId) && element.dataset.nodeId === hoveredId);
@@ -420,6 +429,18 @@
                 element.dataset.edgeB === focusId;
             element.classList.toggle('is-highlight', Boolean(focusId) && relatedToFocus);
             element.classList.toggle('is-dimmed', Boolean(focusId) && !relatedToFocus);
+        });
+        updateNodeLabels();
+    }
+
+    function updateNodeLabels() {
+        const focusId = hoveredId || selectedId;
+        const related = focusId ? connectedIds(focusId) : new Set();
+        nodeLayer.querySelectorAll('.graph-node').forEach(function (element) {
+            const nodeId = element.dataset.nodeId;
+            const showLabel = zoom.scale > 1.05 || nodeId === focusId || related.has(nodeId);
+            const label = element.querySelector('.graph-node-label');
+            if (label) label.classList.toggle('is-hidden', !showLabel);
         });
     }
 
@@ -508,8 +529,9 @@
             });
             const category = (node.categories || [])[0] || '미분류';
             const degree = edges.filter(function (edge) { return edge.a === node.index || edge.b === node.index; }).length;
-            const circle = svgElement('circle', { r: 9 + Math.min(13, degree * 1.35), fill: categoryColor[category] || '#64748b' });
-            const label = svgElement('text', { y: 28, 'text-anchor': 'middle' });
+            const baseRadius = 4.8 + Math.min(6.5, Math.sqrt(degree + 1) * 1.45);
+            const circle = svgElement('circle', { r: baseRadius.toFixed(2), fill: categoryColor[category] || '#64748b', 'data-base-radius': baseRadius.toFixed(2) });
+            const label = svgElement('text', { y: baseRadius + 5, 'text-anchor': 'middle', class: 'graph-node-label is-hidden' });
             label.textContent = node.title.length > 19 ? node.title.slice(0, 19) + '…' : node.title;
             const title = svgElement('title', {});
             title.textContent = node.title;
