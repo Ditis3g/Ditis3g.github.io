@@ -4,8 +4,6 @@ date: 2026-08-11
 draft: false
 tags: ["LLM", "VLM", "VLA"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 310
-book_chapter: "LLM·VLM·VLA — 무엇이 행동을 바꾸는가"
 ---
 
 세 모델의 차이는 이름보다 출력에서 선명해진다. LLM은 언어를 입력받아 언어를 출력한다. VLM은 이미지와 언어를 함께 다루며 장면을 설명하거나 질문에 답한다. VLA는 여기서 한 걸음 더 나아가 로봇 행동을 출력으로 연결한다.

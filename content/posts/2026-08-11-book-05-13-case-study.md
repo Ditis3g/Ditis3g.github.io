@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["Sim-to-Real", "사례 연구", "물류 로봇"]
 categories: ["5부. 가상에서 현실로"]
-book_weight: 620
+book_weight: 560
 book_chapter: "가상 창고에서 현실 창고로 상자를 옮기기"
 ---
 

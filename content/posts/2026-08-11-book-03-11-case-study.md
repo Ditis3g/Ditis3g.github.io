@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["로봇 학습", "사례 연구", "모방학습"]
 categories: ["3부. 로봇은 어떻게 배우고 움직이는가"]
-book_weight: 240
+book_weight: 200
 book_chapter: "수건 접기 데이터가 정책이 되는 과정"
 ---
 

@@ -4,7 +4,7 @@ date: 2026-08-11
 draft: false
 tags: ["VLA", "사례 연구", "의미 일반화"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 405
+book_weight: 360
 book_chapter: "‘버려야 할 것’을 찾는 VLA의 두 벽"
 ---
 

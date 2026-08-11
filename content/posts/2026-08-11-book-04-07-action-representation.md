@@ -4,8 +4,6 @@ date: 2026-08-11
 draft: false
 tags: ["VLA", "Action Token", "Diffusion", "Flow"]
 categories: ["4부. VLA를 자세히 들여다보기"]
-book_weight: 360
-book_chapter: "Action Token, 연속 행동, Diffusion과 Flow"
 ---
 
 행동은 언어 토큰처럼 이산화할 수도 있고, 연속적인 값으로 직접 예측할 수도 있다. 어떤 표현을 선택하느냐에 따라 모델과 제어기를 연결하는 방식, 정밀도, 생성 속도, 다양한 행동을 표현하는 능력이 달라진다.

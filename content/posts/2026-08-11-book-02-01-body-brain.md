@@ -5,7 +5,7 @@ draft: false
 tags: ["피지컬 AI", "로봇 시스템", "체화 지능"]
 categories: ["2부. 피지컬 AI는 어떻게 배우고 움직이는가"]
 book_weight: 70
-book_chapter: "로봇은 몸이고 피지컬 AI는 두뇌다"
+book_chapter: "몸과 두뇌 — 피지컬 AI의 현실 폐루프"
 ---
 
 1부에서 우리는 피지컬 AI가 기존 자동화의 빈틈을 메우는 방향이라고 보았다. 이제 질문을 바꿔 보자.
