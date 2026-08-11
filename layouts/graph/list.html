@@ -67,7 +67,11 @@
 <script type="application/json" id="graph-data">{{ $items | jsonify | safeHTML }}</script>
 <script>
 (function () {
-    const data = JSON.parse(document.getElementById('graph-data').textContent);
+    const rawData = document.getElementById('graph-data').textContent;
+    let data = JSON.parse(rawData);
+    // Hugo can serialize the slice as a JSON string in the embedded script.
+    // Normalize both the string and array forms before building the graph.
+    if (typeof data === 'string') data = JSON.parse(data);
     const svg = document.getElementById('graph-svg');
     const edgeLayer = document.getElementById('graph-edges');
     const nodeLayer = document.getElementById('graph-nodes');
