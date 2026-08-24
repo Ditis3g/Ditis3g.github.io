@@ -125,6 +125,18 @@ function Get-ClaudeDraft($claudeExe, $blogDir, $inputText, $utf8) {
   # as ANSI, so a raw Korean literal is mojibake at runtime and the match
   # silently never fires (that left the 07-10..07-12 briefings stuck as drafts).
   $isNewsBriefing = $raw -match 'categories:\s*\[\s*"\uBD80\uB85D\. AI \uB274\uC2A4 \uBE0C\uB9AC\uD551"\s*\]'
+
+  # A post with front matter but no `draft:` key at all defaults to PUBLIC in
+  # Hugo -- that silently published the 2026-07-14..25 auth-failure/injection
+  # outputs (they had no draft field to flip). Insert one explicitly before
+  # applying the true/false policy below, so every post always carries it.
+  if ($raw -notmatch '(?m)^draft:\s*(true|false)\s*$') {
+    $openTag = [regex]::Match($raw, '^(---|\+\+\+)\s*\r?\n')
+    if ($openTag.Success) {
+      $raw = $raw.Insert($openTag.Length, "draft: true`r`n")
+    }
+  }
+
   if ($isNewsBriefing) {
     if ($raw -match 'draft:\s*true') { $raw = $raw -replace 'draft:\s*true', 'draft: false' }
   } else {
