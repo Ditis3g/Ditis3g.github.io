@@ -89,13 +89,25 @@ function Get-ClaudeDraft($claudeExe, $blogDir, $inputText, $utf8) {
   # by a YAML key line (e.g. `title:`) so a lone `---` separator isn't mistaken
   # for the front matter open.
   $fmStart = [regex]::Match($raw, '(?ms)^(---|\+\+\+)\s*\r?\n[a-zA-Z_][a-zA-Z0-9_-]*\s*:')
+  $fmFound = $fmStart.Success
   if ($fmStart.Success) {
     if ($fmStart.Index -gt 0) { $raw = $raw.Substring($fmStart.Index).Trim() }
   } else {
     $loose = [regex]::Match($raw, '(?m)^(---|\+\+\+)\s*$')
     if ($loose.Success -and $loose.Index -gt 0) {
       $raw = $raw.Substring($loose.Index).Trim()
+      $fmFound = $true
     }
+  }
+
+  # No Hugo front matter anywhere in the output -> claude did not produce a
+  # post (e.g. an auth-failure message like "OAuth session expired" or "Your
+  # organization has disabled..."). Saving that as a post silently published
+  # garbage for a week (2026-08-17..23) before anyone noticed. Treat this the
+  # same as empty output: fail the memo so the next run retries it.
+  if (-not $fmFound) {
+    Log ("claude output had no Hugo front matter; treating as failure. output: " + ($raw -replace '\r?\n',' ' | ForEach-Object { $_.Substring(0, [Math]::Min(200, $_.Length)) }))
+    return $null
   }
 
   # Also strip an inner ```markdown fence the model may have placed RIGHT AFTER
