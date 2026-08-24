@@ -10,7 +10,7 @@
 $ErrorActionPreference = 'Stop'
 
 $BlogDir    = Split-Path $PSScriptRoot -Parent   # repo location (works wherever cloned)
-$MemoDir    = 'D:\Workspace\blog-memo'
+$MemoDir    = 'D:\blog-memo'
 $PostsDir   = Join-Path $BlogDir 'content\posts'
 $PromptFile = Join-Path $BlogDir 'scripts\prompt-instructions.txt'
 $LogFile    = Join-Path $BlogDir 'scripts\daily-blog.log'
