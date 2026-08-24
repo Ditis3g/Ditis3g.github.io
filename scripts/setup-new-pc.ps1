@@ -9,7 +9,7 @@
 
 $ErrorActionPreference = 'Stop'
 $BlogDir = Split-Path $PSScriptRoot -Parent
-$MemoDir = 'D:\blog-memo'
+$MemoDir = 'D:\Workspace\blog-memo'
 
 Write-Host "=== 블로그 자동화 셋업 시작 ($BlogDir) ===" -ForegroundColor Cyan
 
