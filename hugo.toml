@@ -11,6 +11,10 @@ buildDrafts = false
 buildFuture = false
 buildExpired = false
 
+[privacy]
+  [privacy.youtube]
+    privacyEnhanced = true
+
 [pagination]
   pagerSize = 10
 
