@@ -1,0 +1,45 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>점수가 softmax를 거쳐 몫이 되고, 그 몫으로 V를 가중합하는 과정</title>
+<desc>토큰 Q와 후보 K들의 내적으로 점수 3.0, 1.8, 1.1, -1.2가 나오고, 스케일링 후 softmax를 거치면 순서는 유지한 채 합이 1인 몫 0.68, 0.21, 0.10, 0.01이 된다. 이 몫으로 각 V를 가중합한 결과가 원래 토큰에 더해진다.</desc>
+<defs>
+<marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<style>
+.lbl{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:14px;fill:#3d3d3a;}
+.lblm{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:12px;fill:#6f6e69;}
+.wt{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:12px;fill:#ffffff;}
+.dk{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:12px;fill:#2c2c2a;}
+@media (prefers-color-scheme:dark){.lbl{fill:#e8e7e2;}.lblm{fill:#a9a8a2;}}
+</style>
+</defs>
+
+<text class="lbl" x="20" y="28">점수 (Q·K, 스케일링 후)</text>
+<rect x="20" y="40" width="90" height="30" rx="5" fill="#D85A30"/><text class="wt" x="65" y="55" text-anchor="middle" dominant-baseline="central">3.0</text>
+<rect x="118" y="40" width="90" height="30" rx="5" fill="#1D9E75"/><text class="wt" x="163" y="55" text-anchor="middle" dominant-baseline="central">1.8</text>
+<rect x="216" y="40" width="90" height="30" rx="5" fill="#1D9E75" opacity="0.7"/><text class="wt" x="261" y="55" text-anchor="middle" dominant-baseline="central">1.1</text>
+<rect x="314" y="40" width="90" height="30" rx="5" fill="#8a8984" opacity="0.6"/><text class="wt" x="359" y="55" text-anchor="middle" dominant-baseline="central">-1.2</text>
+<text class="lblm" x="65" y="88" text-anchor="middle">경계선 패치</text>
+<text class="lblm" x="163" y="88" text-anchor="middle">자기 자신</text>
+<text class="lblm" x="261" y="88" text-anchor="middle">밝은 면</text>
+<text class="lblm" x="359" y="88" text-anchor="middle">먼 배경</text>
+
+<line x1="212" y1="110" x2="212" y2="140" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow3)"/>
+<rect x="150" y="110" width="124" height="28" rx="14" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/>
+<text class="dk" x="212" y="124" text-anchor="middle" dominant-baseline="central">softmax</text>
+
+<text class="lbl" x="20" y="172">몫 (합이 1)</text>
+<rect x="20" y="184" width="90" height="30" rx="5" fill="#D85A30"/><text class="wt" x="65" y="199" text-anchor="middle" dominant-baseline="central">0.68</text>
+<rect x="118" y="184" width="90" height="30" rx="5" fill="#1D9E75"/><text class="wt" x="163" y="199" text-anchor="middle" dominant-baseline="central">0.21</text>
+<rect x="216" y="184" width="90" height="30" rx="5" fill="#1D9E75" opacity="0.7"/><text class="wt" x="261" y="199" text-anchor="middle" dominant-baseline="central">0.10</text>
+<rect x="314" y="184" width="90" height="30" rx="5" fill="#8a8984" opacity="0.6"/><text class="wt" x="359" y="199" text-anchor="middle" dominant-baseline="central">0.01</text>
+<text class="lblm" x="212" y="232" text-anchor="middle">음수는 0이 되는 게 아니라 아주 작은 몫이 된다 · 순서는 그대로 유지</text>
+
+<line x1="440" y1="199" x2="500" y2="199" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow3)"/>
+<text class="lblm" x="470" y="185" text-anchor="middle">V 가중합</text>
+<circle cx="540" cy="199" r="34" fill="#1D9E75"/>
+<text class="wt" x="540" y="199" text-anchor="middle" dominant-baseline="central">ΔE</text>
+<line x1="574" y1="199" x2="620" y2="199" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow3)"/>
+<circle cx="644" cy="199" r="14" fill="#ffffff" stroke="#8a8984" stroke-width="1"/>
+<text class="dk" x="644" y="199" text-anchor="middle" dominant-baseline="central">+</text>
+<text class="lblm" x="540" y="252" text-anchor="middle">원래 토큰을 대체하지 않고</text>
+<text class="lblm" x="540" y="268" text-anchor="middle">더해진다 (잔차 연결)</text>
+</svg>

@@ -1,0 +1,51 @@
+<svg width="100%" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>토큰 하나에서 Q·K·V 세 벡터가 나오는 과정</title>
+<desc>같은 토큰 벡터 x 하나가 서로 다른 학습된 행렬 W_Q, W_K, W_V 세 개를 각각 통과해 Query, Key, Value 세 벡터가 된다. 세 종류의 정보가 원래 나뉘어 있던 것이 아니라, 같은 입력을 세 번 다르게 변환한 결과다.</desc>
+<defs>
+<marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<style>
+.lbl{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:14px;fill:#3d3d3a;}
+.lblm{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:12px;fill:#6f6e69;}
+.wt{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:13px;fill:#ffffff;}
+.dk{font-family:'Malgun Gothic','Segoe UI',-apple-system,Roboto,sans-serif;font-size:13px;fill:#2c2c2a;}
+@media (prefers-color-scheme:dark){.lbl{fill:#e8e7e2;}.lblm{fill:#a9a8a2;}}
+</style>
+</defs>
+
+<rect x="20" y="112" width="110" height="36" rx="6" fill="#D85A30"/>
+<text class="wt" x="75" y="130" text-anchor="middle" dominant-baseline="central">토큰 벡터 x</text>
+<text class="lblm" x="75" y="164" text-anchor="middle">같은 입력 하나</text>
+
+<path d="M130 130 L216 70" fill="none" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow2)"/>
+<path d="M130 130 L216 130" fill="none" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow2)"/>
+<path d="M130 130 L216 190" fill="none" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow2)"/>
+
+<rect x="220" y="46" width="120" height="48" rx="6" fill="#1D9E75"/>
+<text class="wt" x="280" y="66" text-anchor="middle" dominant-baseline="central">W_Q</text>
+<text class="lblm" x="280" y="86" text-anchor="middle" fill="#ffffff">질문 변환</text>
+
+<rect x="220" y="106" width="120" height="48" rx="6" fill="#1D9E75"/>
+<text class="wt" x="280" y="126" text-anchor="middle" dominant-baseline="central">W_K</text>
+<text class="lblm" x="280" y="146" text-anchor="middle" fill="#ffffff">명함 변환</text>
+
+<rect x="220" y="166" width="120" height="48" rx="6" fill="#1D9E75"/>
+<text class="wt" x="280" y="186" text-anchor="middle" dominant-baseline="central">W_V</text>
+<text class="lblm" x="280" y="206" text-anchor="middle" fill="#ffffff">꾸러미 변환</text>
+
+<line x1="340" y1="70" x2="420" y2="70" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow2)"/>
+<line x1="340" y1="130" x2="420" y2="130" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow2)"/>
+<line x1="340" y1="190" x2="420" y2="190" stroke="#8a8984" stroke-width="1.5" marker-end="url(#arrow2)"/>
+
+<rect x="424" y="50" width="52" height="40" rx="6" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/>
+<text class="dk" x="450" y="70" text-anchor="middle" dominant-baseline="central">Q</text>
+<rect x="424" y="110" width="52" height="40" rx="6" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/>
+<text class="dk" x="450" y="130" text-anchor="middle" dominant-baseline="central">K</text>
+<rect x="424" y="170" width="52" height="40" rx="6" fill="#ECEAE3" stroke="#b9b7ae" stroke-width="0.5"/>
+<text class="dk" x="450" y="190" text-anchor="middle" dominant-baseline="central">V</text>
+
+<text class="lbl" x="500" y="65" >— 내가 무엇을 찾는가</text>
+<text class="lbl" x="500" y="125">— 나는 무엇으로 찾아지는가</text>
+<text class="lbl" x="500" y="185">— 선택되면 무엇을 건네는가</text>
+
+<text class="lblm" x="340" y="240" text-anchor="middle">세 종류의 정보가 원래 나뉘어 있던 게 아니라, 같은 토큰을 세 번 다르게 변환한 결과다</text>
+</svg>
