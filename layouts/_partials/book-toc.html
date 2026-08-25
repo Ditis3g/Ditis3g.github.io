@@ -104,19 +104,19 @@
         {{- end }}
     </details>
     {{- end }}
-    {{/* AI 뉴스 브리핑: 접이식(기본 펼침), 최신 3개만 표시 */}}
-    {{- $news := where (where site.RegularPages "Section" "posts") "Params.categories" "intersect" (slice "부록. AI 뉴스 브리핑") -}}
+    {{/* 피지컬 AI 주간 분석: 접이식(기본 펼침), 최신 3개만 표시 */}}
+    {{- $news := where (where site.RegularPages "Section" "posts") "Params.categories" "intersect" (slice "부록. 피지컬 AI 주간 분석") -}}
     {{- if $news -}}
     <details class="book-part book-fold book-news" open>
         <summary class="book-part-head">
             <span class="book-part-badge">부록</span>
-            <h2 class="book-part-name">AI 뉴스 브리핑</h2>
+            <h2 class="book-part-name">피지컬 AI 주간 분석</h2>
             <span class="book-fold-arrow">▶</span>
         </summary>
         {{- range first 3 $news.ByDate.Reverse }}
         <a class="book-chapter" href="{{ .RelPermalink }}">
             <span class="book-chapter-num">{{ .Date.Format "2006-01-02" }}</span>
-            <span class="book-chapter-name">{{ strings.TrimPrefix "[AI 뉴스 브리핑] " .Title }}{{ if .Draft }}<span class="book-badge">초안</span>{{ end }}</span>
+            <span class="book-chapter-name">{{ .Title }}{{ if .Draft }}<span class="book-badge">초안</span>{{ end }}</span>
         </a>
         {{- end }}
         {{- with (index $news 0).GetTerms "categories" }}

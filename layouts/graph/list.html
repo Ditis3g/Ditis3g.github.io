@@ -2,7 +2,7 @@
 
 {{ define "main" }}
 {{- $allPosts := where site.RegularPages "Section" "posts" -}}
-{{- $excludedCategories := slice "부록. 최전선 논문 읽기" "부록. 블로그 메이킹" "부록. AI 뉴스 브리핑" -}}
+{{- $excludedCategories := slice "부록. 최전선 논문 읽기" "부록. 블로그 메이킹" "부록. 피지컬 AI 주간 분석" -}}
 {{- $excludedPosts := where $allPosts "Params.categories" "intersect" $excludedCategories -}}
 {{- $posts := complement $excludedPosts $allPosts -}}
 {{- $posts = where $posts "Title" "!=" "" -}}

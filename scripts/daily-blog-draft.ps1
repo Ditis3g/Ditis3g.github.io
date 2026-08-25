@@ -115,16 +115,18 @@ function Get-ClaudeDraft($claudeExe, $blogDir, $inputText, $utf8) {
   $raw = $raw -replace '^(---|\+\+\+)\s*\r?\n\s*```(?:markdown|md)?\s*\r?\n(---|\+\+\+)', '$1'
 
   # Draft policy:
-  #  - "부록. AI 뉴스 브리핑" posts are auto-curated news roundups (low
-  #    editorial risk, no book_weight needed -- the book-toc template picks
-  #    them up by category alone) -> publish immediately, no review gate.
+  #  - "부록. 피지컬 AI 주간 분석" posts are the weekly YouTube-trend deep-dive
+  #    (low editorial risk once the format is proven, no book_weight needed --
+  #    the book-toc template picks them up by category alone) -> publish
+  #    immediately, no review gate.
   #  - Everything else keeps the safety net -> force draft: true. These need
   #    a human pass (and book_weight/book_chapter via the blog-memo skill)
   #    before they enter the book TOC, so never auto-publish them.
-  # "부록. AI 뉴스 브리핑" via \uXXXX escapes: PS5.1 reads this BOM-less file
-  # as ANSI, so a raw Korean literal is mojibake at runtime and the match
-  # silently never fires (that left the 07-10..07-12 briefings stuck as drafts).
-  $isNewsBriefing = $raw -match 'categories:\s*\[\s*"\uBD80\uB85D\. AI \uB274\uC2A4 \uBE0C\uB9AC\uD551"\s*\]'
+  # via \uXXXX escapes: PS5.1 reads this BOM-less file as ANSI, so a raw
+  # Korean literal is mojibake at runtime and the match silently never
+  # fires (that left the 07-10..07-12 briefings stuck as drafts, back
+  # when the category was still called "부록. AI 뉴스 브리핑").
+  $isNewsBriefing = $raw -match 'categories:\s*\[\s*"\uBD80\uB85D\. \uD53C\uC9C0\uCEEC AI \uC8FC\uAC04 \uBD84\uC11D"\s*\]'
 
   # A post with front matter but no `draft:` key at all defaults to PUBLIC in
   # Hugo -- that silently published the 2026-07-14..25 auth-failure/injection
