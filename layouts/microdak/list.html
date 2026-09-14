@@ -19,6 +19,8 @@
       {{ with resources.Get "images/microdak/microdak-character.png" }}
         {{ $small := .Resize "480x webp q88" }}{{ $large := .Resize "900x webp q90" }}
         <img src="{{ $large.RelPermalink }}" srcset="{{ $small.RelPermalink }} 480w, {{ $large.RelPermalink }} 900w" sizes="(max-width: 520px) 180px, (max-width: 800px) 240px, 330px" width="{{ $large.Width }}" height="{{ $large.Height }}" alt="실제 마이크로닥 설계를 바탕으로 표현한 빨간 볏, 노란 부리와 발가락, 서보 관절을 가진 작은 닭 로봇" fetchpriority="high" decoding="async">
+      {{ else }}
+        {{ errorf "MicroDak character image is missing: assets/images/microdak/microdak-character.png" }}
       {{ end }}
       <figcaption>설계 도면 기반 AI 이미지</figcaption>
     </figure>
