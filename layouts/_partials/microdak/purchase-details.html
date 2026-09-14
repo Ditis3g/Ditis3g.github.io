@@ -1,0 +1,22 @@
+{{ $d := hugo.Data.microdak }}{{ $s := partial "microdak/summary.html" $d }}
+{{ $orderLabels := dict "unrecorded" "미입력" "planned" "미발주" "ordered" "발주·배송 중" "received" "입고 기록" }}
+  <section class="md-section" id="materials" aria-labelledby="materials-title">
+    <div class="md-section-head"><div><p class="md-eyebrow">MATERIALS & PROCUREMENT</p><h2 id="materials-title">준비물은 얼마나 모였나요?</h2></div><span class="md-muted">{{ len $d.parts }}개 예산 항목 · 자재 {{ $s.materials }}개 품목</span></div>
+    <div class="md-material-summary"><span><i class="md-dot md-dot-done"></i>수량 충족 <b>{{ $s.ready }}</b></span><span><i class="md-dot md-dot-blocked"></i>수량 부족 <b>{{ $s.short }}</b></span><span><i class="md-dot"></i>입고 미확인 <b>{{ $s.unknown }}</b></span><span>발주·배송 중 <b>{{ $s.ordered }}</b></span></div>
+    <p class="md-small">필요 수량은 1대 제작을 위한 초기 구매 단위입니다. HAT는 3장 구매·1장 장착, IMU는 1로트 기준입니다. 수량 충족은 실물 성능 검증과 별개입니다.</p>
+    <details class="md-inventory-details" open>
+      <summary><span class="md-inventory-toggle">{{ partial "microdak/icon.html" "materials" }}<span><strong>자재·예산 목록</strong><small>{{ len $d.parts }}개 항목의 수량 · 견적 · 입고 · 실제 지출</small></span></span><span class="md-disclosure-hint">목록 보기 <b aria-hidden="true">＋</b></span></summary>
+    <div class="md-table-wrap" tabindex="0" role="region" aria-label="자재 및 비용 표, 좁은 화면에서 가로 스크롤">
+      <table class="md-table md-parts-table"><caption>자재별 계획 수량·견적·입고·실지출 비교</caption><thead><tr><th scope="col">품목 / 가격 근거</th><th scope="col">필요 수량</th><th scope="col">기준 단가</th><th scope="col">예상 금액</th><th scope="col">입고 / 부족</th><th scope="col">발주 상태</th><th scope="col">실제 지출</th><th scope="col">정산 차액</th></tr></thead><tbody>
+      {{ range $d.parts }}<tr>
+        <th scope="row"><span class="md-item-id">{{ .id }} · {{ .category }}</span><strong>{{ .name }}</strong><span class="md-price-basis">{{ .price_basis }}</span><details><summary>산정 조건{{ if .purchase_note }} · 구매 메모{{ end }}</summary><p>{{ .note }}</p><p>예상 범위: {{ partial "microdak/money.html" .low_krw }}–{{ partial "microdak/money.html" .high_krw }}원</p>{{ with .purchase_note }}<p>{{ . }}</p>{{ end }}{{ with .updated }}<p>실적 갱신: {{ . }}</p>{{ end }}</details></th>
+        <td>{{ .qty }}{{ .unit }}</td><td class="md-money">{{ partial "microdak/money.html" .unit_krw }}원</td><td class="md-money"><b>{{ partial "microdak/money.html" .estimate_krw }}원</b></td>
+        <td>{{ if eq .kind "reserve" }}<span class="md-muted">비용 항목</span>{{ else if eq .received_qty nil }}<span class="md-badge md-pending">미입력</span>{{ else }}<b>{{ .received_qty }}{{ .unit }} 입고</b><small class="{{ if ge .received_qty .qty }}md-text-done{{ else }}md-text-blocked{{ end }}">{{ if ge .received_qty .qty }}수량 충족{{ else }}{{ sub .qty .received_qty }}{{ .unit }} 부족{{ end }}</small>{{ end }}</td>
+        <td>{{ if eq .kind "reserve" }}—{{ else }}{{ index $orderLabels .order_status }}{{ end }}</td>
+        <td class="md-money">{{ if ne .actual_krw nil }}{{ partial "microdak/money.html" .actual_krw }}원<small>{{ if .actual_final }}정산 완료{{ else }}정산 중{{ end }}</small>{{ else }}<span class="md-muted">미입력</span>{{ end }}</td>
+        <td class="md-money">{{ if .actual_final }}{{ $diff := sub .actual_krw .estimate_krw }}{{ if gt $diff 0 }}+{{ end }}{{ partial "microdak/money.html" $diff }}원{{ else }}<span class="md-muted">—</span>{{ end }}</td>
+      </tr>{{ end }}
+      </tbody><tfoot><tr><th scope="row" colspan="3">기준 준비예산 / 실제 지출 입력분 합계</th><td class="md-money">{{ partial "microdak/money.html" $s.budget }}원</td><td colspan="2">실지출 {{ $s.recorded }}개 항목 입력</td><td class="md-money">{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}원{{ else }}미입력{{ end }}</td><td class="md-money">{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}—{{ end }}</td></tr></tfoot></table>
+    </div>
+    </details>
+  </section>

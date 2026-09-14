@@ -16,12 +16,17 @@ for (const p of d.parts) {
   assert(p.low_krw <= p.estimate_krw && p.estimate_krw <= p.high_krw, p.id + ': invalid range');
   assert(p.received_qty === null || isCount(p.received_qty), p.id + ': invalid received quantity');
   assert(p.actual_krw === null || isCount(p.actual_krw), p.id + ': invalid actual cost');
+  assert(p.remaining_krw === null || isCount(p.remaining_krw), p.id + ': invalid remaining cost');
+  assert(!p.actual_final || p.remaining_krw === null || p.remaining_krw === 0, p.id + ': settled item cannot have remaining cost');
   assert.equal(typeof p.actual_final, 'boolean', p.id + ': final must be boolean');
   assert(!p.actual_final || p.actual_krw !== null, p.id + ': cannot settle unknown cost');
   assert(['unrecorded','planned','ordered','received'].includes(p.order_status), p.id + ': invalid order state');
   assert(p.kind !== 'reserve' || p.received_qty === null, p.id + ': reserve has no inventory');
   assert(typeof p.note === 'string' && typeof p.purchase_note === 'string');
 }
+const groupedIds = d.purchase_groups.flatMap(g => g.part_ids);
+assert.equal(new Set(groupedIds).size, groupedIds.length, 'Purchase group duplicates');
+assert.deepEqual([...groupedIds].sort(), d.parts.filter(p=>p.kind==='material').map(p=>p.id).sort(), 'Purchase groups must cover each material exactly once');
 for (const item of [...d.hardware,...d.software]) assert(['done','progress','blocked','pending'].includes(item.state), item.title + ': invalid work state');
 const testIds = new Set();
 for (const t of d.tests) {

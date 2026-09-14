@@ -41,7 +41,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A02",
@@ -61,7 +62,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A03",
@@ -81,7 +83,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A04",
@@ -101,7 +104,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A05",
@@ -121,7 +125,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A06",
@@ -141,7 +146,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A07",
@@ -161,7 +167,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A08",
@@ -181,7 +188,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A09",
@@ -201,7 +209,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A10",
@@ -221,7 +230,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "A11",
@@ -241,7 +251,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B01",
@@ -261,7 +272,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B02",
@@ -281,7 +293,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B03",
@@ -301,7 +314,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B04",
@@ -321,7 +335,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B05",
@@ -341,7 +356,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B06",
@@ -361,7 +377,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B07",
@@ -381,7 +398,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B08",
@@ -401,7 +419,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "B09",
@@ -421,7 +440,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "C01",
@@ -441,7 +461,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "D01",
@@ -461,7 +482,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     },
     {
       "id": "D02",
@@ -481,7 +503,8 @@
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null
+      "updated": null,
+      "remaining_krw": null
     }
   ],
   "quotes": [
@@ -713,6 +736,57 @@
       "date": "2026-09-07",
       "title": "IMU 제조 예상·초기 품목 예산 정리",
       "detail": "IMU 제조 로트 1,080,000원 반영. 개발 인건비·VAT·납품 수량은 별도 확인."
+    }
+  ],
+  "purchase_groups": [
+    {
+      "id": "boards",
+      "name": "컴퓨터·보드",
+      "items": "Radxa · HAT C1 · 몸통 IMU",
+      "part_ids": [
+        "A02",
+        "A03",
+        "A04"
+      ]
+    },
+    {
+      "id": "power",
+      "name": "서보·전원",
+      "items": "서보 15개 · 배터리 · 전원 보호",
+      "part_ids": [
+        "A01",
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "B07"
+      ]
+    },
+    {
+      "id": "body",
+      "name": "센서·기구",
+      "items": "카메라 · ToF · 출력물 · 조립 부품",
+      "part_ids": [
+        "A05",
+        "A06",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B08",
+        "B09"
+      ]
+    },
+    {
+      "id": "tools",
+      "name": "개발·시험 장비",
+      "items": "IMU 평가보드 · 디버거 · 시험 배선",
+      "part_ids": [
+        "D01"
+      ]
     }
   ]
 }
