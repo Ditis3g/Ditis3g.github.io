@@ -1,0 +1,82 @@
+{{ define "body-class" }}microdak-page{{ end }}
+{{ define "head" }}
+{{ $css := resources.Get "css/microdak.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ end }}
+{{ define "main" }}
+{{ $d := hugo.Data.microdak }}{{ $s := partial "microdak/summary.html" $d }}
+{{ $orderLabels := dict "unrecorded" "미입력" "planned" "미발주" "ordered" "발주·배송 중" "received" "입고 기록" }}
+<div class="md-dashboard">
+  <header class="md-header" id="overview">
+    <div><p class="md-eyebrow">MICRODAK / PROJECT STATUS</p><h1>마이크로닥 <span>개발 대시보드</span></h1><p class="md-meta">현황 기준 {{ $d.updated }} <span>·</span> 제작사양서 {{ $d.specification }} <span>·</span> IMU 검토 {{ $d.review_date }}</p></div>
+    <span class="md-phase"><i aria-hidden="true"></i>{{ $d.phase }}</span>
+  </header>
+  <nav class="md-nav" aria-label="마이크로닥 현황 목차"><a href="#overview">전체 현황</a><a href="#budget">예산·견적</a><a href="#materials">자재·구매</a><a href="#hardware">HW 개발</a><a href="#software">SW 개발</a><a href="#tests">테스트</a></nav>
+  <div class="md-kpis" aria-label="프로젝트 핵심 현황">
+    <section class="md-kpi md-kpi-primary"><h2>기준 준비예산</h2><strong>{{ partial "microdak/money.html" $s.budget }}<small>원</small></strong><p>초기 구매 {{ partial "microdak/money.html" $s.initial }}원 + 개발·예비비</p></section>
+    <section class="md-kpi"><h2>실제 누적 지출</h2><strong>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}<small>원</small>{{ else }}미입력{{ end }}</strong><p>{{ $s.recorded }} / {{ len $d.parts }}개 예산 항목 입력{{ if gt $s.recorded 0 }} · 입력분 합계{{ end }}</p></section>
+    <section class="md-kpi"><h2>자재 확보</h2><strong>{{ if eq $s.unknown $s.materials }}확인 대기{{ else }}{{ $s.ready }}<small> / {{ $s.materials }}개 품목</small>{{ end }}</strong><p>수량 충족 {{ $s.ready }} · 부족 {{ $s.short }} · 미확인 {{ $s.unknown }}</p></section>
+    {{ $physical := where $d.tests "environment" "실물" }}{{ $passed := where $physical "state" "passed" }}{{ $pc := where $d.tests "environment" "PC" }}{{ $pcPassed := where $pc "state" "passed" }}
+    <section class="md-kpi"><h2>실물 시험 통과</h2><strong>{{ len $passed }}<small> / {{ len $physical }}개 항목</small></strong><p>PC 검사 {{ len $pcPassed }}개 통과 · {{ len (where $pc "state" "issue") }}개 제한 확인</p></section>
+  </div>
+  <p class="md-data-note">{{ if and (eq $s.recorded 0) (eq $s.unknown $s.materials) }}구매·입고·지출 실적은 아직 입력되지 않았습니다. {{ end }}미입력은 미구매나 지출 0원을 뜻하지 않습니다. 확보 수량과 실지출 입력분을 기준으로 집계합니다.</p>
+  <section class="md-section" aria-labelledby="priority-title">
+    <div class="md-section-head"><div><p class="md-eyebrow">NEXT DECISIONS</p><h2 id="priority-title">지금 해결할 세 가지</h2></div><span class="md-muted">제작·통전의 선행 조건</span></div>
+    <div class="md-priorities">{{ range $i, $p := $d.priorities }}<article><div class="md-priority-num">0{{ add $i 1 }}</div><div><span class="md-priority-label">{{ .status }}</span><h3>{{ .title }}</h3><p>{{ .detail }}</p></div></article>{{ end }}</div>
+  </section>
+  <section class="md-section" id="budget" aria-labelledby="budget-title">
+    <div class="md-section-head"><div><p class="md-eyebrow">BUDGET & QUOTES</p><h2 id="budget-title">예산과 실제 비용</h2></div><span class="md-muted">원화 · 견적 기준 {{ $d.price_date }}</span></div>
+    <div class="md-budget-layout">
+      <div class="md-panel">
+        <h3>어디에 예산이 들어가나요?</h3>
+        <div class="md-budget-bars">{{ range $i, $category := slice "핵심 전장" "기구·주변 부품" "배송·세금" "개발·예비비" }}
+          {{ $sum := 0 }}{{ range where $d.parts "category" $category }}{{ $sum = add $sum .estimate_krw }}{{ end }}
+          {{ $pct := mul (div (float $sum) (float $s.budget)) 100 }}
+          <div class="md-budget-row"><div><span>{{ $category }}</span><b>{{ partial "microdak/money.html" $sum }}원 <small>{{ printf "%.1f" $pct }}%</small></b></div><div class="md-track" aria-hidden="true"><span class="md-bar-{{ $i }}" style="width:{{ printf "%.2f" $pct }}%"></span></div></div>
+        {{ end }}</div>
+        <div class="md-budget-range"><span>조건부 예산 범위</span><b>{{ partial "microdak/money.html" $s.low }}–{{ partial "microdak/money.html" $s.high }}원</b></div>
+        <p class="md-small">낮음·높음은 가격 변동 시나리오입니다. HAT 3장 견적과 IMU 제조 예상은 같은 금액을 적용했습니다. 실시간 가격·확정 상한이 아닙니다.</p>
+      </div>
+      <div class="md-panel md-cost-summary"><h3>실지출 정산</h3>
+        <dl><div><dt>기준 준비예산</dt><dd>{{ partial "microdak/money.html" $s.budget }}원</dd></div>
+        <div><dt>누적 지출 <small>입력분</small></dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}원{{ else }}미입력{{ end }}</dd></div>
+        <div><dt>예산 − 누적 지출</dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" (sub $s.budget $s.actual) }}원{{ else }}계산 대기{{ end }}</dd></div>
+        <div class="md-settled"><dt>정산 완료 항목 차액<small>실지출 − 해당 항목 예산</small></dt><dd>{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}계산 대기{{ end }}</dd></div></dl>
+        <p class="md-small">정산 완료 {{ $s.settled }}개 항목 기준. +는 초과, −는 절감입니다. 미입력·미정산 항목을 절감액으로 계산하지 않습니다. 예산 잔액에는 아직 낼 비용이 포함됩니다.</p>
+        <div class="md-excluded"><b>합계에 포함되지 않은 비용</b><p>IMU 설계·펌웨어 외주 및 자체 개발 인건비. 미보유 계측장비·추가 전원 PCB·예비비를 넘는 재제작도 별도입니다.</p></div>
+      </div>
+    </div>
+    <div class="md-quotes">{{ range $d.quotes }}<article class="md-panel"><div class="md-quote-top"><h3>{{ .name }}</h3><span class="md-badge md-progress">{{ .status }}</span></div><strong class="md-quote-amount">{{ partial "microdak/money.html" .amount_krw }}<small>원</small></strong><p class="md-muted">{{ .basis }}</p><ul>{{ range .details }}<li>{{ . }}</li>{{ end }}</ul></article>{{ end }}</div>
+  </section>
+  <section class="md-section" id="materials" aria-labelledby="materials-title">
+    <div class="md-section-head"><div><p class="md-eyebrow">MATERIALS & PROCUREMENT</p><h2 id="materials-title">자재·구매 현황</h2></div><span class="md-muted">{{ len $d.parts }}개 예산 항목 · 자재 {{ $s.materials }}개 품목</span></div>
+    <div class="md-material-summary"><span><i class="md-dot md-dot-done"></i>수량 충족 <b>{{ $s.ready }}</b></span><span><i class="md-dot md-dot-blocked"></i>수량 부족 <b>{{ $s.short }}</b></span><span><i class="md-dot"></i>입고 미확인 <b>{{ $s.unknown }}</b></span><span>발주·배송 중 <b>{{ $s.ordered }}</b></span></div>
+    <p class="md-small">필요 수량은 1대 제작을 위한 초기 구매 단위입니다. HAT는 3장 구매·1장 장착, IMU는 1로트 기준입니다. 수량 충족은 실물 성능 검증과 별개입니다.</p>
+    <div class="md-table-wrap" tabindex="0" role="region" aria-label="자재 및 비용 표, 좁은 화면에서 가로 스크롤">
+      <table class="md-table md-parts-table"><caption>자재별 계획 수량·견적·입고·실지출 비교</caption><thead><tr><th scope="col">품목 / 가격 근거</th><th scope="col">필요 수량</th><th scope="col">기준 단가</th><th scope="col">예상 금액</th><th scope="col">입고 / 부족</th><th scope="col">발주 상태</th><th scope="col">실제 지출</th><th scope="col">정산 차액</th></tr></thead><tbody>
+      {{ range $d.parts }}<tr>
+        <th scope="row"><span class="md-item-id">{{ .id }} · {{ .category }}</span><strong>{{ .name }}</strong><span class="md-price-basis">{{ .price_basis }}</span><details><summary>산정 조건{{ if .purchase_note }} · 구매 메모{{ end }}</summary><p>{{ .note }}</p><p>예상 범위: {{ partial "microdak/money.html" .low_krw }}–{{ partial "microdak/money.html" .high_krw }}원</p>{{ with .purchase_note }}<p>{{ . }}</p>{{ end }}{{ with .updated }}<p>실적 갱신: {{ . }}</p>{{ end }}</details></th>
+        <td>{{ .qty }}{{ .unit }}</td><td class="md-money">{{ partial "microdak/money.html" .unit_krw }}원</td><td class="md-money"><b>{{ partial "microdak/money.html" .estimate_krw }}원</b></td>
+        <td>{{ if eq .kind "reserve" }}<span class="md-muted">비용 항목</span>{{ else if eq .received_qty nil }}<span class="md-badge md-pending">미입력</span>{{ else }}<b>{{ .received_qty }}{{ .unit }} 입고</b><small class="{{ if ge .received_qty .qty }}md-text-done{{ else }}md-text-blocked{{ end }}">{{ if ge .received_qty .qty }}수량 충족{{ else }}{{ sub .qty .received_qty }}{{ .unit }} 부족{{ end }}</small>{{ end }}</td>
+        <td>{{ if eq .kind "reserve" }}—{{ else }}{{ index $orderLabels .order_status }}{{ end }}</td>
+        <td class="md-money">{{ if ne .actual_krw nil }}{{ partial "microdak/money.html" .actual_krw }}원<small>{{ if .actual_final }}정산 완료{{ else }}정산 중{{ end }}</small>{{ else }}<span class="md-muted">미입력</span>{{ end }}</td>
+        <td class="md-money">{{ if .actual_final }}{{ $diff := sub .actual_krw .estimate_krw }}{{ if gt $diff 0 }}+{{ end }}{{ partial "microdak/money.html" $diff }}원{{ else }}<span class="md-muted">—</span>{{ end }}</td>
+      </tr>{{ end }}
+      </tbody><tfoot><tr><th scope="row" colspan="3">기준 준비예산 / 실제 지출 입력분 합계</th><td class="md-money">{{ partial "microdak/money.html" $s.budget }}원</td><td colspan="2">실지출 {{ $s.recorded }}개 항목 입력</td><td class="md-money">{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}원{{ else }}미입력{{ end }}</td><td class="md-money">{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}—{{ end }}</td></tr></tfoot></table>
+    </div>
+  </section>
+  <section class="md-section" id="hardware" aria-labelledby="hardware-title"><div class="md-section-head"><div><p class="md-eyebrow">HARDWARE</p><h2 id="hardware-title">HW 개발 현황</h2></div><span class="md-muted">도면 준비 → 전장 확정 → 제작·조립</span></div>{{ partial "microdak/work.html" $d.hardware }}</section>
+  <section class="md-section" id="software" aria-labelledby="software-title"><div class="md-section-head"><div><p class="md-eyebrow">SOFTWARE</p><h2 id="software-title">SW 개발 현황</h2></div><span class="md-muted">통신 코어 → MCU·센서 → 로봇 통합</span></div>{{ partial "microdak/work.html" $d.software }}</section>
+  <section class="md-section" id="tests" aria-labelledby="tests-title"><div class="md-section-head"><div><p class="md-eyebrow">VALIDATION</p><h2 id="tests-title">테스트 진행 상황</h2></div><span class="md-muted">PC 검사와 실물 시험을 구분</span></div>
+    <div class="md-test-note"><b>{{ $d.review_date }} PC 검토 기록</b><span>통신 코어 22개 시험 PASS · binary16 63,488개 왕복 오류 0</span><p>이 결과는 IMU 보드·실제 센서·서보 버스 또는 보행 성능의 검증 결과가 아닙니다.</p></div>
+    <div class="md-table-wrap" tabindex="0" role="region" aria-label="테스트 현황 표, 좁은 화면에서 가로 스크롤"><table class="md-table md-test-table"><caption>검증 항목별 결과와 남은 통과 조건</caption><thead><tr><th scope="col">시험 항목</th><th scope="col">환경</th><th scope="col">상태</th><th scope="col">결과 / 확인 조건</th></tr></thead><tbody>{{ range $d.tests }}<tr><th scope="row"><span class="md-item-id">{{ .id }}</span>{{ .name }}</th><td>{{ .environment }}</td><td><span class="md-badge md-{{ .state }}">{{ .status }}</span></td><td>{{ if ne .result "—" }}<b>{{ .result }}</b>{{ end }}<p>{{ .criteria }}</p></td></tr>{{ end }}</tbody></table></div>
+    <p class="md-small">실물 시험의 수치 목표는 IMU 외주개발 사양서의 협의용 조건입니다. ‘실행 기록 없음’은 참조 문서에서 실물 수행 기록을 확인하지 못했다는 뜻입니다.</p>
+  </section>
+  <section class="md-section md-records" aria-labelledby="records-title"><div><p class="md-eyebrow">PROJECT LOG</p><h2 id="records-title">최근 변경 기록</h2><ol class="md-timeline">{{ range $d.history }}<li><time datetime="{{ .date }}">{{ .date }}</time><h3>{{ .title }}</h3><p>{{ .detail }}</p></li>{{ end }}</ol></div>
+    <div class="md-panel"><h3>이 페이지의 기준 자료</h3><ul class="md-sources">{{ range $d.sources }}<li><b>{{ .name }}</b><span>{{ .version }}</span><p>{{ .scope }}</p></li>{{ end }}</ul><p class="md-small">문서에서 확인된 준비·검토·시험 결과만 반영했습니다. 실제 구매·입고·결제 기록은 운영자가 갱신합니다.</p>
+    <details class="md-update-help"><summary>운영자용 · 현황 업데이트</summary><p>아래 현황 데이터에서 입고 수량과 실제 지출을 수정해 저장하면 블로그에 반영됩니다. GitHub 저장소 수정 권한이 필요합니다.</p><p>입고 수량 <code>received_qty</code>, 누적 실제 지출 <code>actual_krw</code>, 정산 완료 <code>actual_final</code>을 입력합니다. 미확인은 <code>null</code>, 실제 0은 <code>0</code>으로 구분합니다.</p><a href="https://github.com/Ditis3g/Ditis3g.github.io/edit/main/data/microdak.json" target="_blank" rel="noopener">현황 데이터 수정 ↗</a><a href="https://github.com/Ditis3g/Ditis3g.github.io/blob/main/reports/microdak-dashboard.md" target="_blank" rel="noopener">업데이트 안내 ↗</a></details>
+    </div>
+  </section>
+</div>
+{{ partial "footer/footer" . }}
+{{ end }}

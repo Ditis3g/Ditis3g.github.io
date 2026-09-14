@@ -76,6 +76,14 @@ buildExpired = false
     [menu.main.params]
       icon = "graph"
 
+  [[menu.main]]
+    identifier = "microdak"
+    name = "마이크로닥"
+    url = "/microdak/"
+    weight = 55
+    [menu.main.params]
+      icon = "microdak"
+
   [[menu.social]]
     identifier = "youtube"
     name = "YouTube"

@@ -1,0 +1,9 @@
+<div class="md-work-grid">
+{{ range . }}
+  <article class="md-work md-state-{{ .state }}">
+    <div class="md-work-top"><span class="md-badge md-{{ .state }}">{{ .status }}</span></div>
+    <h3>{{ .title }}</h3><p>{{ .detail }}</p>
+    <div class="md-next"><span>다음 작업</span>{{ .next }}</div>
+  </article>
+{{ end }}
+</div>

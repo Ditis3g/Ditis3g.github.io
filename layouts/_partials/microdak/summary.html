@@ -1,0 +1,18 @@
+{{- $d := . -}}
+{{- $budget := 0 -}}{{- $low := 0 -}}{{- $high := 0 -}}{{- $initial := 0 -}}
+{{- $actual := 0 -}}{{- $recorded := 0 -}}{{- $settled := 0 -}}{{- $settledBudget := 0 -}}{{- $settledActual := 0 -}}
+{{- $materials := 0 -}}{{- $unknown := 0 -}}{{- $ready := 0 -}}{{- $short := 0 -}}{{- $ordered := 0 -}}
+{{- range $d.parts -}}
+  {{- $budget = add $budget .estimate_krw -}}{{- $low = add $low .low_krw -}}{{- $high = add $high .high_krw -}}
+  {{- if ne .category "개발·예비비" -}}{{- $initial = add $initial .estimate_krw -}}{{- end -}}
+  {{- if ne .actual_krw nil -}}{{- $actual = add $actual .actual_krw -}}{{- $recorded = add $recorded 1 -}}{{- end -}}
+  {{- if .actual_final -}}{{- $settled = add $settled 1 -}}{{- $settledBudget = add $settledBudget .estimate_krw -}}{{- $settledActual = add $settledActual .actual_krw -}}{{- end -}}
+  {{- if eq .kind "material" -}}
+    {{- $materials = add $materials 1 -}}
+    {{- if eq .received_qty nil -}}{{- $unknown = add $unknown 1 -}}
+    {{- else if ge .received_qty .qty -}}{{- $ready = add $ready 1 -}}
+    {{- else -}}{{- $short = add $short 1 -}}{{- end -}}
+    {{- if eq .order_status "ordered" -}}{{- $ordered = add $ordered 1 -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "budget" $budget "low" $low "high" $high "initial" $initial "actual" $actual "recorded" $recorded "settled" $settled "variance" (sub $settledActual $settledBudget) "materials" $materials "unknown" $unknown "ready" $ready "short" $short "ordered" $ordered) -}}
