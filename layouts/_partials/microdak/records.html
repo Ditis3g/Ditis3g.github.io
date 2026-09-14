@@ -1,7 +1,7 @@
 {{ $d := hugo.Data.microdak }}{{ $s := partial "microdak/summary.html" $d }}
 {{ $orderLabels := dict "unrecorded" "미입력" "planned" "미발주" "ordered" "발주·배송 중" "received" "입고 기록" }}
   <section class="md-section md-records" aria-labelledby="records-title"><div><p class="md-eyebrow">PROJECT LOG</p><h2 id="records-title">마이크로닥의 기록</h2><ol class="md-timeline">{{ range $d.history }}<li><time datetime="{{ .date }}">{{ .date }}</time><h3>{{ .title }}</h3><p>{{ .detail }}</p></li>{{ end }}</ol></div>
-    <div class="md-panel"><h3>이 페이지의 기준 자료</h3><ul class="md-sources">{{ range $d.sources }}<li><b>{{ .name }}</b><span>{{ .version }}</span><p>{{ .scope }}</p></li>{{ end }}</ul><p class="md-small">문서에서 확인된 준비·검토·시험 결과만 반영했습니다. 실제 구매·입고·결제 기록은 운영자가 갱신합니다.</p>
+    <div class="md-panel"><h3>이 페이지의 기준 자료</h3><ul class="md-sources">{{ range $d.sources }}<li><b>{{ .name }}</b><span>{{ .version }}</span><p>{{ .scope }}</p></li>{{ end }}</ul><p class="md-small">최신 운영자 보고와 문서의 준비·검토·시험 결과를 반영했습니다. 실제 구매·입고·결제 기록은 운영자가 갱신합니다.</p>
     <details class="md-update-help"><summary>운영자용 · 현황 업데이트</summary><p>아래 현황 데이터에서 입고 수량과 실제 지출을 수정해 저장하면 블로그에 반영됩니다. GitHub 저장소 수정 권한이 필요합니다.</p><p>입고 수량 <code>received_qty</code>, 누적 실제 지출 <code>actual_krw</code>, 정산 완료 <code>actual_final</code>을 입력합니다. 미확인은 <code>null</code>, 실제 0은 <code>0</code>으로 구분합니다.</p><a href="https://github.com/Ditis3g/Ditis3g.github.io/edit/main/data/microdak.json" target="_blank" rel="noopener">현황 데이터 수정 ↗</a><a href="https://github.com/Ditis3g/Ditis3g.github.io/blob/main/reports/microdak-dashboard.md" target="_blank" rel="noopener">업데이트 안내 ↗</a></details>
     </div>
   </section>

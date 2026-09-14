@@ -33,7 +33,16 @@ for (const e of d.additional_expenses || []) {
 const groupedIds = d.purchase_groups.flatMap(g => g.part_ids);
 assert.equal(new Set(groupedIds).size, groupedIds.length, 'Purchase group duplicates');
 assert.deepEqual([...groupedIds].sort(), d.parts.filter(p=>p.kind==='material').map(p=>p.id).sort(), 'Purchase groups must cover each material exactly once');
-for (const item of [...d.hardware,...d.software]) assert(['done','progress','blocked','pending'].includes(item.state), item.title + ': invalid work state');
+for (const lane of [d.hardware,d.software]) {
+  assert(lane.length > 0, 'Progress lane must contain milestones');
+  for (const item of lane) {
+    assert(['done','progress','blocked','pending'].includes(item.state), item.title + ': invalid work state');
+    assert(typeof item.short === 'string' && item.short.length > 0, item.title + ': missing milestone label');
+  }
+}
+assert(isCount(d.porting_percent) && d.porting_percent <= 100, 'Invalid porting percentage');
+assert(d.current_purchase_plan.length > 0, 'Missing current purchase plan');
+for (const p of d.current_purchase_plan) for (const f of ['name','detail','status']) assert(typeof p[f] === 'string' && p[f].length > 0, 'Invalid purchase plan');
 const testIds = new Set();
 for (const t of d.tests) {
   assert(!testIds.has(t.id), 'Duplicate test ID: ' + t.id); testIds.add(t.id);

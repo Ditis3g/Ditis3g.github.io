@@ -17,6 +17,7 @@
       <figcaption>설계 기반 AI 이미지</figcaption>
     </figure>
   </header>
+  {{ partial "microdak/progress.html" $d }}
   <div class="md-overview-grid">
     <section class="md-focus-card md-task-card" id="todo" aria-labelledby="todo-title">
       <div class="md-focus-heading"><h2 id="todo-title">{{ partial "microdak/icon.html" "tests" }}해야 할 일</h2><span class="md-card-tag">우선 {{ len $d.priorities }}가지</span></div>
@@ -24,13 +25,10 @@
       <div class="md-work-counts"><span>HW 완료 <b>{{ len (where $d.hardware "state" "done") }}/{{ len $d.hardware }}</b></span><span>SW 완료 <b>{{ len (where $d.software "state" "done") }}/{{ len $d.software }}</b></span><span>실물 통과 <b>{{ len $physicalPassed }}/{{ len $physical }}</b></span></div>
     </section>
     <section class="md-focus-card md-buy-card" id="shopping" aria-labelledby="shopping-title">
-      <div class="md-focus-heading"><h2 id="shopping-title">{{ partial "microdak/icon.html" "materials" }}사야 할 것</h2><span class="md-card-tag">{{ $s.materials }}개 품목</span></div>
-      <div class="md-shopping-groups">{{ range $d.purchase_groups }}
-        {{ $parts := where $d.parts "id" "in" .part_ids }}{{ $ready := 0 }}{{ $unknown := 0 }}
-        {{ range $parts }}{{ if eq .received_qty nil }}{{ $unknown = add $unknown 1 }}{{ else if ge .received_qty .qty }}{{ $ready = add $ready 1 }}{{ end }}{{ end }}
-        <div><p><strong>{{ .name }}</strong><small>{{ .items }}</small></p><span>{{ if eq $unknown (len $parts) }}보유 확인 전{{ else }}확보 {{ $ready }}/{{ len $parts }}{{ end }}</span></div>
-      {{ end }}</div>
-      <p class="md-card-footnote">{{ if eq $s.unknown $s.materials }}구매 후보 목록입니다. 실제 보유·구매 내역은 아직 미입력입니다.{{ else }}확보 {{ $s.ready }} · 부족 {{ $s.short }} · 미확인 {{ $s.unknown }}개 품목{{ end }}</p>
+      <div class="md-focus-heading"><h2 id="shopping-title">{{ partial "microdak/icon.html" "materials" }}사야 할 것</h2><span class="md-card-tag">추가 구매 {{ len $d.current_purchase_plan }}종</span></div>
+      <div class="md-shopping-groups">{{ range $d.current_purchase_plan }}<div><p><strong>{{ .name }}</strong><small>{{ .detail }}</small></p><span>{{ .status }}</span></div>{{ end }}</div>
+      <p class="md-procurement-note"><b>프린터</b> 구매 완료 · 도착 대기<br><b>보드 2종</b> HAT 견적 확보 · IMU 개발 후 제작</p>
+      <p class="md-card-footnote">운영자 최신 계획 기준 · 기존 견적의 전체 품목은 아래 상세에 보관</p>
     </section>
     <section class="md-focus-card md-spent-card" id="spent" aria-labelledby="spent-title">
       <div class="md-focus-heading"><h2 id="spent-title">{{ partial "microdak/icon.html" "cost" }}이미 쓴 비용</h2><span class="md-card-tag">기소요예산</span></div>
@@ -45,7 +43,7 @@
       <strong class="md-focus-amount" data-total="remaining">{{ partial "microdak/money.html" $s.remaining }}<small>원</small></strong>
       <p class="md-amount-note">{{ if and (eq $s.recorded 0) (eq $s.remainingAssumed (len $d.parts)) }}전체 계획액 · 기보유·기지출 반영 전{{ else }}잔여 지출 예상 · {{ $s.remainingAssumed }}개 항목은 예산 기준 추정{{ end }}</p>
       <div class="md-future-breakdown">{{ range $category := slice "핵심 전장" "기구·주변 부품" "배송·세금" "개발·예비비" }}{{ $sum := 0 }}{{ range where $d.parts "category" $category }}{{ $r := partial "microdak/remaining.html" . }}{{ $sum = add $sum $r.amount }}{{ end }}<div><span>{{ $category }}</span><b>{{ partial "microdak/money.html" $sum }}원</b></div>{{ end }}</div>
-      <p class="md-card-footnote">IMU 설계·펌웨어 외주비와 인건비는 별도입니다.</p>
+      <p class="md-card-footnote">9/11 견적 기준 · 라즈베리파이 변경 가격 미반영<br>IMU 설계·펌웨어 외주비와 인건비 별도</p>
     </section>
   </div>
   <div class="md-detail-folders" aria-label="필요할 때 펼쳐 보는 상세 자료">

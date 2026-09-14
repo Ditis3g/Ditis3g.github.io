@@ -16,7 +16,7 @@
         <td class="md-money">{{ if ne .actual_krw nil }}{{ partial "microdak/money.html" .actual_krw }}원<small>{{ if .actual_final }}정산 완료{{ else }}정산 중{{ end }}</small>{{ else }}<span class="md-muted">미입력</span>{{ end }}</td>
         <td class="md-money">{{ if .actual_final }}{{ $diff := sub .actual_krw .estimate_krw }}{{ if gt $diff 0 }}+{{ end }}{{ partial "microdak/money.html" $diff }}원{{ else }}<span class="md-muted">—</span>{{ end }}</td>
       </tr>{{ end }}
-      </tbody><tfoot><tr><th scope="row" colspan="3">기준 준비예산 / 실제 지출 입력분 합계</th><td class="md-money">{{ partial "microdak/money.html" $s.budget }}원</td><td colspan="2">실지출 {{ $s.recorded }}개 항목 입력</td><td class="md-money">{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}원{{ else }}미입력{{ end }}</td><td class="md-money">{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}—{{ end }}</td></tr></tfoot></table>
+      </tbody><tfoot><tr><th scope="row" colspan="3">기준 준비예산 / 장비 구매 포함 전체 지출</th><td class="md-money">{{ partial "microdak/money.html" $s.budget }}원</td><td colspan="2">실지출 {{ $s.recorded }}개 항목 입력</td><td class="md-money">{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}원{{ else }}미입력{{ end }}</td><td class="md-money">{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}—{{ end }}</td></tr></tfoot></table>
     </div>
     </details>
   </section>

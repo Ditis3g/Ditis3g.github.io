@@ -1,0 +1,22 @@
+{{- $hwDone := len (where .hardware "state" "done") -}}{{- $swDone := len (where .software "state" "done") -}}
+{{- $total := add (len .hardware) (len .software) -}}{{- $done := add $hwDone $swDone -}}
+{{- $percent := int (math.Round (mul (div (float $done) (float $total)) 100)) -}}
+<section class="md-progress-panel" aria-labelledby="progress-title">
+  <div class="md-progress-overview">
+    <h2 id="progress-title">전체 진행률</h2>
+    <div class="md-progress-ring" style="--progress:{{ $percent }}%" role="img" aria-label="전체 {{ $total }}단계 중 {{ $done }}단계 완료, {{ $percent }}퍼센트"><div><strong data-progress="overall">{{ $percent }}<small>%</small></strong><span>{{ $done }} / {{ $total }}단계 완료</span></div></div>
+    <p class="md-porting-result">MuJoCo 이식 <b>{{ .porting_percent }}%</b></p>
+    <p class="md-progress-next">다음 과제 <b>IMU 보드·펌웨어</b></p>
+  </div>
+  <div class="md-progress-lanes">
+    {{ range $lane := slice (dict "id" "hw" "name" "HW" "label" "설계 → 제작 → 조립" "items" .hardware) (dict "id" "sw" "name" "SW" "label" "이식 → 펌웨어" "items" .software) }}
+    {{ $count := len .items }}{{ $complete := len (where .items "state" "done") }}{{ $pct := int (math.Round (mul (div (float $complete) (float $count)) 100)) }}
+    <div class="md-progress-lane">
+      <div class="md-lane-heading"><h3>{{ .name }} <span>{{ .label }}</span></h3><b data-progress="{{ .id }}">{{ $pct }}% <small>{{ $complete }}/{{ $count }} 완료</small></b></div>
+      <progress max="{{ $count }}" value="{{ $complete }}" aria-label="{{ .name }} 완료 단계">{{ $pct }}%</progress>
+      <ol class="md-milestones">{{ range .items }}<li class="md-milestone-{{ .state }}"><span aria-hidden="true">{{ if eq .state "done" }}✓{{ else if or (eq .state "progress") (eq .state "blocked") }}…{{ else }}○{{ end }}</span><span>{{ .short }}<small>{{ if eq .state "done" }}완료{{ else if eq .state "blocked" }}해결 필요{{ else if eq .state "progress" }}개발 중{{ else }}대기{{ end }}</small></span></li>{{ end }}</ol>
+    </div>
+    {{ end }}
+  </div>
+  <p class="md-progress-basis">{{ .progress_basis }} · {{ .updated }} 운영자 보고 기준</p>
+</section>
