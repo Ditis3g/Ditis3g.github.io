@@ -36,8 +36,8 @@
       <div class="md-focus-heading"><h2 id="spent-title">{{ partial "microdak/icon.html" "cost" }}이미 쓴 비용</h2><span class="md-card-tag">기소요예산</span></div>
       <strong class="md-focus-amount" data-total="spent">{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}<small>원</small>{{ else }}입력 대기{{ end }}</strong>
       <p class="md-amount-note">{{ if eq $s.recorded 0 }}실제 결제 내역을 입력하면 합산됩니다.{{ else }}입력된 실제 지출의 누적 합계{{ end }}</p>
-      <dl class="md-mini-ledger"><div><dt>지출 입력</dt><dd>{{ $s.recorded }} / {{ len $d.parts }}개</dd></div><div><dt>정산 완료</dt><dd>{{ $s.settled }} / {{ len $d.parts }}개</dd></div><div><dt>정산 차액 <small>실제 − 예산</small></dt><dd>{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}—{{ end }}</dd></div></dl>
-      {{ if gt $s.recorded 0 }}<details class="md-ledger-details"><summary>입력된 지출 내역</summary><ul>{{ range $d.parts }}{{ if ne .actual_krw nil }}<li><span>{{ .name }}</span><b>{{ partial "microdak/money.html" .actual_krw }}원</b></li>{{ end }}{{ end }}</ul></details>{{ end }}
+      <dl class="md-mini-ledger">{{ range $d.additional_expenses }}<div><dt>{{ .name }}</dt><dd>{{ partial "microdak/money.html" .actual_krw }}원</dd></div>{{ end }}<div><dt>지출 입력</dt><dd>{{ $s.recorded }} / {{ $s.entryCount }}개</dd></div><div><dt>정산 완료</dt><dd>{{ $s.settled }} / {{ len $d.parts }}개</dd></div><div><dt>정산 차액 <small>실제 − 예산</small></dt><dd>{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}—{{ end }}</dd></div></dl>
+      {{ if gt (sub $s.recorded $s.expenseCount) 0 }}<details class="md-ledger-details"><summary>입력된 지출 내역</summary><ul>{{ range $d.parts }}{{ if ne .actual_krw nil }}<li><span>{{ .name }}</span><b>{{ partial "microdak/money.html" .actual_krw }}원</b></li>{{ end }}{{ end }}</ul></details>{{ end }}
       <p class="md-card-footnote">미입력은 0원을 뜻하지 않습니다.</p>
     </section>
     <section class="md-focus-card md-future-card" id="planned" aria-labelledby="planned-title">

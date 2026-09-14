@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-14",
+  "updated": "2026-09-15",
   "specification": "v0.5",
   "specification_date": "2026-09-11",
   "price_date": "2026-09-11",
@@ -723,6 +723,11 @@
   ],
   "history": [
     {
+      "date": "2026-09-15",
+      "title": "3D 프린터 구매 비용 반영",
+      "detail": "뱀부랩 X2D Combo 1,349,000원을 기소요예산에 추가. 기존 제작 예산 외 장비 지출로 기록."
+    },
+    {
       "date": "2026-09-14",
       "title": "IMU 설계·펌웨어 검토 반영",
       "detail": "PC 단위시험 22개 및 binary16 왕복 통과. PCB·MCU 실행·센서 경로와 실물 검증은 미완료."
@@ -787,6 +792,15 @@
       "part_ids": [
         "D01"
       ]
+    }
+  ],
+  "additional_expenses": [
+    {
+      "id": "E01",
+      "name": "3D 프린터 · 뱀부랩 X2D Combo",
+      "actual_krw": 1349000,
+      "updated": "2026-09-15",
+      "note": "운영자 입력. 기존 제작 예산 외 장비 구매 비용."
     }
   ]
 }

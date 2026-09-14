@@ -17,4 +17,6 @@
     {{- if eq .order_status "ordered" -}}{{- $ordered = add $ordered 1 -}}{{- end -}}
   {{- end -}}
 {{- end -}}
-{{- return (dict "remaining" $remaining "remainingAssumed" $assumed "budget" $budget "low" $low "high" $high "initial" $initial "actual" $actual "recorded" $recorded "settled" $settled "variance" (sub $settledActual $settledBudget) "materials" $materials "unknown" $unknown "ready" $ready "short" $short "ordered" $ordered) -}}
+{{- $plannedActual := $actual -}}
+{{- range $d.additional_expenses -}}{{- $actual = add $actual .actual_krw -}}{{- $recorded = add $recorded 1 -}}{{- end -}}
+{{- return (dict "plannedActual" $plannedActual "expenseCount" (len ($d.additional_expenses | default slice)) "entryCount" (add (len $d.parts) (len ($d.additional_expenses | default slice))) "remaining" $remaining "remainingAssumed" $assumed "budget" $budget "low" $low "high" $high "initial" $initial "actual" $actual "recorded" $recorded "settled" $settled "variance" (sub $settledActual $settledBudget) "materials" $materials "unknown" $unknown "ready" $ready "short" $short "ordered" $ordered) -}}

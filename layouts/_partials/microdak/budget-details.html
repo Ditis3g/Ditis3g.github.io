@@ -16,8 +16,9 @@
       <div class="md-panel md-cost-summary"><h3>실지출 정산</h3>
         <dl><div><dt>기준 준비예산</dt><dd>{{ partial "microdak/money.html" $s.budget }}원</dd></div>
         <div><dt>누적 지출 <small>입력분</small></dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}원{{ else }}미입력{{ end }}</dd></div>
-        <div><dt>예산 − 누적 지출</dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" (sub $s.budget $s.actual) }}원{{ else }}계산 대기{{ end }}</dd></div>
+        <div><dt>기준 예산 − 해당 품목 지출</dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" (sub $s.budget $s.plannedActual) }}원{{ else }}계산 대기{{ end }}</dd></div>
         <div class="md-settled"><dt>정산 완료 항목 차액<small>실지출 − 해당 항목 예산</small></dt><dd>{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}계산 대기{{ end }}</dd></div></dl>
+        {{ if gt $s.expenseCount 0 }}<p class="md-small">추가 장비 지출 {{ partial "microdak/money.html" (sub $s.actual $s.plannedActual) }}원은 누적 지출에 포함하며, 기존 제작 예산의 잔액·정산 차액에서는 제외합니다.</p>{{ end }}
         <p class="md-small">정산 완료 {{ $s.settled }}개 항목 기준. +는 초과, −는 절감입니다. 미입력·미정산 항목을 절감액으로 계산하지 않습니다. 예산 잔액에는 아직 낼 비용이 포함됩니다.</p>
         <div class="md-excluded"><b>합계에 포함되지 않은 비용</b><p>IMU 설계·펌웨어 외주 및 자체 개발 인건비. 미보유 계측장비·추가 전원 PCB·예비비를 넘는 재제작도 별도입니다.</p></div>
       </div>

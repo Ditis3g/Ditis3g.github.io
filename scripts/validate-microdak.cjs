@@ -24,6 +24,12 @@ for (const p of d.parts) {
   assert(p.kind !== 'reserve' || p.received_qty === null, p.id + ': reserve has no inventory');
   assert(typeof p.note === 'string' && typeof p.purchase_note === 'string');
 }
+for (const e of d.additional_expenses || []) {
+  assert(typeof e.id === 'string' && !ids.has(e.id), 'Invalid or duplicate expense ID'); ids.add(e.id);
+  assert(typeof e.name === 'string' && e.name.length > 0, e.id + ': missing name');
+  assert(isCount(e.actual_krw), e.id + ': invalid actual cost');
+  assert.match(e.updated, /^\d{4}-\d{2}-\d{2}$/);
+}
 const groupedIds = d.purchase_groups.flatMap(g => g.part_ids);
 assert.equal(new Set(groupedIds).size, groupedIds.length, 'Purchase group duplicates');
 assert.deepEqual([...groupedIds].sort(), d.parts.filter(p=>p.kind==='material').map(p=>p.id).sort(), 'Purchase groups must cover each material exactly once');
