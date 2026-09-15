@@ -27,7 +27,7 @@
     <section class="md-focus-card md-buy-card" id="shopping" aria-labelledby="shopping-title">
       <div class="md-focus-heading"><h2 id="shopping-title">{{ partial "microdak/icon.html" "materials" }}사야 할 것</h2><span class="md-card-tag">추가 구매 {{ len $d.current_purchase_plan }}종</span></div>
       <div class="md-shopping-groups">{{ range $d.current_purchase_plan }}<div><p><strong>{{ .name }}</strong><small>{{ .detail }}</small></p><span>{{ .status }}</span></div>{{ end }}</div>
-      <p class="md-procurement-note"><b>프린터</b> 구매 완료 · 도착 대기<br><b>보드 2종</b> HAT 견적 확보 · IMU 개발 후 제작</p>
+      <p class="md-procurement-note"><b>프린터</b> 구매 완료 · 도착 대기<br><b>HAT</b> 제작 견적 확보<br><b>몸통 IMU</b> 완제품 선정·구매·통합 대기</p>
       <p class="md-card-footnote">운영자 최신 계획 기준 · 기존 견적의 전체 품목은 아래 상세에 보관</p>
     </section>
     <section class="md-focus-card md-spent-card" id="spent" aria-labelledby="spent-title">
@@ -41,9 +41,10 @@
     <section class="md-focus-card md-future-card" id="planned" aria-labelledby="planned-title">
       <div class="md-focus-heading"><h2 id="planned-title">{{ partial "microdak/icon.html" "budget" }}앞으로 쓸 예산</h2><span class="md-card-tag">{{ if eq $s.remainingAssumed (len $d.parts) }}계획 기준{{ else if gt $s.remainingAssumed 0 }}추정 포함{{ else }}입력 기준{{ end }}</span></div>
       <strong class="md-focus-amount" data-total="remaining">{{ partial "microdak/money.html" $s.remaining }}<small>원</small></strong>
+      {{ if gt $s.remainingUnknown 0 }}<p class="md-amount-note"><b>+ IMU 구매비 미정</b> · 금액 기입 항목 소계</p>{{ end }}
       <p class="md-amount-note">{{ if and (eq $s.recorded 0) (eq $s.remainingAssumed (len $d.parts)) }}전체 계획액 · 기보유·기지출 반영 전{{ else }}잔여 지출 예상 · {{ $s.remainingAssumed }}개 항목은 예산 기준 추정{{ end }}</p>
       <div class="md-future-breakdown">{{ range $category := slice "핵심 전장" "기구·주변 부품" "배송·세금" "개발·예비비" }}{{ $sum := 0 }}{{ range where $d.parts "category" $category }}{{ $r := partial "microdak/remaining.html" . }}{{ $sum = add $sum $r.amount }}{{ end }}<div><span>{{ $category }}</span><b>{{ partial "microdak/money.html" $sum }}원</b></div>{{ end }}</div>
-      <p class="md-card-footnote">9/11 견적 기준 · 라즈베리파이 변경 가격 미반영<br>IMU 설계·펌웨어 외주비와 인건비 별도</p>
+      <p class="md-card-footnote">9/15 IMU 제작비 제외 · 라즈베리파이 변경 가격 미반영<br>IMU 구매비·호스트 통합 인건비 별도</p>
     </section>
   </div>
   <div class="md-detail-folders" aria-label="필요할 때 펼쳐 보는 상세 자료">

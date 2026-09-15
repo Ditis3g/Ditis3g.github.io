@@ -11,9 +11,15 @@ for (const p of d.parts) {
   assert(['material','reserve'].includes(p.kind), p.id + ': invalid kind');
   assert(['핵심 전장','기구·주변 부품','배송·세금','개발·예비비'].includes(p.category), p.id + ': invalid category');
   assert(Number.isSafeInteger(p.qty) && p.qty > 0, p.id + ': qty must be a positive integer');
-  for (const field of ['unit_krw','estimate_krw','low_krw','high_krw']) assert(isCount(p[field]), `${p.id}: invalid ${field}`);
-  assert.equal(p.qty * p.unit_krw, p.estimate_krw, p.id + ': qty × unit cost differs from estimate');
-  assert(p.low_krw <= p.estimate_krw && p.estimate_krw <= p.high_krw, p.id + ': invalid range');
+  const priceFields = ['unit_krw','estimate_krw','low_krw','high_krw'];
+  if (p.estimate_krw === null) {
+    assert(priceFields.every(f => p[f] === null), p.id + ': pending quote must have all prices null');
+    assert(typeof p.price_basis === 'string' && p.price_basis.includes('대기'), p.id + ': explain pending quote');
+  } else {
+    for (const field of priceFields) assert(isCount(p[field]), `${p.id}: invalid ${field}`);
+    assert.equal(p.qty * p.unit_krw, p.estimate_krw, p.id + ': qty × unit cost differs from estimate');
+    assert(p.low_krw <= p.estimate_krw && p.estimate_krw <= p.high_krw, p.id + ': invalid range');
+  }
   assert(p.received_qty === null || isCount(p.received_qty), p.id + ': invalid received quantity');
   assert(p.actual_krw === null || isCount(p.actual_krw), p.id + ': invalid actual cost');
   assert(p.remaining_krw === null || isCount(p.remaining_krw), p.id + ': invalid remaining cost');
@@ -49,5 +55,6 @@ for (const t of d.tests) {
   assert(['PC','실물'].includes(t.environment), t.id + ': invalid environment');
   assert(['passed','issue','pending','running','failed'].includes(t.state), t.id + ': invalid test state');
 }
-const total = f => d.parts.reduce((sum,p)=>sum+p[f],0);
-console.log(JSON.stringify({valid:true,items:d.parts.length,materials:d.parts.filter(p=>p.kind==='material').length,budget:total('estimate_krw'),low:total('low_krw'),high:total('high_krw'),actualEntered:d.parts.filter(p=>p.actual_krw!==null).length,physicalPassed:d.tests.filter(t=>t.environment==='실물'&&t.state==='passed').length},null,2));
+for (const q of d.quotes) assert(q.amount_krw === null || isCount(q.amount_krw), 'Invalid quote amount');
+const total = f => d.parts.reduce((sum,p)=>sum+(p[f] ?? 0),0);
+console.log(JSON.stringify({valid:true,items:d.parts.length,materials:d.parts.filter(p=>p.kind==='material').length,pendingQuotes:d.parts.filter(p=>p.estimate_krw===null).length,knownBudgetSubtotal:total('estimate_krw'),low:total('low_krw'),high:total('high_krw'),actualEntered:d.parts.filter(p=>p.actual_krw!==null).length,physicalPassed:d.tests.filter(t=>t.environment==='실물'&&t.state==='passed').length},null,2));

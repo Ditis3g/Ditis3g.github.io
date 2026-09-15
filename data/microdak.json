@@ -1,10 +1,10 @@
 {
   "updated": "2026-09-15",
-  "specification": "v0.5",
-  "specification_date": "2026-09-11",
-  "price_date": "2026-09-11",
+  "specification": "v0.6",
+  "specification_date": "2026-09-15",
+  "price_date": "2026-09-15",
   "review_date": "2026-09-14",
-  "phase": "외형 설계·MuJoCo 이식 완료 · IMU 개발 / 제작 준비",
+  "phase": "외형 설계·MuJoCo 이식 완료 · IMU 완제품 선정·통합 준비",
   "sources": [
     {
       "name": "운영자 진행 현황",
@@ -13,18 +13,18 @@
     },
     {
       "name": "MicroDak 기구·전장 제작사양서",
-      "version": "v0.5 · 2026-09-11",
-      "scope": "기구 도면 준비, 보드 확보 계획, 전원 미확정 사항과 시험 단계"
+      "version": "v0.6 · 2026-09-15",
+      "scope": "IMU 완제품 구매·몸통 장착·HAT 연결·호스트 통합 계획"
     },
     {
       "name": "1대 제작 예상견적",
-      "version": "2026-09-11 · HAT 견적 반영",
-      "scope": "23개 예산 항목. HAT 외 가격 조건은 2026-09-07 기준"
+      "version": "2026-09-15 · IMU 제작비 제외",
+      "scope": "23항목 중 IMU 구매비 1개 미정. HAT는 9/11 견적, 다른 가격은 기존 조건 유지"
     },
     {
       "name": "Fanduck IMU 설계·펌웨어 검토",
       "version": "2026-09-14",
-      "scope": "회로 초안·통신 코어 검토, PC 시험 결과와 미완료 개발 범위"
+      "scope": "이전 전용 IMU 검토 기록. 새 완제품의 검증 결과가 아님"
     }
   ],
   "parts": [
@@ -93,23 +93,23 @@
     },
     {
       "id": "A04",
-      "name": "몸통 IMU PCB + 실장",
+      "name": "몸통 IMU 완제품 모듈",
       "category": "핵심 전장",
       "kind": "material",
       "qty": 1,
-      "unit": "로트",
-      "unit_krw": 1080000,
-      "estimate_krw": 1080000,
-      "low_krw": 1080000,
-      "high_krw": 1080000,
-      "price_basis": "관계자 예상",
-      "note": "부품 10EA 기준 13만원 + 4층 PCB 55만원 + 실장 약 40만원; VAT·납품 수량 미확인; U1",
-      "order_status": "unrecorded",
+      "unit": "개",
+      "unit_krw": null,
+      "estimate_krw": null,
+      "low_krw": null,
+      "high_krw": null,
+      "price_basis": "모델 선정·구매 견적 대기",
+      "note": "몸통 장착용 완제품 1개. 모델·판매처·가격·배송·전압/핀 배열 미정. 미정 금액은 소계 제외이며 0원이 아님.",
+      "order_status": "planned",
       "received_qty": null,
       "actual_krw": null,
       "actual_final": false,
-      "purchase_note": "",
-      "updated": null,
+      "purchase_note": "완제품 1개 구매로 전환. 모델·가격·J7 연결 검증 대기. 아직 발주·입고하지 않음.",
+      "updated": "2026-09-15",
       "remaining_krw": null
     },
     {
@@ -376,13 +376,13 @@
       "low_krw": 15000,
       "high_krw": 45000,
       "price_basis": "추정",
-      "note": "서보 여분 3~5개, FFC·센서선·전원선; 기본 케이블은 서보에 동봉",
+      "note": "서보 여분, FFC·전원선·외장 IMU 연결선/변환 커넥터 포함 가정. 핀 배열·길이 확정 후 재산정; D01과 중복 계상하지 않음",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null,
+      "updated": "2026-09-15",
       "remaining_krw": null
     },
     {
@@ -460,18 +460,18 @@
       "low_krw": 100000,
       "high_krw": 250000,
       "price_basis": "추정",
-      "note": "HAT VAT는 A03 포함으로 중복 가산하지 않음. HAT 배송 및 IMU VAT·배송 포함 여부 미확인; C01 전액 충당 보장 아님",
+      "note": "HAT VAT는 A03에 포함. HAT 배송 및 IMU 모듈 세금·배송 미확정; 예비액 전액 충당 보장 아님",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null,
+      "updated": "2026-09-15",
       "remaining_krw": null
     },
     {
       "id": "D01",
-      "name": "IMU 개발·검증용 소모 장비",
+      "name": "외장 IMU 통합·검증 소모품 예비비",
       "category": "개발·예비비",
       "kind": "material",
       "qty": 1,
@@ -481,18 +481,18 @@
       "low_krw": 80000,
       "high_krw": 180000,
       "price_basis": "추정",
-      "note": "센서/MCU 평가보드, 디버거·시험 배선; 로봇 장착품과 별도",
+      "note": "기존 100,000원을 시험 배선·고정 지그·검증 소모품 예비액으로 유지한 내부 가정. A04 모듈·B06 본 배선·인건비 제외; MCU 평가보드/디버거 구매 전제 폐기",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null,
+      "updated": "2026-09-15",
       "remaining_krw": null
     },
     {
       "id": "D02",
-      "name": "PCB 수정·재출력 예비비",
+      "name": "HAT·배선 수정 및 기구 재출력 예비비",
       "category": "개발·예비비",
       "kind": "reserve",
       "qty": 1,
@@ -502,13 +502,13 @@
       "low_krw": 150000,
       "high_krw": 350000,
       "price_basis": "추정",
-      "note": "소규모 수정/기구 재출력용; HAT·IMU 전체 로트 재제작에는 부족할 수 있음",
+      "note": "기존 200,000원 유지. IMU 전용 PCB 재제작 제외; HAT 전체 로트 재제작을 보장하지 않음",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
       "actual_final": false,
       "purchase_note": "",
-      "updated": null,
+      "updated": "2026-09-15",
       "remaining_krw": null
     }
   ],
@@ -526,23 +526,23 @@
       ]
     },
     {
-      "name": "몸통 IMU · 초기 제조 로트",
-      "status": "관계자 예상",
-      "amount_krw": 1080000,
-      "basis": "2026-09-07 · 납품 수량 미확인",
+      "name": "몸통 IMU · 완제품 모듈",
+      "status": "모델 선정·견적 대기",
+      "amount_krw": null,
+      "basis": "2026-09-15 · 장착용 1개 구매 계획",
       "details": [
-        "부품 130,000원 + 4층 PCB 550,000원 + 실장 약 400,000원",
-        "부품 10EA 기준이며 완성 양품 10장 납품이 확정된 것은 아님",
-        "설계·펌웨어 개발비 제외. VAT·배송 포함 여부 미확인",
-        "9월 14일 검토본은 PCB·MCU 실행 펌웨어 미완료. 개발 범위 재산정 필요"
+        "전용 PCB·SMT 제조 예상 1,080,000원은 현행 예산 제외",
+        "모듈 모델·판매처·세금·배송·커넥터 포함 범위 미정",
+        "미정 가격은 소계 제외이며 무료가 아님",
+        "호스트 드라이버·런타임 통합 인건비 별도 산정"
       ]
     }
   ],
   "priorities": [
     {
-      "title": "IMU 보드·펌웨어 해결",
-      "status": "핵심 개발",
-      "detail": "남은 보드 1종의 설계·제조 자료와 실행 펌웨어를 완성하고 센서·통신을 확인합니다."
+      "title": "IMU 완제품 선정·연결 검증",
+      "status": "구매 방식 확정",
+      "detail": "몸통용 모듈 1개를 선정해 견적을 받고 HAT 연결·장착·호스트 처리를 검증합니다. J7은 핀·OS 설정 확인이 남은 후보입니다."
     },
     {
       "title": "모터·라즈베리파이 구매",
@@ -552,7 +552,7 @@
     {
       "title": "프린터 도착 → 출력·보드 제작 → 조립",
       "status": "제작 대기",
-      "detail": "외형 도면은 즉시 출력 가능한 상태입니다. 프린터 입고 후 출력하고, 보드 제작·부품 준비를 마쳐 조립·실물 확인으로 이어갑니다."
+      "detail": "프린터 입고 후 출력, HAT 제작·입고와 IMU 모듈 구매를 진행하고 조립·실물 시험으로 이어갑니다."
     }
   ],
   "hardware": [
@@ -569,7 +569,7 @@
       "title": "HAT 보드 설계 확보",
       "state": "done",
       "status": "오픈소스 확보",
-      "detail": "보드 2종 중 HAT 1종은 설계와 펌웨어가 오픈소스로 준비되어 있습니다.",
+      "detail": "HAT C1 공개 설계와 제조 자료를 확보했습니다. IMU는 전용 보드 제작 대신 완제품 구매로 전환합니다.",
       "next": "확보한 설계로 보드 제작"
     },
     {
@@ -581,12 +581,12 @@
       "next": "제작 발주·입고"
     },
     {
-      "short": "IMU 설계",
-      "title": "IMU 보드 설계",
-      "state": "blocked",
-      "status": "해결 필요",
-      "detail": "나머지 보드 1종은 IMU 관련 설계·제조 준비가 남아 있습니다. 기존 회로 초안 검토 기록을 참고합니다.",
-      "next": "설계 확정 → PCB·제조 자료 완성"
+      "short": "IMU 구매·장착",
+      "title": "몸통 IMU 완제품 구매·장착",
+      "state": "pending",
+      "status": "모델·견적 대기",
+      "detail": "구매 방식은 확정했습니다. 모듈 1개를 선정하고 전압·핀 배열·몸통 고정·HAT 연결을 검증해야 합니다.",
+      "next": "모델·견적 → 구매·입고 → 장착·단품 시험"
     },
     {
       "short": "모터·Pi 구매",
@@ -601,8 +601,8 @@
       "title": "외형 출력·보드 제작",
       "state": "pending",
       "status": "프린터 도착 대기",
-      "detail": "뱀부랩 X2D Combo 구매 비용 반영. 외형 출력과 보드 2종 제작·입고는 아직 완료 전입니다.",
-      "next": "프린터 도착 → 출력 / 보드 제작"
+      "detail": "뱀부랩 X2D Combo 구매 비용 반영. 외형 출력·HAT 제작·IMU 모듈 입고는 아직 완료 전입니다.",
+      "next": "프린터 도착 → 출력 / HAT 제작·IMU 구매"
     },
     {
       "short": "조립·실물 확인",
@@ -631,12 +631,12 @@
       "next": "보드 제작 후 기록·구동 확인"
     },
     {
-      "short": "IMU 펌웨어",
-      "title": "IMU 보드 실행 펌웨어",
-      "state": "progress",
-      "status": "추가 개발 필요",
-      "detail": "남은 SW 개발은 보드류 펌웨어입니다. IMU 통신 코어의 PC 검토 기록을 바탕으로 MCU 실행·센서 구동·통신·고장 대응을 완성합니다.",
-      "next": "실행 펌웨어 구현 → 실제 보드 검증"
+      "short": "외장 IMU 통합",
+      "title": "외장 IMU 드라이버·런타임 통합",
+      "state": "pending",
+      "status": "구현·실물 검증 대기",
+      "detail": "전용 MCU 펌웨어 대신 메인 컴퓨터 IMU 읽기 경로를 추가합니다. DXL ID 200 의존 제거, 몸통 좌표·단위·갱신·고장 처리를 검증합니다.",
+      "next": "SBC·모듈 확정 → 드라이버·제어 입력 수정 → 실물 검증"
     }
   ],
   "tests": [
@@ -651,30 +651,30 @@
     },
     {
       "id": "PC-01",
-      "name": "통신 코어 C 단위시험",
+      "name": "[이전 보드 참고] 통신 코어 C 단위시험",
       "environment": "PC",
       "state": "passed",
       "status": "통과",
       "result": "22개 테스트 함수 PASS · 종료 코드 0",
-      "criteria": "2026-09-14 검토 기록. TinyCC / Windows 실행; MCU·실물 시험 아님"
+      "criteria": "2026-09-14 검토 기록. TinyCC / Windows 실행; MCU·실물 시험 아님 · 이전 전용 보드 기록. 새 완제품 합격 근거 아님."
     },
     {
       "id": "PC-02",
-      "name": "binary16 유한 표현 왕복",
+      "name": "[이전 보드 참고] binary16 유한 표현 왕복",
       "environment": "PC",
       "state": "passed",
       "status": "통과",
       "result": "63,488개 표현 · 오류 0",
-      "criteria": "원래 half로 표현 가능한 값의 보존. 중간값 반올림 차이는 별도 개선 항목"
+      "criteria": "원래 half로 표현 가능한 값의 보존. 중간값 반올림 차이는 별도 개선 항목 · 이전 전용 보드 기록. 새 완제품 합격 근거 아님."
     },
     {
       "id": "PC-03",
-      "name": "Sync Read 응답 순서",
+      "name": "[이전 보드 참고] Sync Read 응답 순서",
       "environment": "PC",
       "state": "issue",
       "status": "제한 확인",
       "result": "ID 200 첫 순서: 23바이트 / 두 번째: 응답 0",
-      "criteria": "현재 기본 호스트 순서에 한정. 임의 순서 대응 미완료"
+      "criteria": "현재 기본 호스트 순서에 한정. 임의 순서 대응 미완료 · 이전 전용 보드 기록. 새 완제품 합격 근거 아님."
     },
     {
       "id": "HW-01",
@@ -683,7 +683,7 @@
       "state": "pending",
       "status": "실행 기록 없음",
       "result": "—",
-      "criteria": "전원 순서·리셋·무전원 격리 및 실제 배선에서 1Mbps 파형 측정"
+      "criteria": "모듈 전원·논리 전압·핀 배열·I²C 주소·풀업·케이블/목 가동 안정성 확인"
     },
     {
       "id": "HW-02",
@@ -696,12 +696,12 @@
     },
     {
       "id": "HW-03",
-      "name": "15개 서보 혼합 버스",
+      "name": "외장 IMU·서보 동시 운용",
       "environment": "실물",
       "state": "pending",
       "status": "실행 기록 없음",
       "result": "—",
-      "criteria": "협의용 목표: 실제 Radxa + HAT + IMU + 서보 15개, 50Hz ≥1시간, 유효 응답 ≥99.9%"
+      "criteria": "협의용 목표: 채택 SBC + HAT + 외장 IMU + 서보 15개, 50Hz ≥1시간, 유효 관측/응답 ≥99.9%. IMU는 별도 I²C 경로"
     },
     {
       "id": "HW-04",
@@ -710,16 +710,16 @@
       "state": "pending",
       "status": "실행 기록 없음",
       "result": "—",
-      "criteria": "센서 정지·통신 오류·MCU 리셋 → 무효 전달·모터 차단·재준비 전 자동 재개 방지"
+      "criteria": "센서 정지·I²C 오류·호스트 재시작 → 데이터 무효·모터 차단·재준비 전 자동 재개 방지"
     },
     {
       "id": "HW-05",
-      "name": "기동·단독 응답",
+      "name": "모듈 기동·ID 200 의존 제거",
       "environment": "실물",
       "state": "pending",
       "status": "실행 기록 없음",
       "result": "—",
-      "criteria": "협의용 목표: 준비 ≤3초, 단독 요청→응답 완료 ≤1ms"
+      "criteria": "센서 초기화·유효 데이터 준비 확인. ID 200 응답 없이 모터 초기화·제어하도록 런타임 수정 검증"
     },
     {
       "id": "SYS-01",
@@ -734,8 +734,13 @@
   "history": [
     {
       "date": "2026-09-15",
+      "title": "IMU 완제품 구매 전환 · 사양서 v0.6",
+      "detail": "제작 예상 1,080,000원 제외. 준비 소계 2,768,260원 + IMU 구매비 미정. 모듈 선정·HAT 연결·호스트 통합·실물 시험 대기."
+    },
+    {
+      "date": "2026-09-15",
       "title": "최신 개발 상태·진행률 반영",
-      "detail": "외형 설계·MuJoCo 이식 완료, HAT 설계·펌웨어·견적 확보. IMU 개발과 모터·라즈베리파이 구매, 출력·제작·조립이 남은 단계."
+      "detail": "당시 보고: 외형 설계·MuJoCo 이식 완료, HAT 자료·견적 확보. 이후 IMU는 완제품 구매·호스트 통합으로 전환."
     },
     {
       "date": "2026-09-15",
@@ -750,12 +755,12 @@
     {
       "date": "2026-09-11",
       "title": "제작사양서 v0.5 · HAT 견적 갱신",
-      "detail": "HAT 3장 VAT 포함 1,250,700원 반영. 준비예산 3,848,260원."
+      "detail": "HAT 3장 VAT 포함 1,250,700원 반영. 준비예산 3,848,260원. v0.6으로 대체된 과거 금액."
     },
     {
       "date": "2026-09-07",
       "title": "IMU 제조 예상·초기 품목 예산 정리",
-      "detail": "IMU 제조 로트 1,080,000원 반영. 개발 인건비·VAT·납품 수량은 별도 확인."
+      "detail": "IMU 제조 로트 1,080,000원 반영. 개발 인건비·VAT·납품 수량은 별도 확인. 완제품 구매 전환으로 현행 예산 제외."
     }
   ],
   "purchase_groups": [
@@ -803,7 +808,7 @@
     {
       "id": "tools",
       "name": "개발·시험 장비",
-      "items": "IMU 평가보드 · 디버거 · 시험 배선",
+      "items": "외장 IMU 통합 시험 소모품·지그",
       "part_ids": [
         "D01"
       ]
@@ -828,6 +833,11 @@
       "name": "라즈베리파이",
       "detail": "모델·가격 미정",
       "status": "구매 예정"
+    },
+    {
+      "name": "몸통 IMU 완제품",
+      "detail": "1개 · 모델·가격·HAT 연결 검증 대기",
+      "status": "선정 후 구매"
     }
   ],
   "progress_basis": "완료 단계 ÷ 전체 단계 · 각 단계 동일 비중, 작업 시간 기준 아님",

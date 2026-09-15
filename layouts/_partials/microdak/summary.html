@@ -2,13 +2,14 @@
 {{- $budget := 0 -}}{{- $low := 0 -}}{{- $high := 0 -}}{{- $initial := 0 -}}
 {{- $actual := 0 -}}{{- $recorded := 0 -}}{{- $settled := 0 -}}{{- $settledBudget := 0 -}}{{- $settledActual := 0 -}}
 {{- $materials := 0 -}}{{- $unknown := 0 -}}{{- $ready := 0 -}}{{- $short := 0 -}}{{- $ordered := 0 -}}
-{{- $remaining := 0 -}}{{- $assumed := 0 -}}
+{{- $remaining := 0 -}}{{- $assumed := 0 -}}{{- $pricePending := 0 -}}{{- $remainingUnknown := 0 -}}{{- $knownActual := 0 -}}
 {{- range $d.parts -}}
-  {{- $r := partial "microdak/remaining.html" . -}}{{- $remaining = add $remaining $r.amount -}}{{- if $r.assumed -}}{{- $assumed = add $assumed 1 -}}{{- end -}}
-  {{- $budget = add $budget .estimate_krw -}}{{- $low = add $low .low_krw -}}{{- $high = add $high .high_krw -}}
-  {{- if ne .category "개발·예비비" -}}{{- $initial = add $initial .estimate_krw -}}{{- end -}}
+  {{- $r := partial "microdak/remaining.html" . -}}{{- if $r.unknown -}}{{- $remainingUnknown = add $remainingUnknown 1 -}}{{- end -}}{{- $remaining = add $remaining $r.amount -}}{{- if $r.assumed -}}{{- $assumed = add $assumed 1 -}}{{- end -}}
+  {{- if eq .estimate_krw nil -}}{{- $pricePending = add $pricePending 1 -}}{{- else -}}
+  {{- $budget = add $budget .estimate_krw -}}{{- $low = add $low .low_krw -}}{{- $high = add $high .high_krw -}}{{- if ne .actual_krw nil -}}{{- $knownActual = add $knownActual .actual_krw -}}{{- end -}}{{- end -}}
+  {{- if and (ne .category "개발·예비비") (ne .estimate_krw nil) -}}{{- $initial = add $initial .estimate_krw -}}{{- end -}}
   {{- if ne .actual_krw nil -}}{{- $actual = add $actual .actual_krw -}}{{- $recorded = add $recorded 1 -}}{{- end -}}
-  {{- if .actual_final -}}{{- $settled = add $settled 1 -}}{{- $settledBudget = add $settledBudget .estimate_krw -}}{{- $settledActual = add $settledActual .actual_krw -}}{{- end -}}
+  {{- if and .actual_final (ne .estimate_krw nil) -}}{{- $settled = add $settled 1 -}}{{- $settledBudget = add $settledBudget .estimate_krw -}}{{- $settledActual = add $settledActual .actual_krw -}}{{- end -}}
   {{- if eq .kind "material" -}}
     {{- $materials = add $materials 1 -}}
     {{- if eq .received_qty nil -}}{{- $unknown = add $unknown 1 -}}
@@ -19,4 +20,4 @@
 {{- end -}}
 {{- $plannedActual := $actual -}}
 {{- range $d.additional_expenses -}}{{- $actual = add $actual .actual_krw -}}{{- $recorded = add $recorded 1 -}}{{- end -}}
-{{- return (dict "plannedActual" $plannedActual "expenseCount" (len ($d.additional_expenses | default slice)) "entryCount" (add (len $d.parts) (len ($d.additional_expenses | default slice))) "remaining" $remaining "remainingAssumed" $assumed "budget" $budget "low" $low "high" $high "initial" $initial "actual" $actual "recorded" $recorded "settled" $settled "variance" (sub $settledActual $settledBudget) "materials" $materials "unknown" $unknown "ready" $ready "short" $short "ordered" $ordered) -}}
+{{- return (dict "pricePending" $pricePending "remainingUnknown" $remainingUnknown "knownActual" $knownActual "plannedActual" $plannedActual "expenseCount" (len ($d.additional_expenses | default slice)) "entryCount" (add (len $d.parts) (len ($d.additional_expenses | default slice))) "remaining" $remaining "remainingAssumed" $assumed "budget" $budget "low" $low "high" $high "initial" $initial "actual" $actual "recorded" $recorded "settled" $settled "variance" (sub $settledActual $settledBudget) "materials" $materials "unknown" $unknown "ready" $ready "short" $short "ordered" $ordered) -}}

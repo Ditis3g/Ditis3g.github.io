@@ -1,8 +1,9 @@
-{{- $amount := 0 -}}{{- $assumed := false -}}
+{{- $amount := 0 -}}{{- $assumed := false -}}{{- $unknown := false -}}
 {{- if .actual_final -}}
 {{- else if ne .remaining_krw nil -}}{{- $amount = .remaining_krw -}}
+{{- else if eq .estimate_krw nil -}}{{- $unknown = true -}}
 {{- else -}}
   {{- $spent := 0 -}}{{- if ne .actual_krw nil -}}{{- $spent = .actual_krw -}}{{- end -}}
   {{- $amount = math.Max 0 (sub .estimate_krw $spent) -}}{{- $assumed = true -}}
 {{- end -}}
-{{- return (dict "amount" $amount "assumed" $assumed) -}}
+{{- return (dict "amount" $amount "assumed" $assumed "unknown" $unknown) -}}

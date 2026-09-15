@@ -6,22 +6,22 @@
       <div class="md-panel">
         <h3>어디에 예산이 들어가나요?</h3>
         <div class="md-budget-bars">{{ range $i, $category := slice "핵심 전장" "기구·주변 부품" "배송·세금" "개발·예비비" }}
-          {{ $sum := 0 }}{{ range where $d.parts "category" $category }}{{ $sum = add $sum .estimate_krw }}{{ end }}
+          {{ $sum := 0 }}{{ range where $d.parts "category" $category }}{{ if ne .estimate_krw nil }}{{ $sum = add $sum .estimate_krw }}{{ end }}{{ end }}
           {{ $pct := mul (div (float $sum) (float $s.budget)) 100 }}
           <div class="md-budget-row"><div><span>{{ $category }}</span><b>{{ partial "microdak/money.html" $sum }}원 <small>{{ printf "%.1f" $pct }}%</small></b></div><div class="md-track" aria-hidden="true"><span class="md-bar-{{ $i }}" style="width:{{ printf "%.2f" $pct }}%"></span></div></div>
         {{ end }}</div>
-        <div class="md-budget-range"><span>조건부 예산 범위</span><b>{{ partial "microdak/money.html" $s.low }}–{{ partial "microdak/money.html" $s.high }}원</b></div>
-        <p class="md-small">낮음·높음은 가격 변동 시나리오입니다. HAT 3장 견적과 IMU 제조 예상은 같은 금액을 적용했습니다. 실시간 가격·확정 상한이 아닙니다.</p>
+        <div class="md-budget-range"><span>금액 기입 항목의 조건부 범위</span><b>{{ partial "microdak/money.html" $s.low }}–{{ partial "microdak/money.html" $s.high }}원</b></div>
+        <p class="md-small">IMU 완제품 구매비는 미정으로 위 소계·비중에서 제외했습니다. HAT 3장 견적은 유지하며 다른 금액은 기존 가정입니다. 확정 총액·상한이 아닙니다.</p>
       </div>
       <div class="md-panel md-cost-summary"><h3>실지출 정산</h3>
-        <dl><div><dt>기준 준비예산</dt><dd>{{ partial "microdak/money.html" $s.budget }}원</dd></div>
+        <dl><div><dt>준비예산 소계</dt><dd>{{ partial "microdak/money.html" $s.budget }}원</dd></div>
         <div><dt>누적 지출 <small>입력분</small></dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" $s.actual }}원{{ else }}미입력{{ end }}</dd></div>
-        <div><dt>기준 예산 − 해당 품목 지출</dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" (sub $s.budget $s.plannedActual) }}원{{ else }}계산 대기{{ end }}</dd></div>
+        <div><dt>가격 기입 품목 예산 − 같은 품목 지출</dt><dd>{{ if gt $s.recorded 0 }}{{ partial "microdak/money.html" (sub $s.budget $s.knownActual) }}원{{ else }}계산 대기{{ end }}</dd></div>
         <div class="md-settled"><dt>정산 완료 항목 차액<small>실지출 − 해당 항목 예산</small></dt><dd>{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}계산 대기{{ end }}</dd></div></dl>
         {{ if gt $s.expenseCount 0 }}<p class="md-small">추가 장비 지출 {{ partial "microdak/money.html" (sub $s.actual $s.plannedActual) }}원은 누적 지출에 포함하며, 기존 제작 예산의 잔액·정산 차액에서는 제외합니다.</p>{{ end }}
         <p class="md-small">정산 완료 {{ $s.settled }}개 항목 기준. +는 초과, −는 절감입니다. 미입력·미정산 항목을 절감액으로 계산하지 않습니다. 예산 잔액에는 아직 낼 비용이 포함됩니다.</p>
-        <div class="md-excluded"><b>합계에 포함되지 않은 비용</b><p>IMU 설계·펌웨어 외주 및 자체 개발 인건비. 미보유 계측장비·추가 전원 PCB·예비비를 넘는 재제작도 별도입니다.</p></div>
+        <div class="md-excluded"><b>합계에 포함되지 않은 비용</b><p>가격 미정인 IMU 완제품 구매비와 호스트 드라이버·런타임 통합 인건비. 미보유 계측장비·추가 전원 PCB·예비비를 넘는 재제작도 별도입니다.</p></div>
       </div>
     </div>
-    <div class="md-quotes">{{ range $d.quotes }}<article class="md-panel"><div class="md-quote-top"><h3>{{ .name }}</h3><span class="md-badge md-progress">{{ .status }}</span></div><strong class="md-quote-amount">{{ partial "microdak/money.html" .amount_krw }}<small>원</small></strong><p class="md-muted">{{ .basis }}</p><details class="md-quote-details"><summary>견적 메모 보기</summary><ul>{{ range .details }}<li>{{ . }}</li>{{ end }}</ul></details></article>{{ end }}</div>
+    <div class="md-quotes">{{ range $d.quotes }}<article class="md-panel"><div class="md-quote-top"><h3>{{ .name }}</h3><span class="md-badge md-progress">{{ .status }}</span></div><strong class="md-quote-amount">{{ if eq .amount_krw nil }}견적 대기{{ else }}{{ partial "microdak/money.html" .amount_krw }}<small>원</small>{{ end }}</strong><p class="md-muted">{{ .basis }}</p><details class="md-quote-details"><summary>견적 메모 보기</summary><ul>{{ range .details }}<li>{{ . }}</li>{{ end }}</ul></details></article>{{ end }}</div>
   </section>
