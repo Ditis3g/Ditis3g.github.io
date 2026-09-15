@@ -34,6 +34,7 @@ for (const e of d.additional_expenses || []) {
   assert(typeof e.id === 'string' && !ids.has(e.id), 'Invalid or duplicate expense ID'); ids.add(e.id);
   assert(typeof e.name === 'string' && e.name.length > 0, e.id + ': missing name');
   assert(isCount(e.actual_krw), e.id + ': invalid actual cost');
+  assert.equal(typeof e.actual_final, 'boolean', e.id + ': final must be boolean');
   assert.match(e.updated, /^\d{4}-\d{2}-\d{2}$/);
 }
 const groupedIds = d.purchase_groups.flatMap(g => g.part_ids);

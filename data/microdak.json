@@ -824,7 +824,8 @@
       "id": "E01",
       "name": "3D 프린터 · 뱀부랩 X2D Combo",
       "actual_krw": 1349000,
-      "updated": "2026-09-15",
+      "actual_final": true,
+      "updated": "2026-09-16",
       "note": "운영자 입력. 기존 제작 예산 외 장비 구매 비용. 프린터 도착 대기."
     }
   ],
