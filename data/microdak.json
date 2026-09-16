@@ -109,13 +109,13 @@
       "high_krw": 49120,
       "price_basis": "DeviceMart 구매 완료 · 2026-09-17",
       "note": "몸통 장착용 완제품 1개. HAT J7 직접 연결 후보. 구매가는 제품 1개 기준이며 케이블·배송비는 별도 확인.",
-      "order_status": "purchased",
+      "order_status": "ordered",
       "received_qty": 0,
       "actual_krw": 49120,
       "actual_final": true,
       "purchase_note": "2026-09-17 구매 완료 · DeviceMart 판매 페이지",
       "updated": "2026-09-17",
-      "remaining_krw": 49120,
+      "remaining_krw": 0,
       "purchase_url": "https://www.devicemart.co.kr/goods/view?no=15077890"
     },
     {
@@ -872,4 +872,4 @@
   ],
   "progress_basis": "완료 단계 ÷ 전체 단계 · 각 단계 동일 비중, 작업 시간 기준 아님",
   "porting_percent": 100
-}
+}\n
