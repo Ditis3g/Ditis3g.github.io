@@ -1,4 +1,4 @@
----
+﻿---
 title: "MicroDak 전장·보드 배선도 — 몸통 IMU를 HAT J7에 연결"
 date: 2026-09-16T00:00:00+09:00
 draft: false
@@ -10,8 +10,10 @@ comments: false
 ---
 
 <p class="lead">몸통에 고정한 <strong>IMU 완제품을 HAT의 J7에 직접 연결</strong>하고, Radxa Zero 3W가 센서 데이터를 읽어 모터 제어에 사용한다. 전용 imu_to_dxl 보드는 구성에서 제외한다.</p>
-<div class="status" style="display:flex;flex-wrap:wrap;gap:12px;padding:16px;border:1px solid #8ab2c7;border-radius:10px"><strong>이번 구성 확정</strong><span>메인 컴퓨터: Radxa Zero 3W</span><span>몸통 IMU: 완제품 / J7</span><span>모터: XL330-M288-T ×15</span><span>IMU 제조사·모델명: 비기재</span></div>
+<div class="status" style="display:flex;flex-wrap:wrap;gap:12px;padding:16px;border:1px solid #8ab2c7;border-radius:10px"><strong>이번 구성 확정</strong><span>메인 컴퓨터: Radxa Zero 3W</span><span>몸통 IMU: 완제품 / J7</span><span>모터: XL330-M288-T ×15</span><span>IMU: SparkFun LSM6DSV16X Qwiic (구매 완료)</span></div>
 <p class="evidence"><strong>채택 근거:</strong> 사용자가 전달한 다른 개발자의 J7 연결 기립·보행 성공 보고를 바탕으로 이 경로를 채택했다. 보고 원문·상세 설정은 이 문서에 첨부되지 않았다. 이 보고는 해당 개발자 시스템의 실적이며, 현재 MicroDak의 실물 시험 완료 기록으로 합산하지 않는다.</p>
+
+<div class="status" style="background:#eef8ff;border:1px solid #9bc7e8"><strong>몸통 IMU 구매 완료 · 2026-09-17</strong><span><strong>SparkFun 6DoF IMU Breakout - LSM6DSV16X (Qwiic)</strong> 1개</span><span>구매가: <strong>49,120원</strong></span><span>상태: 입고·J7 연결·Radxa 드라이버 검증 대기</span><a href="https://www.devicemart.co.kr/goods/view?no=15077890" target="_blank" rel="noopener">DeviceMart 구매 링크 ↗</a></div>
 
 <p><a href="/microdak/wiring/" target="_blank" rel="noopener"><strong>배선도 전체 화면으로 보기 ↗</strong></a> · 각 도면을 누르면 SVG 원본을 확대할 수 있습니다.</p>
 
@@ -28,7 +30,7 @@ comments: false
 
 ## 3. 몸통 IMU와 J7의 핀별 배선
 
-<figure><a href="/microdak/wiring/03-j7-pinout.svg" target="_blank" rel="noopener"><img src="/microdak/wiring/03-j7-pinout.svg" alt="3. 몸통 IMU와 J7의 핀별 배선" loading="lazy"></a><figcaption>그림을 누르면 원본을 확대할 수 있습니다. <a href="/microdak/wiring/03-j7-pinout.svg" download>SVG 다운로드</a></figcaption></figure><div class="table-wrap"><table><thead><tr><th>HAT J7</th><th>기능</th><th>HAT J4 / Radxa 대응</th><th>IMU 측 연결</th></tr></thead><tbody><tr><td>1</td><td>GND</td><td>공통 GND</td><td>모듈 GND</td></tr><tr><td>2</td><td>+3V3</td><td>J4-1·17의 3.3V 레일</td><td>3.3V 입력에 적합한 전원 핀</td></tr><tr><td>3</td><td>SDA로 사용</td><td>J4 물리 24번 → GPIO4_C6</td><td>모듈 SDA</td></tr><tr><td>4</td><td>SCL로 사용</td><td>J4 물리 21번 → GPIO4_C5</td><td>모듈 SCL</td></tr></tbody></table></div><p><strong>J7을 이번 MicroDak의 몸통 IMU 포트로 사용한다.</strong> Radxa의 GPIO4_C6·GPIO4_C5를 GPIO-I²C 버스로 구성하고, 선택한 IMU의 주소·드라이버·샘플링 설정을 적용한다. 해당 핀을 SPI·UART·다른 오버레이가 동시에 사용하지 않도록 한다. 성공 사례의 OS·설정 자료가 확보되면 이를 우선 대조한다.</p><p>J7은 JST SH 계열 1mm 4핀이다. IMU가 동일 Qwiic 배열을 쓰면 표준 케이블을 사용할 수 있고, 다른 커넥터라면 위 <strong>기능 대응</strong>에 맞춘 하네스가 필요하다. 모델 비기재이므로 IMU 쪽 물리 핀 번호·주소·크기는 확정하지 않는다. HAT의 R34·R35는 각 10kΩ 풀업이며, 모듈 풀업과 합성 저항·상승 시간을 확인한다.</p><p>몸통에는 움직이지 않도록 고정하고 센서 축 방향을 기록한다. 목 관절의 전체 가동 범위에서 당김·끼임이 없도록 여유 길이와 고정부를 둔다. 모터 전원선과 거리를 두고 통신 오류를 측정한다. <a href="https://github.com/pollen-robotics/elec_RPI_Robot_HAT/blob/main/elec_RPI_Robot_HAT.kicad_pcb">HAT PCB 핀 근거</a> · <a href="https://docs.radxa.com/en/zero/zero3/hardware-design/hardware-interface">Radxa 헤더 핀 근거</a></p>
+<figure><a href="/microdak/wiring/03-j7-pinout.svg" target="_blank" rel="noopener"><img src="/microdak/wiring/03-j7-pinout.svg" alt="3. 몸통 IMU와 J7의 핀별 배선" loading="lazy"></a><figcaption>그림을 누르면 원본을 확대할 수 있습니다. <a href="/microdak/wiring/03-j7-pinout.svg" download>SVG 다운로드</a></figcaption></figure><div class="table-wrap"><table><thead><tr><th>HAT J7</th><th>기능</th><th>HAT J4 / Radxa 대응</th><th>IMU 측 연결</th></tr></thead><tbody><tr><td>1</td><td>GND</td><td>공통 GND</td><td>모듈 GND</td></tr><tr><td>2</td><td>+3V3</td><td>J4-1·17의 3.3V 레일</td><td>3.3V 입력에 적합한 전원 핀</td></tr><tr><td>3</td><td>SDA로 사용</td><td>J4 물리 24번 → GPIO4_C6</td><td>모듈 SDA</td></tr><tr><td>4</td><td>SCL로 사용</td><td>J4 물리 21번 → GPIO4_C5</td><td>모듈 SCL</td></tr></tbody></table></div><p><strong>J7을 이번 MicroDak의 몸통 IMU 포트로 사용한다.</strong> Radxa의 GPIO4_C6·GPIO4_C5를 GPIO-I²C 버스로 구성하고, 선택한 IMU의 주소·드라이버·샘플링 설정을 적용한다. 해당 핀을 SPI·UART·다른 오버레이가 동시에 사용하지 않도록 한다. 성공 사례의 OS·설정 자료가 확보되면 이를 우선 대조한다.</p><p>J7은 JST SH 계열 1mm 4핀이다. IMU가 동일 Qwiic 배열을 쓰면 표준 케이블을 사용할 수 있고, 다른 커넥터라면 위 <strong>기능 대응</strong>에 맞춘 하네스가 필요하다. 구매한 SparkFun 모듈의 물리 핀 번호·주소·크기는 실물과 데이터시트로 대조한다. HAT의 R34·R35는 각 10kΩ 풀업이며, 모듈 풀업과 합성 저항·상승 시간을 확인한다.</p><p>몸통에는 움직이지 않도록 고정하고 센서 축 방향을 기록한다. 목 관절의 전체 가동 범위에서 당김·끼임이 없도록 여유 길이와 고정부를 둔다. 모터 전원선과 거리를 두고 통신 오류를 측정한다. <a href="https://github.com/pollen-robotics/elec_RPI_Robot_HAT/blob/main/elec_RPI_Robot_HAT.kicad_pcb">HAT PCB 핀 근거</a> · <a href="https://docs.radxa.com/en/zero/zero3/hardware-design/hardware-interface">Radxa 헤더 핀 근거</a></p>
 
 
 ## 4. 모터 15개와 전원 분리 하네스
@@ -53,4 +55,6 @@ comments: false
 
 ## 8. 근거·개정 및 다운로드
 
-<ul><li><a href="https://github.com/pollen-robotics/elec_RPI_Robot_HAT/blob/main/elec_RPI_Robot_HAT.kicad_pcb">HAT PCB 원본</a>: J4·J5·J7·J11·J13·J14 핀과 전원 넷을 추적했다.</li><li><a href="https://github.com/pollen-robotics/elec_RPI_Robot_HAT/blob/main/power.kicad_sch">HAT 전원 회로</a>: 5V 강압·역류 방지 경로. 소스 시트 표제의 리비전과 실제 C1 제조 묶음은 구분한다.</li><li><a href="https://docs.radxa.com/en/zero/zero3/hardware-design/hardware-interface">Radxa Zero 3W 핀 설명</a>: 물리 21·24번의 GPIO 대응.</li><li><a href="https://emanual.robotis.com/docs/en/dxl/x/xl330-m288/">ROBOTIS XL330-M288-T</a>: 3.7~6.0V, 권장 5V, TTL 커넥터.</li><li><a href="https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/bus.rs">Microduck 버스 코드</a>: 기존 IMU·서보 통합 읽기를 분리할 지점.</li><li>2026-09-16 사용자 결정: Radxa Zero 3W, 몸통 IMU 완제품 → J7, IMU 모델명 비기재. 다른 개발자의 기립·보행 성공 보고를 채택 근거로 전달받음.</li></ul><p><strong>도면 v1.0 · 2026-09-16.</strong> 전장 구성과 하네스 연결을 설명하는 상세 설계안이다. 실제 납품 보드의 핀·극성, 모듈 정격, 강압기·퓨즈·배선 용량을 확정한 뒤 제작에 적용한다. 전장 구성 변경으로 새로운 구매·실지출 금액을 임의 추가하지 않았다.</p>
+<ul><li><a href="https://github.com/pollen-robotics/elec_RPI_Robot_HAT/blob/main/elec_RPI_Robot_HAT.kicad_pcb">HAT PCB 원본</a>: J4·J5·J7·J11·J13·J14 핀과 전원 넷을 추적했다.</li><li><a href="https://github.com/pollen-robotics/elec_RPI_Robot_HAT/blob/main/power.kicad_sch">HAT 전원 회로</a>: 5V 강압·역류 방지 경로. 소스 시트 표제의 리비전과 실제 C1 제조 묶음은 구분한다.</li><li><a href="https://docs.radxa.com/en/zero/zero3/hardware-design/hardware-interface">Radxa Zero 3W 핀 설명</a>: 물리 21·24번의 GPIO 대응.</li><li><a href="https://emanual.robotis.com/docs/en/dxl/x/xl330-m288/">ROBOTIS XL330-M288-T</a>: 3.7~6.0V, 권장 5V, TTL 커넥터.</li><li><a href="https://github.com/pollen-robotics/microduck/blob/main/duck-control/src/bus.rs">Microduck 버스 코드</a>: 기존 IMU·서보 통합 읽기를 분리할 지점.</li><li>2026-09-17 구매 반영: Radxa Zero 3W, SparkFun LSM6DSV16X Qwiic 몸통 IMU 완제품 → J7. 다른 개발자의 기립·보행 성공 보고를 채택 근거로 전달받음.</li></ul><p><strong>도면 v1.0 · 2026-09-16.</strong> 전장 구성과 하네스 연결을 설명하는 상세 설계안이다. 실제 납품 보드의 핀·극성, 모듈 정격, 강압기·퓨즈·배선 용량을 확정한 뒤 제작에 적용한다. 2026-09-17 IMU 구매가 49,120원을 반영했다. 케이블·배송비와 통합 인건비는 별도 확인한다.</p>
+
+

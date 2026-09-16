@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-16",
+  "updated": "2026-09-17",
   "specification": "v0.7",
-  "specification_date": "2026-09-16",
-  "price_date": "2026-09-16",
+  "specification_date": "2026-09-17",
+  "price_date": "2026-09-17",
   "review_date": "2026-09-14",
-  "phase": "외형 설계·MuJoCo 이식 완료 · 모터 배송 대기 · 몸통 IMU J7 구성 채택",
+  "phase": "외형 설계·MuJoCo 이식 완료 · HAT 제작·IMU 구매 완료 · J7 통합 대기",
   "sources": [
     {
       "name": "MicroDak 전장·보드 배선도",
@@ -98,24 +98,25 @@
     },
     {
       "id": "A04",
-      "name": "몸통 IMU 완제품 모듈",
+      "name": "SparkFun 6DoF IMU Breakout - LSM6DSV16X (Qwiic)",
       "category": "핵심 전장",
       "kind": "material",
       "qty": 1,
       "unit": "개",
-      "unit_krw": null,
-      "estimate_krw": null,
-      "low_krw": null,
-      "high_krw": null,
-      "price_basis": "모델 선정·구매 견적 대기",
-      "note": "몸통 IMU 완제품 1개 → HAT J7 채택. 제조사·모델명 비기재. 구매가·판매처·배송 미정으로 소계 제외; 0원이 아님",
-      "order_status": "planned",
-      "received_qty": null,
-      "actual_krw": null,
-      "actual_final": false,
-      "purchase_note": "2026-09-16 사용자 결정: 몸통 IMU 완제품을 HAT J7에 연결. 제조사·모델명 비기재. 구매·가격·자체 실물 시험은 대기.",
-      "updated": "2026-09-16",
-      "remaining_krw": null
+      "unit_krw": 49120,
+      "estimate_krw": 49120,
+      "low_krw": 49120,
+      "high_krw": 49120,
+      "price_basis": "DeviceMart 구매 완료 · 2026-09-17",
+      "note": "몸통 장착용 완제품 1개. HAT J7 직접 연결 후보. 구매가는 제품 1개 기준이며 케이블·배송비는 별도 확인.",
+      "order_status": "purchased",
+      "received_qty": 0,
+      "actual_krw": 49120,
+      "actual_final": true,
+      "purchase_note": "2026-09-17 구매 완료 · DeviceMart 판매 페이지",
+      "updated": "2026-09-17",
+      "remaining_krw": 49120,
+      "purchase_url": "https://www.devicemart.co.kr/goods/view?no=15077890"
     },
     {
       "id": "A05",
@@ -532,22 +533,22 @@
     },
     {
       "name": "몸통 IMU · 완제품 모듈",
-      "status": "모델 선정·견적 대기",
-      "amount_krw": null,
-      "basis": "2026-09-15 · 장착용 1개 구매 계획",
+      "status": "구매 완료 · 통합 대기",
+      "amount_krw": 49120,
+      "basis": "2026-09-17 · DeviceMart 구매가",
       "details": [
-        "전용 PCB·SMT 제조 예상 1,080,000원은 현행 예산 제외",
-        "모듈 모델·판매처·세금·배송·커넥터 포함 범위 미정",
-        "미정 가격은 소계 제외이며 무료가 아님",
-        "호스트 드라이버·런타임 통합 인건비 별도 산정"
+        "SparkFun 6DoF IMU Breakout - LSM6DSV16X (Qwiic) 1개",
+        "제품가 49,120원 · 케이블·배송비 별도 확인",
+        "구매 링크: https://www.devicemart.co.kr/goods/view?no=15077890",
+        "HAT J7 핀 배열·3.3V·I²C 주소·풀업과 호스트 드라이버 검증 필요"
       ]
     }
   ],
   "priorities": [
     {
-      "title": "몸통 IMU 구매·J7 통합",
-      "status": "J7 경로 채택",
-      "detail": "다른 개발자의 기립·보행 성공 보고(사용자 전달)를 참고해 J7을 채택했습니다. 모듈 구매와 Radxa 설정·드라이버·자체 실물 검증을 진행합니다."
+      "title": "구매한 IMU의 J7 통합",
+      "status": "구매 완료 · 연결 검증 대기",
+      "detail": "SparkFun LSM6DSV16X Qwiic 1개를 49,120원에 구매했습니다. HAT J7 연결, 몸통 고정, Radxa 드라이버와 자세 처리 통합을 진행합니다."
     },
     {
       "title": "모터 입고·Radxa 구매 준비",
@@ -589,9 +590,9 @@
       "short": "IMU 구매·장착",
       "title": "몸통 IMU 완제품 구매·장착",
       "state": "pending",
-      "status": "J7 경로 채택 · 구매·장착 대기",
-      "detail": "몸통 IMU 완제품을 HAT J7에 연결합니다. 다른 개발자의 성공 보고는 사용자 전달 참고 실적이며 현재 MicroDak의 검증 완료를 뜻하지 않습니다.",
-      "next": "완제품 구매 → 몸통 고정·J7 배선 → 단품 시험"
+      "status": "구매 완료 · 장착 대기",
+      "detail": "SparkFun LSM6DSV16X Qwiic 1개 구매 완료(49,120원). 몸통 고정, J7 핀·케이블 확인, 단품 통신 시험이 남았습니다.",
+      "next": "입고 확인 → 몸통 고정·J7 배선 → 단품 시험"
     },
     {
       "short": "모터 구매·입고",
@@ -746,6 +747,11 @@
   ],
   "history": [
     {
+      "date": "2026-09-17",
+      "title": "몸통 IMU 구매 완료 · J7 통합 준비",
+      "detail": "SparkFun 6DoF IMU Breakout - LSM6DSV16X (Qwiic) 1개를 DeviceMart에서 49,120원에 구매. 입고·핀 배열·J7 연결·Radxa 드라이버 검증 대기."
+    },
+    {
       "date": "2026-09-16",
       "title": "메인 컴퓨터 Radxa 확정 · 구매 진행 항목 분리",
       "detail": "사야 할 것에 Radxa ZERO 3W를 반영. HW의 모터 구매·입고와 메인 컴퓨터 보드 구매·준비를 별도로 관리. 기존 모터 지출·배송 기록 유지."
@@ -860,8 +866,8 @@
     },
     {
       "name": "몸통 IMU 완제품",
-      "detail": "몸통 장착용 1개 · HAT J7 직접 연결 · 모델명 비기재",
-      "status": "선정 후 구매"
+      "detail": "SparkFun LSM6DSV16X Qwiic 1개 · 49,120원 · DeviceMart 구매 완료",
+      "status": "구매 완료"
     }
   ],
   "progress_basis": "완료 단계 ÷ 전체 단계 · 각 단계 동일 비중, 작업 시간 기준 아님",
