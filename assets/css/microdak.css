@@ -32,3 +32,51 @@
 @media(max-width:1100px){.md-progress-panel{grid-template-columns:155px minmax(0,1fr);gap:16px;padding:20px}.md-milestones{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:650px){.md-progress-panel{grid-template-columns:minmax(0,1fr);padding:18px}.md-progress-overview{display:grid;grid-template-columns:112px minmax(0,1fr);column-gap:18px;text-align:left;align-items:center}.md-progress-overview h2{grid-column:2;margin:0;font-size:1.8rem}.md-progress-ring{grid-column:1;grid-row:1/4;width:112px;margin:0;padding:8px}.md-progress-ring strong{font-size:3rem}.md-porting-result,.md-progress-next{grid-column:2}.md-progress-next b{display:inline;margin-left:4px}.md-milestones{grid-template-columns:repeat(3,minmax(0,1fr))}.md-lane-heading h3 span{font-size:1.2rem}.md-milestones li{font-size:1.4rem;padding:7px 6px;gap:4px}}
 @media(max-width:380px){.md-milestones{grid-template-columns:repeat(2,minmax(0,1fr))}.md-progress-overview{column-gap:12px}.md-progress-next b{display:block;margin-left:0}}
+
+/* Simulation diary: an invitation to meet the physical MicroDak. */
+.md-simple .md-compact-header{background:transparent;box-shadow:none;padding:4px 6px 16px;min-height:112px;margin-bottom:0;grid-template-columns:minmax(0,1fr) 100px;color:var(--card-text-color-main)}
+.md-simple .md-header .md-eyebrow{color:var(--md-accent)}
+.md-simple .md-brief-status,.md-simple .md-brief-status span,.md-simple .md-character figcaption{color:var(--card-text-color-secondary)}
+.md-simple .md-character img{max-width:76px;border-radius:18px;transform:rotate(3deg)}
+.md-sim-story{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);gap:0;background:#fff8e9;border:1px solid #e9dfc8;border-radius:26px;overflow:hidden;margin-bottom:24px;box-shadow:0 12px 36px #283b6010;color:#26374b}
+.md-sim-copy{padding:36px 28px 30px 34px;align-self:center}
+.md-sim-kicker{display:flex;gap:8px;align-items:center;color:#74623e;font-size:1.2rem;font-weight:600;letter-spacing:.01em}
+.md-sim-kicker>span{width:7px;height:7px;border-radius:50%;background:#ad7a24;box-shadow:0 0 0 4px #ad7a2414;flex-shrink:0}
+.md-sim-copy h2{font-size:clamp(3.2rem,3vw,4.5rem);font-weight:800;line-height:1.2;letter-spacing:-.06em;margin:20px 0 22px;word-break:keep-all}
+.md-sim-copy h2 em{font-style:normal;color:#3b62a2}
+.md-sim-description{font-size:1.5rem;line-height:1.85;color:#5c6673;word-break:keep-all}
+.md-sim-promise{font-size:1.5rem;line-height:1.85;margin-top:22px!important;color:#5c6673;word-break:keep-all}
+.md-sim-promise strong{font-weight:700;color:#26374b}
+.md-sim-next{display:inline-flex;gap:18px;align-items:center;font-size:1.3rem;font-weight:600;border-bottom:1px solid #bdc7d2;padding-bottom:5px;margin-top:24px;color:#345990!important}
+.md-sim-next span{font-size:1.8rem}
+.md-sim-film{margin:22px 22px 22px 0;align-self:center;border-radius:18px;overflow:hidden;min-width:0;background:#203447;box-shadow:0 14px 28px #1d304122;color:#e9f0f8}
+.md-sim-film-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 17px;font-size:1.1rem;letter-spacing:.08em;color:#bccddd}
+.md-sim-film-top>span:first-child{display:flex;gap:7px;align-items:center;font-weight:600;color:#eaf1fa}
+.md-sim-film-top i{display:inline-block;width:6px;height:6px;background:#ffdc63;border-radius:50%}
+.md-sim-film video{display:block;width:100%;height:auto;aspect-ratio:1280/846;background:#203447;object-fit:contain}
+.md-sim-film video:focus-visible{outline:3px solid #ffdc63;outline-offset:-3px}
+.md-sim-film figcaption{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 17px;font-size:1.2rem;line-height:1.6;color:#d0dfec}
+.md-sim-film figcaption>span:last-child{font-size:1.1rem;white-space:nowrap;color:#aac0d3}
+.md-sim-journey{grid-column:1/-1;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin:0;padding:22px 30px;background:#ffffff8a;border-top:1px solid #e9dfc8}
+.md-sim-journey li{display:flex;gap:12px;align-items:center;position:relative}
+.md-sim-journey li+li::before{content:'→';position:absolute;left:-21px;color:#b4b8ba;font-size:1.4rem}
+.md-sim-number{display:flex;align-items:center;justify-content:center;width:32px;height:32px;flex-shrink:0;border:1px solid #d4d8df;border-radius:50%;font-size:1.2rem;color:#8591a0}
+.md-sim-journey [aria-current] .md-sim-number{background:#ffdc63;border-color:#ffdc63;color:#675019;font-weight:700}
+.md-sim-journey small{display:block;font-size:1.1rem;color:#77818a;margin-bottom:2px}
+.md-sim-journey strong{display:block;font-size:1.3rem;font-weight:600;word-break:keep-all;color:#465467}
+.md-overview-grid+.md-panel{margin-top:24px}
+[data-scheme="dark"] .md-sim-story{background:#263447;border-color:#465062;color:#f1f5fa}
+[data-scheme="dark"] .md-sim-kicker{color:#ebca86}
+[data-scheme="dark"] .md-sim-copy h2 em{color:#a9c5ff}
+[data-scheme="dark"] .md-sim-description,[data-scheme="dark"] .md-sim-promise{color:#c0ccda}
+[data-scheme="dark"] .md-sim-promise strong{color:#f0f4fa}
+[data-scheme="dark"] .md-sim-next{color:#b8ceff!important}
+[data-scheme="dark"] .md-sim-journey{background:#1c293c;border-color:#465062}
+[data-scheme="dark"] .md-sim-journey strong{color:#e0e8f3}
+[data-scheme="dark"] .md-sim-journey small{color:#a9b8cb}
+@media(max-width:1100px){.md-sim-copy{padding:28px 24px}.md-sim-copy h2{font-size:3.5rem}.md-sim-film{margin:18px 18px 18px 0}.md-sim-film figcaption>span:last-child{display:none}.md-sim-journey{padding:18px 24px;gap:20px}.md-sim-journey li{gap:9px}.md-sim-journey strong{font-size:1.2rem}}
+@media(max-width:900px){.md-sim-story{grid-template-columns:minmax(0,1fr)}.md-sim-copy{padding:28px 28px 22px}.md-sim-copy h2{font-size:3.8rem;margin:16px 0}.md-sim-desktop-break{display:none}.md-sim-promise{margin-top:14px!important}.md-sim-next{margin-top:16px}.md-sim-film{margin:0 22px 22px}.md-sim-journey{gap:20px;padding:20px}.md-sim-number{width:28px;height:28px}}
+@media(max-width:540px){.md-simple .md-compact-header{padding:4px 2px 18px;grid-template-columns:minmax(0,1fr) 70px;gap:12px}.md-simple .md-character img{max-width:62px}.md-simple .md-character figcaption{font-size:1rem}.md-simple .md-header h1{font-size:2.6rem}.md-simple .md-brief-status{font-size:1.2rem}.md-sim-story{border-radius:20px}.md-sim-copy{padding:25px 22px 20px}.md-sim-copy h2{font-size:3.6rem}.md-sim-description,.md-sim-promise{font-size:1.4rem}.md-sim-film{margin:0 12px 16px;border-radius:12px}.md-sim-film-top{padding:11px 12px;font-size:.95rem;letter-spacing:.04em}.md-sim-film figcaption{padding:10px 12px;font-size:1.1rem}.md-sim-journey{grid-template-columns:minmax(0,1fr);gap:16px;padding:20px 22px}.md-sim-journey li{gap:12px}.md-sim-journey li+li::before{content:'';width:1px;height:12px;background:#d4d8df;left:14px;top:-14px}.md-sim-journey strong{font-size:1.3rem}.md-sim-journey small{font-size:1.1rem}}
+@media print{.md-sim-story{box-shadow:none;break-inside:avoid}.md-sim-next{display:none}}
+
+.md-simple .md-character figcaption{font-size:1rem;white-space:nowrap}

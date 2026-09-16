@@ -17,7 +17,28 @@
       <figcaption>설계 기반 AI 이미지</figcaption>
     </figure>
   </header>
-  <div class="md-panel" style="margin-bottom:20px"><strong>전장·보드 배선도 · J7 몸통 IMU 구성</strong><p>Radxa Zero 3W 기준 · 전체 구성, 전원 분리, J7 핀 배열, 모터 하네스 4종</p><a href="/posts/microdak-wiring-j7/">상세 배선도·설명 보기 →</a> · <a href="/microdak/wiring/">도면 전체 화면 ↗</a></div>
+  <section class="md-sim-story" aria-labelledby="sim-title">
+    <div class="md-sim-copy">
+      <p class="md-sim-kicker"><span></span> 지금은 시뮬레이션에서 연습 중</p>
+      <h2 id="sim-title">한 걸음씩,<br><em>현실을 향해.</em></h2>
+      <p class="md-sim-description">일어서고, 균형을 잡고, 다시 한 걸음.<br>마이크로닥은 가상 공간에서<br class="md-sim-desktop-break"> 기립과 보행을 연습하고 있어요.</p>
+      <p class="md-sim-promise">조금만 기다려 주세요.<br><strong>곧 실물 마이크로닥으로 만나요.</strong></p>
+      <a class="md-sim-next" href="#todo">실물로 만날 준비 살펴보기 <span aria-hidden="true">↗</span></a>
+    </div>
+    <figure class="md-sim-film">
+      <div class="md-sim-film-top"><span><i aria-hidden="true"></i> MICRODAK IN MOTION</span><span>MuJoCo · 00:37</span></div>
+      <video controls muted playsinline preload="metadata" poster="/videos/microdak/microdak_mujoco-poster.jpg" width="1280" height="846" aria-label="마이크로닥 MuJoCo 시뮬레이션 연습 영상, 37초" aria-describedby="sim-caption">
+        <source src="/videos/microdak/microdak_mujoco.mp4" type="video/mp4">
+        <p><a href="/videos/microdak/microdak_mujoco.mp4">마이크로닥 시뮬레이션 영상 보기</a></p>
+      </video>
+      <figcaption id="sim-caption"><span>화면 속 작은 연습, 실물의 첫걸음을 향해.</span><span>시뮬레이션 기록</span></figcaption>
+    </figure>
+    <ol class="md-sim-journey" aria-label="시뮬레이션에서 실물까지">
+      <li aria-current="step"><span class="md-sim-number">01</span><div><small>지금 하고 있어요</small><strong>시뮬레이션 기립·보행 연습</strong></div></li>
+      <li><span class="md-sim-number">02</span><div><small>다음으로 준비해요</small><strong>부품 출력과 실물 조립</strong></div></li>
+      <li><span class="md-sim-number">03</span><div><small>함께 기다려 주세요</small><strong>우리 앞에서 내딛는 첫걸음</strong></div></li>
+    </ol>
+  </section>
   {{ partial "microdak/progress.html" $d }}
   <div class="md-overview-grid">
     <section class="md-focus-card md-task-card" id="todo" aria-labelledby="todo-title">
@@ -48,6 +69,7 @@
       <p class="md-card-footnote">9/15 IMU 제작비 제외 · Radxa 기준 추정 예산 유지<br>IMU 구매비·호스트 통합 인건비 별도</p>
     </section>
   </div>
+  <div class="md-panel" style="margin-bottom:20px"><strong>전장·보드 배선도 · J7 몸통 IMU 구성</strong><p>Radxa Zero 3W 기준 · 전체 구성, 전원 분리, J7 핀 배열, 모터 하네스 4종</p><a href="/posts/microdak-wiring-j7/">상세 배선도·설명 보기 →</a> · <a href="/microdak/wiring/">도면 전체 화면 ↗</a></div>
   <div class="md-detail-folders" aria-label="필요할 때 펼쳐 보는 상세 자료">
     <details><summary><span>{{ partial "microdak/icon.html" "hardware" }}개발·테스트 상세</span><small>HW · SW · 시험 결과</small></summary><div class="md-folder-body">{{ partial "microdak/task-details.html" . }}</div></details>
     <details><summary><span>{{ partial "microdak/icon.html" "materials" }}구매 목록 상세</span><small>품목별 수량 · 가격 · 입고</small></summary><div class="md-folder-body">{{ partial "microdak/purchase-details.html" . }}</div></details>
