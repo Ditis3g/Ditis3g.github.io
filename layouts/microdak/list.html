@@ -1,45 +1,51 @@
-{{ define "body-class" }}microdak-page{{ end }}
+{{ define "body-class" }}microdak-page microdak-pop{{ end }}
 {{ define "head" }}
 {{ $css := resources.Get "css/microdak.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ $pop := resources.Get "css/microdak-pop.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $pop.RelPermalink }}" integrity="{{ $pop.Data.Integrity }}">
 {{ end }}
 {{ define "main" }}
 {{ $d := hugo.Data.microdak }}{{ $s := partial "microdak/summary.html" $d }}
 {{ $physical := where $d.tests "environment" "실물" }}{{ $physicalPassed := where $physical "state" "passed" }}
 <div class="md-dashboard md-simple">
-  <header class="md-header md-compact-header" id="overview">
-    <div class="md-welcome"><p class="md-eyebrow">MICRODAK PROJECT</p><h1>마이크로닥 <span>작업실</span></h1><p class="md-brief-status">{{ $d.phase }} <span>· {{ $d.updated }} 기준</span></p></div>
-    <figure class="md-character">
-      {{ with resources.Get "images/microdak/microdak-character.png" }}
-      {{ $small := .Resize "480x webp q88" }}{{ $large := .Resize "900x webp q90" }}
-      <img src="{{ $large.RelPermalink }}" srcset="{{ $small.RelPermalink }} 480w, {{ $large.RelPermalink }} 900w" sizes="160px" width="{{ $large.Width }}" height="{{ $large.Height }}" alt="설계 도면을 바탕으로 만든 마이크로닥 닭 로봇 AI 이미지" fetchpriority="high">
-      {{ else }}{{ errorf "MicroDak character image is missing" }}{{ end }}
-      <figcaption>설계 기반 AI 이미지</figcaption>
-    </figure>
+  {{ $done := add (len (where $d.hardware "state" "done")) (len (where $d.software "state" "done")) }}
+  {{ $total := add (len $d.hardware) (len $d.software) }}
+  {{ $percent := int (math.Round (mul (div (float $done) (float $total)) 100)) }}
+  <header class="pop-nav" id="overview">
+    <a class="pop-brand" href="/microdak/" aria-label="마이크로닥 작업실"><span class="pop-brand-icon" aria-hidden="true">m<span>·</span></span><span>microdak<small>PHYSICAL AI DREAM TEAM</small></span></a>
+    <nav aria-label="작업실 바로가기"><a href="#practice">연습 일지</a><a href="#notebook">제작 노트</a><a href="#progress">진행 현황</a><a class="pop-home" href="/">블로그 홈 ↗</a></nav>
   </header>
-  <section class="md-sim-story" aria-labelledby="sim-title">
-    <div class="md-sim-copy">
-      <p class="md-sim-kicker"><span></span> 지금은 시뮬레이션에서 연습 중</p>
-      <h2 id="sim-title">한 걸음씩,<br><em>현실을 향해.</em></h2>
-      <p class="md-sim-description">일어서고, 균형을 잡고, 다시 한 걸음.<br>마이크로닥은 가상 공간에서<br class="md-sim-desktop-break"> 기립과 보행을 연습하고 있어요.</p>
-      <p class="md-sim-promise">조금만 기다려 주세요.<br><strong>곧 실물 마이크로닥으로 만나요.</strong></p>
-      <a class="md-sim-next" href="#todo">실물로 만날 준비 살펴보기 <span aria-hidden="true">↗</span></a>
+  <section class="pop-hero" id="practice" aria-labelledby="sim-title">
+    <div class="pop-hero-copy">
+      <p class="pop-label"><span></span> 작은 로봇의 큰 도전</p>
+      <h1 id="sim-title">작은 발걸음,<br><span>큰 세상으로.</span><svg class="pop-spark" viewBox="0 0 60 60" aria-hidden="true"><path d="M30 2v56M2 30h56M10 10l40 40M10 50l40-40" stroke="currentColor" stroke-width="7"/></svg></h1>
+      <p class="pop-hero-description">일어서고, 균형 잡고, 다시 한 걸음.<br>마이크로닥은 시뮬레이션에서<br> 기립과 보행을 연습하고 있어요.</p>
+      <p class="pop-promise">곧, 화면 밖에서 만나요!</p>
+      <div class="pop-actions"><a href="#notebook">실물로 만날 준비 보기 <span aria-hidden="true">↗</span></a><span>만드는 과정도 함께 즐겨요.</span></div>
+      <div class="pop-hero-stamp">
+      {{ with resources.Get "images/microdak/microdak-character.png" }}{{ $im := .Resize "180x webp q85" }}<img src="{{ $im.RelPermalink }}" width="72" height="72" alt="설계 기반 마이크로닥 AI 이미지">{{ end }}
+      <p><strong>안녕, 나는 마이크로닥!</strong><small>실물 데뷔 준비 중 · 설계 기반 AI 이미지</small></p>
+      </div>
     </div>
-    <figure class="md-sim-film">
-      <div class="md-sim-film-top"><span><i aria-hidden="true"></i> MICRODAK IN MOTION</span><span>MuJoCo · 00:37</span></div>
-      <video controls autoplay muted playsinline preload="metadata" poster="/videos/microdak/microdak_mujoco-poster.jpg" width="1280" height="846" aria-label="마이크로닥 MuJoCo 시뮬레이션 연습 영상, 37초" aria-describedby="sim-caption">
-        <source src="/videos/microdak/microdak_mujoco.mp4" type="video/mp4">
-        <p><a href="/videos/microdak/microdak_mujoco.mp4">마이크로닥 시뮬레이션 영상 보기</a></p>
-      </video>
-      <figcaption id="sim-caption"><span>화면 속 작은 연습, 실물의 첫걸음을 향해.</span><span>시뮬레이션 기록</span></figcaption>
+    <figure class="pop-video-card">
+      <div class="pop-video-heading"><span><i></i> MICRODAK PLAYGROUND</span><span class="pop-video-dots" aria-hidden="true">● ● ●</span></div>
+      <div class="pop-video-stage">
+        <video controls autoplay muted playsinline preload="metadata" poster="/videos/microdak/microdak_mujoco-poster.jpg" width="1280" height="846" aria-label="마이크로닥 시뮬레이션 연습 영상, 37초" aria-describedby="sim-caption">
+          <source src="/videos/microdak/microdak_mujoco.mp4" type="video/mp4">
+          <a href="/videos/microdak/microdak_mujoco.mp4">연습 영상 보기</a>
+        </video>
+        <span class="pop-video-badge">오늘도<br><b>연습 중!</b></span>
+      </div>
+      <figcaption id="sim-caption"><strong>가상 공간에서 차곡차곡, 첫걸음 연습.</strong><span>MuJoCo · 37초</span></figcaption>
     </figure>
-    <ol class="md-sim-journey" aria-label="시뮬레이션에서 실물까지">
-      <li aria-current="step"><span class="md-sim-number">01</span><div><small>지금 하고 있어요</small><strong>시뮬레이션 기립·보행 연습</strong></div></li>
-      <li><span class="md-sim-number">02</span><div><small>다음으로 준비해요</small><strong>부품 출력과 실물 조립</strong></div></li>
-      <li><span class="md-sim-number">03</span><div><small>함께 기다려 주세요</small><strong>우리 앞에서 내딛는 첫걸음</strong></div></li>
-    </ol>
   </section>
-  {{ partial "microdak/progress.html" $d }}
+  <ol class="pop-journey" aria-label="실물로 만나는 과정">
+    <li aria-current="step"><span class="pop-journey-icon">01</span><div><small>NOW · 지금은</small><strong>가상 공간에서 연습</strong></div><span class="pop-journey-arrow" aria-hidden="true">↗</span></li>
+    <li><span class="pop-journey-icon">02</span><div><small>NEXT · 다음은</small><strong>출력하고 조립하고</strong></div><span class="pop-journey-arrow" aria-hidden="true">↗</span></li>
+    <li><span class="pop-journey-icon">03</span><div><small>SOON · 함께 기다려요</small><strong>실물 마이크로닥과 인사!</strong></div><span class="pop-journey-arrow" aria-hidden="true">✳</span></li>
+  </ol>
+  <div class="pop-section-heading" id="notebook"><div><p class="pop-label">THE MAKING OF MICRODAK</p><h2>우리의 작업 노트<span>✎</span></h2></div><p><span class="pop-progress-chip">{{ $percent }}% 진행 중</span><small>{{ $d.updated }} 업데이트 · {{ $done }}/{{ $total }}단계 완료</small></p></div>
   <div class="md-overview-grid">
     <section class="md-focus-card md-task-card" id="todo" aria-labelledby="todo-title">
       <div class="md-focus-heading"><h2 id="todo-title">{{ partial "microdak/icon.html" "tests" }}해야 할 일</h2><span class="md-card-tag">우선 {{ len $d.priorities }}가지</span></div>
@@ -69,7 +75,9 @@
       <p class="md-card-footnote">9/15 IMU 제작비 제외 · Radxa 기준 추정 예산 유지<br>IMU 구매비·호스트 통합 인건비 별도</p>
     </section>
   </div>
-  <div class="md-panel" style="margin-bottom:20px"><strong>전장·보드 배선도 · J7 몸통 IMU 구성</strong><p>Radxa Zero 3W 기준 · 전체 구성, 전원 분리, J7 핀 배열, 모터 하네스 4종</p><a href="/posts/microdak-wiring-j7/">상세 배선도·설명 보기 →</a> · <a href="/microdak/wiring/">도면 전체 화면 ↗</a></div>
+  <div class="pop-section-heading" id="progress"><div><p class="pop-label">ONE STEP AT A TIME</p><h2>얼마나 왔을까요?</h2></div><p>작은 완료들이 모여, 실물의 첫걸음까지.</p></div>
+  {{ partial "microdak/progress.html" $d }}
+  <div class="md-panel pop-wiring" style="margin-bottom:20px"><strong>전장·보드 배선도 · J7 몸통 IMU 구성</strong><p>Radxa Zero 3W 기준 · 전체 구성, 전원 분리, J7 핀 배열, 모터 하네스 4종</p><a href="/posts/microdak-wiring-j7/">상세 배선도·설명 보기 →</a> · <a href="/microdak/wiring/">도면 전체 화면 ↗</a></div>
   <div class="md-detail-folders" aria-label="필요할 때 펼쳐 보는 상세 자료">
     <details><summary><span>{{ partial "microdak/icon.html" "hardware" }}개발·테스트 상세</span><small>HW · SW · 시험 결과</small></summary><div class="md-folder-body">{{ partial "microdak/task-details.html" . }}</div></details>
     <details><summary><span>{{ partial "microdak/icon.html" "materials" }}구매 목록 상세</span><small>품목별 수량 · 가격 · 입고</small></summary><div class="md-folder-body">{{ partial "microdak/purchase-details.html" . }}</div></details>
@@ -77,5 +85,5 @@
     <details><summary><span>{{ partial "microdak/icon.html" "overview" }}기준 자료·업데이트</span><small>변경 기록 · 실적 수정</small></summary><div class="md-folder-body">{{ partial "microdak/records.html" . }}</div></details>
   </div>
 </div>
-{{ partial "footer/footer" . }}
+<footer class="pop-footer"><strong>small steps. big dreams.</strong><span>마이크로닥 작업실 · Physical AI 드림팀</span><a href="#overview">맨 위로 ↑</a></footer>
 {{ end }}
