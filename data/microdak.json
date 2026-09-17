@@ -24,7 +24,7 @@
     {
       "name": "1대 제작 예상견적",
       "version": "2026-09-16 · 모터 구매 실적 반영",
-      "scope": "모터 15개 396,000원 구매 완료. 준비 소계 유지, IMU 구매비 미정. 다른 가격은 기존 조건 유지."
+      "scope": "모터·IMU·Radxa·필라멘트 구매 실적과 HAT 2장 제작 계획 반영. 외주 출력·IMU-to-DXL·HAT 예비비 항목 제외."
     },
     {
       "name": "Fanduck IMU 설계·펌웨어 검토",
@@ -81,14 +81,14 @@
       "name": "HAT C1 PCBA (4층)",
       "category": "핵심 전장",
       "kind": "material",
-      "qty": 3,
+      "qty": 2,
       "unit": "장",
       "unit_krw": 416900,
-      "estimate_krw": 1250700,
-      "low_krw": 1250700,
-      "high_krw": 1250700,
+      "estimate_krw": 833800,
+      "low_krw": 833800,
+      "high_krw": 833800,
       "price_basis": "업체 견적",
-      "note": "U2: 379,000원/장 VAT 별도; 3장 공급가 1,137,000원 + VAT 10% 계산 113,700원. 1장 장착 + 2장 잔여; 배송비 포함 여부 미기재",
+      "note": "U2: 379,000원/장 VAT 별도; 2장 공급가 758,000원 + VAT 10% 75,800원. 1장 장착 + 1장 예비; 배송비 포함 여부 미기재",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
@@ -383,7 +383,7 @@
       "low_krw": 15000,
       "high_krw": 45000,
       "price_basis": "추정",
-      "note": "서보 여분, FFC·전원선·외장 IMU 연결선/변환 커넥터 포함 가정. 핀 배열·길이 확정 후 재산정; D01과 중복 계상하지 않음",
+      "note": "서보 여분, FFC·전원선·외장 IMU 연결선/변환 커넥터 포함 가정. 핀 배열·길이 확정 후 재산정; 별도 예비비와 중복 계상하지 않음",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
@@ -435,27 +435,6 @@
       "remaining_krw": null
     },
     {
-      "id": "B09",
-      "name": "FDM 외주 출력 1대분",
-      "category": "기구·주변 부품",
-      "kind": "material",
-      "qty": 1,
-      "unit": "식",
-      "unit_krw": 160000,
-      "estimate_krw": 160000,
-      "low_krw": 100000,
-      "high_krw": 250000,
-      "price_basis": "혼합",
-      "note": "외주 출력 가정 160,000원. ASA·TPU 필라멘트는 별도 구매 실적으로 반영했으며, 자체 출력 확정 시 외주 출력 예산과 중복되지 않도록 재산정.",
-      "order_status": "unrecorded",
-      "received_qty": null,
-      "actual_krw": null,
-      "actual_final": false,
-      "purchase_note": "",
-      "updated": null,
-      "remaining_krw": null
-    },
-    {
       "id": "C01",
       "name": "배송·수입세금·결제 예비액",
       "category": "배송·세금",
@@ -468,48 +447,6 @@
       "high_krw": 250000,
       "price_basis": "추정",
       "note": "HAT VAT는 A03에 포함. HAT 배송 및 IMU 모듈 세금·배송 미확정; 예비액 전액 충당 보장 아님",
-      "order_status": "unrecorded",
-      "received_qty": null,
-      "actual_krw": null,
-      "actual_final": false,
-      "purchase_note": "",
-      "updated": "2026-09-15",
-      "remaining_krw": null
-    },
-    {
-      "id": "D01",
-      "name": "외장 IMU 통합·검증 소모품 예비비",
-      "category": "개발·예비비",
-      "kind": "material",
-      "qty": 1,
-      "unit": "식",
-      "unit_krw": 100000,
-      "estimate_krw": 100000,
-      "low_krw": 80000,
-      "high_krw": 180000,
-      "price_basis": "추정",
-      "note": "기존 100,000원을 시험 배선·고정 지그·검증 소모품 예비액으로 유지한 내부 가정. A04 모듈·B06 본 배선·인건비 제외; MCU 평가보드/디버거 구매 전제 폐기",
-      "order_status": "unrecorded",
-      "received_qty": null,
-      "actual_krw": null,
-      "actual_final": false,
-      "purchase_note": "",
-      "updated": "2026-09-15",
-      "remaining_krw": null
-    },
-    {
-      "id": "D02",
-      "name": "HAT·배선 수정 및 기구 재출력 예비비",
-      "category": "개발·예비비",
-      "kind": "reserve",
-      "qty": 1,
-      "unit": "식",
-      "unit_krw": 200000,
-      "estimate_krw": 200000,
-      "low_krw": 150000,
-      "high_krw": 350000,
-      "price_basis": "추정",
-      "note": "기존 200,000원 유지. IMU 전용 PCB 재제작 제외; HAT 전체 로트 재제작을 보장하지 않음",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
@@ -565,11 +502,11 @@
     {
       "name": "HAT C1 · 엠피게이트",
       "status": "견적 수령",
-      "amount_krw": 1250700,
-      "basis": "2026-09-11 · 3장 일괄",
+      "amount_krw": 833800,
+      "basis": "2026-09-11 · 2장 제작",
       "details": [
-        "공급가 1,137,000원 + VAT 10% 계산 113,700원",
-        "1장 장착 + 2장 잔여 계획. 416,900원/장은 3장 견적의 배분액",
+        "공급가 758,000원 + VAT 10% 계산 75,800원",
+        "1장 장착 + 1장 예비 계획. 416,900원/장은 2장 견적의 장당 금액",
         "선결제 · 발주 후 출발 기준 4주 · 견적 유효 30일",
         "두께·동박·양면 실장·검사·배송 포함 범위 확인 후 발주 검토"
       ]
@@ -627,7 +564,7 @@
       "title": "HAT 제작 견적",
       "state": "done",
       "status": "견적 수령 완료",
-      "detail": "HAT C1 PCBA 3장 견적 1,250,700원 확보. 발주·입고 완료를 의미하지 않습니다.",
+      "detail": "HAT C1 PCBA 2장 견적 833,800원 확보. 1장 장착·1장 예비이며, 발주·입고 완료를 의미하지 않습니다.",
       "next": "제작 발주·입고"
     },
     {
@@ -818,12 +755,12 @@
     {
       "date": "2026-09-16",
       "title": "모터 15개 구매 완료 · 배송 대기",
-      "detail": "XL330-M288-T 15개 총 396,000원(개당 26,400원), 입고 0개. 예산과 동일. 프린터 포함 누적 지출 1,745,000원, 잔여 예산 소계 2,372,260원 + IMU 구매비 미정."
+      "detail": "XL330-M288-T 15개 총 396,000원(개당 26,400원), 입고 0개. 예산과 동일. 프린터 포함 누적 지출 1,745,000원, 잔여 예산 소계는 당시 산정 기준이며, 이후 IMU 49,120원 구매가 반영되었습니다."
     },
     {
       "date": "2026-09-15",
       "title": "IMU 완제품 구매 전환 · 사양서 v0.6",
-      "detail": "제작 예상 1,080,000원 제외. 준비 소계 2,768,260원 + IMU 구매비 미정. 모듈 선정·HAT 연결·호스트 통합·실물 시험 대기."
+      "detail": "제작 예상 1,080,000원 제외. 준비 소계 2,768,260원으로 기록한 당시 계획이며, 이후 IMU 49,120원 구매가 반영되었습니다. 모듈 선정·HAT 연결·호스트 통합·실물 시험 대기."
     },
     {
       "date": "2026-09-15",
@@ -843,7 +780,7 @@
     {
       "date": "2026-09-11",
       "title": "제작사양서 v0.5 · HAT 견적 갱신",
-      "detail": "HAT 3장 VAT 포함 1,250,700원 반영. 준비예산 3,848,260원. v0.6으로 대체된 과거 금액."
+      "detail": "당시 HAT 3장 VAT 포함 1,250,700원 반영. 현재 계획은 2장(1장 장착·1장 예비), 833,800원으로 변경."
     },
     {
       "date": "2026-09-07",
@@ -890,17 +827,8 @@
         "B05",
         "B06",
         "B08",
-        "B09",
         "B10",
         "B11"
-      ]
-    },
-    {
-      "id": "tools",
-      "name": "개발·시험 장비",
-      "items": "외장 IMU 통합 시험 소모품·지그",
-      "part_ids": [
-        "D01"
       ]
     }
   ],

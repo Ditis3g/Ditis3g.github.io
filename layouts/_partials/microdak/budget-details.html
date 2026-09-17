@@ -11,7 +11,7 @@
           <div class="md-budget-row"><div><span>{{ $category }}</span><b>{{ partial "microdak/money.html" $sum }}원 <small>{{ printf "%.1f" $pct }}%</small></b></div><div class="md-track" aria-hidden="true"><span class="md-bar-{{ $i }}" style="width:{{ printf "%.2f" $pct }}%"></span></div></div>
         {{ end }}</div>
         <div class="md-budget-range"><span>금액 기입 항목의 조건부 범위</span><b>{{ partial "microdak/money.html" $s.low }}–{{ partial "microdak/money.html" $s.high }}원</b></div>
-        <p class="md-small">IMU 완제품 구매비는 미정으로 위 소계·비중에서 제외했습니다. HAT 3장 견적은 유지하며 다른 금액은 기존 가정입니다. 확정 총액·상한이 아닙니다.</p>
+        <p class="md-small">IMU 완제품 구매비 49,120원과 HAT 2장 견적 833,800원을 반영했습니다. 다른 금액은 기존 가정이며 확정 총액·상한이 아닙니다.</p>
       </div>
       <div class="md-panel md-cost-summary"><h3>실지출 정산</h3>
         <dl><div><dt>준비예산 소계</dt><dd>{{ partial "microdak/money.html" $s.budget }}원</dd></div>
