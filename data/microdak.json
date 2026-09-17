@@ -24,7 +24,7 @@
     {
       "name": "1대 제작 예상견적",
       "version": "2026-09-16 · 모터 구매 실적 반영",
-      "scope": "모터·IMU·Radxa·필라멘트 구매 실적과 HAT 2장 제작 계획 반영. 외주 출력·IMU-to-DXL·HAT 예비비 항목 제외."
+      "scope": "모터·IMU·Radxa·필라멘트 구매 실적과 HAT 2장 제작 계획 반영. 외주 출력·이전 IMU 전용 보드·HAT 예비비 항목 제외."
     },
     {
       "name": "Fanduck IMU 설계·펌웨어 검토",
