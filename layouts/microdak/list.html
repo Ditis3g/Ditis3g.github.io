@@ -18,7 +18,6 @@
   </header>
   <section class="pop-hero" id="practice" aria-labelledby="sim-title">
     <div class="pop-hero-copy">
-      {{ with resources.Get "images/microdak/microdak-character.png" }}{{ $bg := .Resize "760x webp q78" }}<img class="pop-hero-face-bg" src="{{ $bg.RelPermalink }}" width="760" height="760" alt="" aria-hidden="true" loading="eager">{{ end }}
       <p class="pop-label"><span></span> 작은 로봇의 큰 도전</p>
       <h1 id="sim-title">작은 발걸음,<br><span>큰 세상으로.</span><svg class="pop-spark" viewBox="0 0 60 60" aria-hidden="true"><path d="M30 2v56M2 30h56M10 10l40 40M10 50l40-40" stroke="currentColor" stroke-width="7"/></svg></h1>
       <p class="pop-hero-description">일어서고, 균형 잡고, 다시 한 걸음.<br>마이크로닥은 시뮬레이션에서<br> 기립과 보행을 연습하고 있어요.</p>
@@ -87,6 +86,3 @@
 </div>
 <footer class="pop-footer"><strong>small steps. big dreams.</strong><span>마이크로닥 작업실 · Physical AI 드림팀</span><a href="#overview">맨 위로 ↑</a></footer>
 {{ end }}
-
-
-\n
