@@ -149,3 +149,17 @@ html[data-scheme="dark"] .microdak-pop .md-progress-overview h2,
 html[data-scheme="dark"] .microdak-pop .md-lane-heading h3{
   color:#24243b !important;
 }
+
+/* Typography: Pretendard carries the body copy; large display headings prefer SUIT ExtraBold when installed. */
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:800;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-ExtraBold.woff2') format('woff2')}
+@font-face{font-family:'Pretendard';font-style:normal;font-weight:400;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2')}
+.microdak-pop,.microdak-pop .md-dashboard{font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+.microdak-pop .pop-brand,
+.microdak-pop .pop-hero h1,
+.microdak-pop .pop-section-heading h2,
+.microdak-pop .md-focus-heading h2,
+.microdak-pop .md-progress-overview h2,
+.microdak-pop .md-lane-heading h3{font-family:'SUIT','Pretendard','Apple SD Gothic Neo',sans-serif;font-weight:800}
+.pop-hero-copy::before{inset:18px -125px 18px 8px;background-position:center 14%;background-size:min(600px,100%) auto;opacity:.105}
+@media(max-width:800px){.pop-hero-copy::before{inset:30px -82px 16px 0;background-size:460px auto;opacity:.09}}
+@media(max-width:540px){.pop-hero-copy::before{inset:74px -68px 12px 0;background-size:365px auto;opacity:.085}}
