@@ -130,3 +130,22 @@
     text-shadow:none;
   }
 }
+
+/* Keep the MicroDak dashboard in its designed light palette when the host device uses dark mode. */
+html[data-scheme="dark"] .microdak-pop{
+  --body-background:#fffaf1;
+  --card-background:#fffefb;
+  --card-text-color-main:#24243b;
+  --card-text-color-secondary:#646278;
+  --md-accent:#6244dd;
+  --md-accent-soft:#ece6ff;
+  --md-line:#d5cfdd;
+  background:#fffaf1 !important;
+  color:#24243b !important;
+}
+html[data-scheme="dark"] .microdak-pop .md-focus-heading h2,
+html[data-scheme="dark"] .microdak-pop .pop-section-heading h2,
+html[data-scheme="dark"] .microdak-pop .md-progress-overview h2,
+html[data-scheme="dark"] .microdak-pop .md-lane-heading h3{
+  color:#24243b !important;
+}
