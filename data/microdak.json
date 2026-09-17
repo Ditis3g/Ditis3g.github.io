@@ -446,7 +446,7 @@
       "low_krw": 100000,
       "high_krw": 250000,
       "price_basis": "혼합",
-      "note": "가정 500g×250원 + TPU/후처리 여유 35,000원; S12",
+      "note": "외주 출력 가정 160,000원. ASA·TPU 필라멘트는 별도 구매 실적으로 반영했으며, 자체 출력 확정 시 외주 출력 예산과 중복되지 않도록 재산정.",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
@@ -517,6 +517,48 @@
       "purchase_note": "",
       "updated": "2026-09-15",
       "remaining_krw": null
+    },
+    {
+      "id": "B10",
+      "name": "Bambu Lab ASA White 필라멘트",
+      "category": "기구·주변 부품",
+      "kind": "material",
+      "qty": 1,
+      "unit": "kg",
+      "unit_krw": 52800,
+      "estimate_krw": 52800,
+      "low_krw": 52800,
+      "high_krw": 52800,
+      "price_basis": "파이토스 구매 완료 · 2026-09-17",
+      "note": "MicroDak 몸통·외피·구조 부품 출력용 ASA White 1kg. 구매가는 필라멘트 1롤 기준.",
+      "order_status": "ordered",
+      "received_qty": 0,
+      "actual_krw": 52800,
+      "actual_final": true,
+      "purchase_note": "2026-09-17 파이토스 구매 완료 · ASA White 1kg",
+      "updated": "2026-09-17",
+      "remaining_krw": 0
+    },
+    {
+      "id": "B11",
+      "name": "Bambu Lab TPU Yellow 필라멘트",
+      "category": "기구·주변 부품",
+      "kind": "material",
+      "qty": 1,
+      "unit": "kg",
+      "unit_krw": 66000,
+      "estimate_krw": 66000,
+      "low_krw": 66000,
+      "high_krw": 66000,
+      "price_basis": "파이토스 구매 완료 · 2026-09-17",
+      "note": "MicroDak 부리 연질부·타이어·완충 부품 출력용 TPU Yellow 1kg. 구매가는 필라멘트 1롤 기준.",
+      "order_status": "ordered",
+      "received_qty": 0,
+      "actual_krw": 66000,
+      "actual_final": true,
+      "purchase_note": "2026-09-17 파이토스 구매 완료 · TPU Yellow 1kg",
+      "updated": "2026-09-17",
+      "remaining_krw": 0
     }
   ],
   "quotes": [
@@ -750,6 +792,11 @@
   "history": [
     {
       "date": "2026-09-17",
+      "title": "3D 프린트 필라멘트 구매 완료",
+      "detail": "파이토스에서 Bambu Lab ASA White 1kg(52,800원)과 TPU Yellow 1kg(66,000원)을 구매. 구조부품은 ASA, 연질·완충부는 TPU로 출력 예정."
+    },
+    {
+      "date": "2026-09-17",
       "title": "Radxa ZERO 3W 구매 완료",
       "detail": "4GB RAM·32GB eMMC·GPIO 헤더 포함 제품을 AliExpress에서 160,398원에 구매. 입고·단독 부팅·HAT 적층·J7 설정 대기."
     },
@@ -832,7 +879,7 @@
     {
       "id": "body",
       "name": "센서·기구",
-      "items": "카메라 · ToF · 출력물 · 조립 부품",
+      "items": "카메라 · ToF · 출력물 · 조립 부품 · ASA·TPU 필라멘트",
       "part_ids": [
         "A05",
         "A06",
@@ -843,7 +890,9 @@
         "B05",
         "B06",
         "B08",
-        "B09"
+        "B09",
+        "B10",
+        "B11"
       ]
     },
     {
@@ -874,6 +923,16 @@
     {
       "name": "몸통 IMU 완제품",
       "detail": "SparkFun LSM6DSV16X Qwiic 1개 · 49,120원 · DeviceMart 구매 완료",
+      "status": "구매 완료"
+    },
+    {
+      "name": "Bambu Lab ASA White",
+      "detail": "1kg · 52,800원 · 파이토스 구매 완료",
+      "status": "구매 완료"
+    },
+    {
+      "name": "Bambu Lab TPU Yellow",
+      "detail": "1kg · 66,000원 · 파이토스 구매 완료",
       "status": "구매 완료"
     }
   ],
