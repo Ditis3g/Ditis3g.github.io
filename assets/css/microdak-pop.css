@@ -163,3 +163,19 @@ html[data-scheme="dark"] .microdak-pop .md-lane-heading h3{
 .pop-hero-copy::before{inset:18px -125px 18px 8px;background-position:center 14%;background-size:min(600px,100%) auto;opacity:.105}
 @media(max-width:800px){.pop-hero-copy::before{inset:30px -82px 16px 0;background-size:460px auto;opacity:.09}}
 @media(max-width:540px){.pop-hero-copy::before{inset:74px -68px 12px 0;background-size:365px auto;opacity:.085}}
+
+/* Editorial polish: fewer ornaments, tighter display type, and softer surfaces. */
+.microdak-pop .pop-hero h1{font-family:'SUIT','Pretendard','Apple SD Gothic Neo',sans-serif;font-size:clamp(4.9rem,5vw,7rem);line-height:1.06;letter-spacing:-.065em;margin-bottom:20px}
+.microdak-pop .pop-hero h1>span::after{height:9px;left:-2px;right:-8px;bottom:0;transform:rotate(-1.2deg)}
+.microdak-pop .pop-spark{display:none!important}
+.microdak-pop .pop-promise{font-size:1.5rem;padding:3px 8px;border-radius:5px;color:#24243b;background:#ffd966}
+.microdak-pop .pop-actions>a{box-shadow:2px 3px 0 #27243c}
+.microdak-pop .pop-actions>a:hover{box-shadow:1px 1px 0 #27243c}
+.microdak-pop .pop-video-card{border-width:1.5px;box-shadow:4px 5px 0 rgba(200,185,255,.58)}
+.microdak-pop .pop-journey li{box-shadow:1px 2px 0 rgba(55,49,71,.55);border-width:1px}
+.microdak-pop .pop-journey-icon{width:12px;height:12px;border:0;background:transparent;font-size:.78rem}
+.microdak-pop .pop-section-heading .pop-label{font-size:.82rem;letter-spacing:.08em}
+.microdak-pop .pop-section-heading h2{font-family:'SUIT','Pretendard','Apple SD Gothic Neo',sans-serif;font-size:3.35rem;line-height:1.2;letter-spacing:-.06em}
+.microdak-pop .md-focus-heading h2{font-family:'SUIT','Pretendard','Apple SD Gothic Neo',sans-serif}
+@media(max-width:800px){.microdak-pop .pop-hero h1{font-size:5.9rem}.microdak-pop .pop-section-heading h2{font-size:3rem}}
+@media(max-width:540px){.microdak-pop .pop-hero h1{font-size:4.75rem;line-height:1.04;letter-spacing:-.06em}.microdak-pop .pop-promise{font-size:1.35rem}.microdak-pop .pop-section-heading h2{font-size:2.75rem}.microdak-pop .pop-journey-icon{width:9px;height:9px;font-size:.65rem}}
