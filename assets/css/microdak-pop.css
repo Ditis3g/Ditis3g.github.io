@@ -120,3 +120,13 @@
   .pop-hero-copy{padding:12px 8px 18px 0}
   .pop-hero-copy::before{inset:74px -48px 12px 0;background-size:330px auto;opacity:.07}
 }
+
+/* Mobile readability: avoid light text on the hero action button. */
+@media(max-width:600px){
+  .microdak-pop .pop-actions > a{
+    color:#2f254c !important;
+    background:#ffdd65;
+    border-color:#2f254c;
+    text-shadow:none;
+  }
+}
