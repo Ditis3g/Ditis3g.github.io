@@ -4,7 +4,7 @@
   "specification_date": "2026-09-17",
   "price_date": "2026-09-17",
   "review_date": "2026-09-14",
-  "phase": "외형 설계·MuJoCo 이식 완료 · HAT 제작·IMU 구매 완료 · J7 통합 대기",
+  "phase": "외형 설계·MuJoCo 이식 완료 · HAT·IMU·Radxa 구매 완료 · 실물 통합 대기",
   "sources": [
     {
       "name": "MicroDak 전장·보드 배선도",
@@ -13,8 +13,8 @@
     },
     {
       "name": "운영자 진행 현황",
-      "version": "2026-09-16",
-      "scope": "모터 15개 구매·배송 대기, 메인 컴퓨터 Radxa ZERO 3W 확정, 몸통 IMU J7 채택 및 전장 도면 공개"
+      "version": "2026-09-17",
+      "scope": "모터·IMU·Radxa 구매 실적, HAT 견적, J7 몸통 IMU 구성 및 실물 통합 현황"
     },
     {
       "name": "MicroDak 기구·전장 제작사양서",
@@ -56,24 +56,25 @@
     },
     {
       "id": "A02",
-      "name": "Radxa Zero 3W",
+      "name": "Radxa ZERO 3W RK3566 SBC (4GB RAM / 32GB eMMC / GPIO)",
       "category": "핵심 전장",
       "kind": "material",
       "qty": 1,
       "unit": "개",
-      "unit_krw": 55000,
-      "estimate_krw": 55000,
-      "low_krw": 35000,
-      "high_krw": 80000,
-      "price_basis": "추정",
-      "note": "Radxa ZERO 3W 제품 확정(2026-09-16). RAM·eMMC·헤더 SKU 및 실구매가 미정; 55,000원은 기존 추정 예산; S3",
-      "order_status": "planned",
-      "received_qty": null,
-      "actual_krw": null,
-      "actual_final": false,
-      "purchase_note": "2026-09-16 사용자: 메인 컴퓨터는 Radxa Zero 3W로 확정. 기존 55,000원은 추정 예산이며 실제 구매가는 미입력.",
-      "updated": "2026-09-16",
-      "remaining_krw": null
+      "unit_krw": 160398,
+      "estimate_krw": 160398,
+      "low_krw": 160398,
+      "high_krw": 160398,
+      "price_basis": "AliExpress 구매 완료 · 2026-09-17",
+      "note": "Radxa ZERO 3W, 4GB RAM, 32GB eMMC, GPIO 헤더 포함. AliExpress 구매가 160,398원.",
+      "order_status": "ordered",
+      "received_qty": 0,
+      "actual_krw": 160398,
+      "actual_final": true,
+      "purchase_note": "2026-09-17 구매 완료 · AliExpress 상품 1005007614734251",
+      "updated": "2026-09-17",
+      "remaining_krw": 0,
+      "purchase_url": "https://ko.aliexpress.com/item/1005007614734251.html"
     },
     {
       "id": "A03",
@@ -551,9 +552,10 @@
       "detail": "SparkFun LSM6DSV16X Qwiic 1개를 49,120원에 구매했습니다. HAT J7 연결, 몸통 고정, Radxa 드라이버와 자세 처리 통합을 진행합니다."
     },
     {
-      "title": "모터 입고·Radxa 구매 준비",
-      "status": "품목별 준비",
-      "detail": "모터 15개는 구매 완료·배송 대기입니다. 메인 컴퓨터는 Radxa ZERO 3W로 확정했고 구매·부팅 준비를 별도로 관리합니다."
+      "title": "메인 컴퓨터 Radxa 구매 완료",
+      "status": "구매 완료 · 입고 대기",
+      "detail": "Radxa ZERO 3W 4GB RAM·32GB eMMC·GPIO 헤더 포함 제품을 160,398원에 구매했습니다. 입고 후 단독 부팅과 HAT 적층·J7 설정을 확인합니다.",
+      "next": "입고 확인 → 단독 부팅 → HAT·J7 설정"
     },
     {
       "title": "프린터 도착 → 출력·보드 제작 → 조립",
@@ -603,12 +605,12 @@
       "next": "배송·입고 확인 → 수량·모델 확인 → 모터 단품 시험"
     },
     {
-      "short": "메인 보드 준비",
-      "title": "메인 컴퓨터 보드 구매·준비",
-      "state": "pending",
-      "status": "Radxa ZERO 3W 확정 · 구매 예정",
-      "detail": "메인 컴퓨터는 Radxa ZERO 3W를 사용합니다. RAM·eMMC·헤더 SKU와 실제 구매 조건을 확인합니다.",
-      "next": "Radxa 구매·입고 → 단독 부팅 → HAT·J7 설정"
+      "short": "Radxa 구매·준비",
+      "title": "메인 컴퓨터 Radxa ZERO 3W",
+      "state": "progress",
+      "status": "구매 완료 · 입고 대기",
+      "detail": "4GB RAM·32GB eMMC·GPIO 헤더 포함 Radxa ZERO 3W를 160,398원에 구매했습니다. 입고 후 HAT 40핀 적층과 J7 IMU 연결을 확인합니다.",
+      "next": "입고 확인 → 단독 부팅 → HAT·J7 설정"
     },
     {
       "short": "출력·보드 제작",
@@ -748,6 +750,11 @@
   "history": [
     {
       "date": "2026-09-17",
+      "title": "Radxa ZERO 3W 구매 완료",
+      "detail": "4GB RAM·32GB eMMC·GPIO 헤더 포함 제품을 AliExpress에서 160,398원에 구매. 입고·단독 부팅·HAT 적층·J7 설정 대기."
+    },
+    {
+      "date": "2026-09-17",
       "title": "몸통 IMU 구매 완료 · J7 통합 준비",
       "detail": "SparkFun 6DoF IMU Breakout - LSM6DSV16X (Qwiic) 1개를 DeviceMart에서 49,120원에 구매. 입고·핀 배열·J7 연결·Radxa 드라이버 검증 대기."
     },
@@ -860,9 +867,9 @@
   ],
   "current_purchase_plan": [
     {
-      "name": "Radxa Zero 3W",
-      "detail": "사용자 확정 · SKU·구매 조건 확인",
-      "status": "구매 예정"
+      "name": "Radxa ZERO 3W",
+      "detail": "4GB RAM · 32GB eMMC · GPIO 헤더 포함 · 160,398원 · AliExpress 구매 완료",
+      "status": "구매 완료"
     },
     {
       "name": "몸통 IMU 완제품",
