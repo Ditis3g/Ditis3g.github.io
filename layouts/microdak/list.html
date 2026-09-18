@@ -48,7 +48,7 @@
   <div class="pop-section-heading" id="notebook"><div><p class="pop-label">THE MAKING OF MICRODAK</p><h2>우리의 작업 노트<span>✎</span></h2></div><p><span class="pop-progress-chip">{{ $percent }}% 진행 중</span><small>{{ $d.updated }} 업데이트 · {{ $done }}/{{ $total }}단계 완료</small></p></div>
   <div class="md-overview-grid">
     <section class="md-focus-card md-task-card" id="todo" aria-labelledby="todo-title">
-      <div class="md-focus-heading"><h2 id="todo-title">{{ partial "microdak/icon.html" "tests" }}해야 할 일</h2><span class="md-card-tag">우선 {{ len $d.priorities }}가지</span></div>
+      <div class="md-focus-heading"><h2 id="todo-title">{{ partial "microdak/icon.html" "tests" }}현재 진행 중인 일</h2><span class="md-card-tag">우선 {{ len $d.priorities }}가지</span></div>
       <ol class="md-todo-list">{{ range $i,$p := $d.priorities }}<li><span class="md-step">{{ add $i 1 }}</span><strong>{{ .title }}</strong></li>{{ end }}</ol>
       <div class="md-work-counts"><span>HW 완료 <b>{{ len (where $d.hardware "state" "done") }}/{{ len $d.hardware }}</b></span><span>SW 완료 <b>{{ len (where $d.software "state" "done") }}/{{ len $d.software }}</b></span><span>실물 통과 <b>{{ len $physicalPassed }}/{{ len $physical }}</b></span></div>
     </section>

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-17",
+  "updated": "2026-09-18",
   "specification": "v0.7",
   "specification_date": "2026-09-17",
   "price_date": "2026-09-17",
@@ -526,20 +526,22 @@
   ],
   "priorities": [
     {
-      "title": "구매한 IMU의 J7 통합",
-      "status": "구매 완료 · 연결 검증 대기",
-      "detail": "SparkFun LSM6DSV16X Qwiic 1개를 49,120원에 구매했습니다. HAT J7 연결, 몸통 고정, Radxa 드라이버와 자세 처리 통합을 진행합니다."
+      "title": "3D 프린터로 외형 출력",
+      "status": "출력 준비",
+      "detail": "Bambu Lab 프린터와 ASA·TPU 필라멘트를 사용해 MicroDak 외형 부품을 출력합니다.",
+      "next": "도면 최종 확인 → 출력 조건 설정 → 부품별 출력·후처리"
     },
     {
-      "title": "메인 컴퓨터 Radxa 구매 완료",
-      "status": "구매 완료 · 입고 대기",
-      "detail": "Radxa ZERO 3W 4GB RAM·32GB eMMC·GPIO 헤더 포함 제품을 160,398원에 구매했습니다. 입고 후 단독 부팅과 HAT 적층·J7 설정을 확인합니다.",
-      "next": "입고 확인 → 단독 부팅 → HAT·J7 설정"
+      "title": "HAT 보드 제작 발주",
+      "status": "발주 준비",
+      "detail": "HAT C1 PCBA 2장(장착 1장·예비 1장) 제작을 발주하고 납기·실장·검사 범위를 확인합니다.",
+      "next": "최종 Gerber·BOM·좌표 검토 → 제작 발주 → 입고 검사"
     },
     {
-      "title": "프린터 도착 → 출력·보드 제작 → 조립",
-      "status": "제작 대기",
-      "detail": "프린터 입고 후 출력, HAT 제작·입고와 IMU 모듈 구매를 진행하고 조립·실물 시험으로 이어갑니다."
+      "title": "Radxa 프로그램 제작",
+      "status": "통합 준비",
+      "detail": "Radxa ZERO 3W에서 모터 제어, J7 몸통 IMU 입력, 자세 처리와 실물 시험용 프로그램을 준비합니다.",
+      "next": "OS·개발환경 준비 → J7 IMU 단품 통신 → 모터·자세 제어 통합"
     }
   ],
   "hardware": [
