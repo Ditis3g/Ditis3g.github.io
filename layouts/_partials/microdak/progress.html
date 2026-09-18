@@ -6,7 +6,7 @@
     <h2 id="progress-title">전체 진행률</h2>
     <div class="md-progress-ring" style="--progress:{{ $percent }}%" role="img" aria-label="전체 {{ $total }}단계 중 {{ $done }}단계 완료, {{ $percent }}퍼센트"><div><strong data-progress="overall">{{ $percent }}<small>%</small></strong><span>{{ $done }} / {{ $total }}단계 완료</span></div></div>
     <p class="md-porting-result">MuJoCo 이식 <b>{{ .porting_percent }}%</b></p>
-    <p class="md-progress-next">다음 과제 <b>IMU 완제품·호스트 통합</b></p>
+    <p class="md-progress-next">다음 과제 <b>외형 출력·HAT 발주·Radxa SW 수정</b></p>
   </div>
   <div class="md-progress-lanes">
     {{ range $lane := slice (dict "id" "hw" "name" "HW" "label" "설계 → 제작 → 조립" "items" .hardware) (dict "id" "sw" "name" "SW" "label" "이식 → 센서 통합" "items" .software) }}
@@ -20,3 +20,5 @@
   </div>
   <p class="md-progress-basis">{{ .progress_basis }} · {{ .updated }} 운영자 보고 기준</p>
 </section>
+
+\n

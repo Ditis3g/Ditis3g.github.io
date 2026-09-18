@@ -581,25 +581,33 @@
       "short": "모터 구매·입고",
       "title": "모터 구매·입고",
       "state": "progress",
-      "status": "구매 완료 · 배송 대기",
-      "detail": "XL330-M288-T 15개, 총 396,000원 구매 완료. 현재 입고 0개이며 배송을 기다리고 있습니다.",
+      "status": "발주 완료 · 입고 대기",
+      "detail": "XL330-M288-T 15개, 총 396,000원 발주 완료. 현재 입고 0개이며 입고를 기다리고 있습니다.",
       "next": "배송·입고 확인 → 수량·모델 확인 → 모터 단품 시험"
     },
     {
       "short": "Radxa 구매·준비",
       "title": "메인 컴퓨터 Radxa ZERO 3W",
       "state": "progress",
-      "status": "구매 완료 · 입고 대기",
-      "detail": "4GB RAM·32GB eMMC·GPIO 헤더 포함 Radxa ZERO 3W를 160,398원에 구매했습니다. 입고 후 HAT 40핀 적층과 J7 IMU 연결을 확인합니다.",
+      "status": "발주 완료 · 입고 대기",
+      "detail": "4GB RAM·32GB eMMC·GPIO 헤더 포함 Radxa ZERO 3W를 160,398원에 발주 완료했습니다. 현재 입고 대기이며, 입고 후 HAT 40핀 적층과 J7 IMU 연결을 확인합니다.",
       "next": "입고 확인 → 단독 부팅 → HAT·J7 설정"
     },
     {
-      "short": "출력·보드 제작",
-      "title": "외형 출력·보드 제작",
+      "short": "외형 출력",
+      "title": "3D 프린터 외형 출력",
       "state": "pending",
-      "status": "프린터 도착 대기",
-      "detail": "뱀부랩 X2D Combo 구매 비용 반영. 외형 출력·HAT 제작·IMU 모듈 입고는 아직 완료 전입니다.",
-      "next": "프린터 도착 → 출력 / HAT 제작·IMU 구매"
+      "status": "출력 대기",
+      "detail": "Bambu Lab X2D용 ASA·TPU 필라멘트와 출력 도면을 준비했습니다. MicroDak 외형 출력은 아직 시작 전입니다.",
+      "next": "도면 최종 확인 → 출력 → 후처리"
+    },
+    {
+      "short": "HAT 보드 제작",
+      "title": "HAT C1 보드 제작",
+      "state": "pending",
+      "status": "제작 대기",
+      "detail": "HAT C1 PCBA 2장(장착 1장·예비 1장) 제작을 준비하고 있습니다. Gerber·BOM·POS 최종 확인 후 제작을 진행합니다.",
+      "next": "제작 자료 최종 검토 → 제작 발주 → 입고 검사"
     },
     {
       "short": "조립·실물 확인",
@@ -634,6 +642,14 @@
       "status": "구현·실물 검증 대기",
       "detail": "Radxa Zero 3W의 J7 대응 GPIO-I²C·센서 드라이버를 구성하고, DXL ID 200 의존 제거·몸통 좌표·갱신·고장 처리를 검증합니다.",
       "next": "J7 설정·드라이버 적용 → 런타임 입력 수정 → 자체 실물 검증"
+    },
+    {
+      "short": "Radxa SW 수정",
+      "title": "Radxa 프로그램 수정·통합",
+      "state": "pending",
+      "status": "수정 작업 대기",
+      "detail": "Radxa ZERO 3W에서 XL330 모터 제어, J7 몸통 IMU 입력, 자세 처리와 실물 시험을 연결하도록 기존 프로그램을 수정합니다.",
+      "next": "OS·개발환경 준비 → J7 IMU 통신 → 모터·자세 제어 통합"
     }
   ],
   "tests": [
