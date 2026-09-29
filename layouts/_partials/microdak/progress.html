@@ -6,7 +6,8 @@
     <h2 id="progress-title">전체 진행률</h2>
     <div class="md-progress-ring" style="--progress:{{ $percent }}%" role="img" aria-label="전체 {{ $total }}단계 중 {{ $done }}단계 완료, {{ $percent }}퍼센트"><div><strong data-progress="overall">{{ $percent }}<small>%</small></strong><span>{{ $done }} / {{ $total }}단계 완료</span></div></div>
     <p class="md-porting-result">MuJoCo 이식 <b>{{ .porting_percent }}%</b></p>
-    <p class="md-progress-next">다음 과제 <b>외형 출력·HAT 발주·Radxa SW 수정</b></p>
+    <p class="md-progress-next">지금은 <b>설계 수정·부품 출력 중<br>HAT 3장 배송 대기</b></p>
+    <p class="md-progress-next">다음 과제 <b>Radxa 설정·IMU 장착·통합</b></p>
   </div>
   <div class="md-progress-lanes">
     {{ range $lane := slice (dict "id" "hw" "name" "HW" "label" "설계 → 제작 → 조립" "items" .hardware) (dict "id" "sw" "name" "SW" "label" "이식 → 센서 통합" "items" .software) }}
@@ -14,11 +15,9 @@
     <div class="md-progress-lane">
       <div class="md-lane-heading"><h3>{{ .name }} <span>{{ .label }}</span></h3><b data-progress="{{ .id }}">{{ $pct }}% <small>{{ $complete }}/{{ $count }} 완료</small></b></div>
       <progress max="{{ $count }}" value="{{ $complete }}" aria-label="{{ .name }} 완료 단계">{{ $pct }}%</progress>
-      <ol class="md-milestones">{{ range .items }}<li class="md-milestone-{{ .state }}"><span aria-hidden="true">{{ if eq .state "done" }}✓{{ else if or (eq .state "progress") (eq .state "blocked") }}…{{ else }}○{{ end }}</span><span>{{ .short }}<small>{{ if eq .state "done" }}완료{{ else if eq .state "blocked" }}해결 필요{{ else if eq .state "progress" }}개발 중{{ else }}대기{{ end }}</small></span></li>{{ end }}</ol>
+      <ol class="md-milestones">{{ range .items }}<li class="md-milestone-{{ .state }}"><span aria-hidden="true">{{ if eq .state "done" }}✓{{ else if or (eq .state "progress") (eq .state "blocked") }}…{{ else }}○{{ end }}</span><span>{{ .short }}<small>{{ .status }}</small></span></li>{{ end }}</ol>
     </div>
     {{ end }}
   </div>
   <p class="md-progress-basis">{{ .progress_basis }} · {{ .updated }} 운영자 보고 기준</p>
 </section>
-
-\n
