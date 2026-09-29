@@ -11,7 +11,7 @@
           <div class="md-budget-row"><div><span>{{ $category }}</span><b>{{ partial "microdak/money.html" $sum }}원 <small>{{ printf "%.1f" $pct }}%</small></b></div><div class="md-track" aria-hidden="true"><span class="md-bar-{{ $i }}" style="width:{{ printf "%.2f" $pct }}%"></span></div></div>
         {{ end }}</div>
         <div class="md-budget-range"><span>금액 기입 항목의 조건부 범위</span><b>{{ partial "microdak/money.html" $s.low }}–{{ partial "microdak/money.html" $s.high }}원</b></div>
-        <p class="md-small">IMU 완제품 구매비 49,120원과 HAT 2장 견적 833,800원을 반영했습니다. 다른 금액은 기존 가정이며 확정 총액·상한이 아닙니다.</p>
+        <p class="md-small">IMU 완제품 구매비 49,120원과 HAT 3장 발주액 681,495원(배송비 포함)을 반영했습니다. 다른 금액은 기존 가정이며 확정 총액·상한이 아닙니다.</p>
       </div>
       <div class="md-panel md-cost-summary"><h3>실지출 정산</h3>
         <dl><div><dt>준비예산 소계</dt><dd>{{ partial "microdak/money.html" $s.budget }}원</dd></div>
@@ -20,7 +20,7 @@
         <div class="md-settled"><dt>정산 완료 항목 차액<small>실지출 − 해당 항목 예산</small></dt><dd>{{ if gt $s.settled 0 }}{{ if gt $s.variance 0 }}+{{ end }}{{ partial "microdak/money.html" $s.variance }}원{{ else }}계산 대기{{ end }}</dd></div></dl>
         {{ if gt $s.expenseCount 0 }}<p class="md-small">추가 장비 지출 {{ partial "microdak/money.html" (sub $s.actual $s.plannedActual) }}원은 누적 지출에 포함하며, 기존 제작 예산의 잔액·정산 차액에서는 제외합니다.</p>{{ end }}
         <p class="md-small">정산 완료 {{ $s.settled }}개 항목 기준. +는 초과, −는 절감입니다. 미입력·미정산 항목을 절감액으로 계산하지 않습니다. 예산 잔액에는 아직 낼 비용이 포함됩니다.</p>
-        <div class="md-excluded"><b>합계에 포함되지 않은 비용</b><p>가격 미정인 IMU 완제품 구매비와 호스트 드라이버·런타임 통합 인건비. 미보유 계측장비·추가 전원 PCB·예비비를 넘는 재제작도 별도입니다.</p></div>
+        <div class="md-excluded"><b>합계에 포함되지 않은 비용</b><p>호스트 드라이버·런타임 통합 인건비. 미보유 계측장비·추가 전원 PCB·예비비를 넘는 재제작도 별도입니다.</p></div>
       </div>
     </div>
     <div class="md-quotes">{{ range $d.quotes }}<article class="md-panel"><div class="md-quote-top"><h3>{{ .name }}</h3><span class="md-badge md-progress">{{ .status }}</span></div><strong class="md-quote-amount">{{ if eq .amount_krw nil }}견적 대기{{ else }}{{ partial "microdak/money.html" .amount_krw }}<small>원</small>{{ end }}</strong><p class="md-muted">{{ .basis }}</p><details class="md-quote-details"><summary>견적 메모 보기</summary><ul>{{ range .details }}<li>{{ . }}</li>{{ end }}</ul></details></article>{{ end }}</div>

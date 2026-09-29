@@ -46,6 +46,7 @@
     <li><span class="pop-journey-icon">03</span><div><small>SOON · 함께 기다려요</small><strong>실물 마이크로닥과 인사!</strong></div><span class="pop-journey-arrow" aria-hidden="true">✳</span></li>
   </ol>
   <div class="pop-section-heading" id="notebook"><div><p class="pop-label">THE MAKING OF MICRODAK</p><h2>우리의 작업 노트<span>✎</span></h2></div><p><span class="pop-progress-chip">{{ $percent }}% 진행 중</span><small>{{ $d.updated }} 업데이트 · {{ $done }}/{{ $total }}단계 완료</small></p></div>
+  {{ partial "microdak/latest-update.html" . }}
   <div class="md-overview-grid">
     <section class="md-focus-card md-task-card" id="todo" aria-labelledby="todo-title">
       <div class="md-focus-heading"><h2 id="todo-title">{{ partial "microdak/icon.html" "tests" }}현재 진행 중인 일</h2><span class="md-card-tag">우선 {{ len $d.priorities }}가지</span></div>
@@ -53,9 +54,9 @@
       <div class="md-work-counts"><span>HW 완료 <b>{{ len (where $d.hardware "state" "done") }}/{{ len $d.hardware }}</b></span><span>SW 완료 <b>{{ len (where $d.software "state" "done") }}/{{ len $d.software }}</b></span><span>실물 통과 <b>{{ len $physicalPassed }}/{{ len $physical }}</b></span></div>
     </section>
     <section class="md-focus-card md-buy-card" id="shopping" aria-labelledby="shopping-title">
-      <div class="md-focus-heading"><h2 id="shopping-title">{{ partial "microdak/icon.html" "materials" }}사야 할 것</h2><span class="md-card-tag">추가 구매 {{ len $d.current_purchase_plan }}종</span></div>
+      <div class="md-focus-heading"><h2 id="shopping-title">{{ partial "microdak/icon.html" "materials" }}구매·입고 현황</h2><span class="md-card-tag">주요 품목 {{ len $d.current_purchase_plan }}종</span></div>
       <div class="md-shopping-groups">{{ range $d.current_purchase_plan }}<div><p><strong>{{ .name }}</strong><small>{{ .detail }}</small></p><span>{{ .status }}</span></div>{{ end }}</div>
-      <p class="md-procurement-note"><b>모터</b> 15개 구매 완료 · 배송 대기 (396,000원)<br><b>프린터</b> 구매 완료 · 도착 대기<br><b>필라멘트</b> ASA White 1kg·TPU Yellow 1kg 구매 완료 (118,800원)<br><b>Radxa ZERO 3W</b> 4GB/32GB eMMC 구매 완료 (160,398원)<br><b>HAT</b> 제작 견적 확보<br><b>몸통 IMU</b> SparkFun LSM6DSV16X 구매 완료 (49,120원) · J7 통합 대기</p>
+      <p class="md-procurement-note"><b>모터</b> 15개 구매 완료 · 배송 대기 (396,000원)<br><b>프린터</b> 부품 출력 중 · 설계 수정 병행<br><b>필라멘트</b> ASA White 1kg·TPU Yellow 1kg 구매 완료 (118,800원)<br><b>Radxa ZERO 3W</b> 9/28 입고 완료 (160,398원)<br><b>HAT</b> 3장 발주 완료 · 배송 대기 (배송비 포함 681,495원)<br><b>몸통 IMU</b> SparkFun LSM6DSV16X 9/28 입고 완료 (49,120원) · J7 통합 대기</p>
       <p class="md-card-footnote">운영자 최신 계획 기준 · 기존 견적의 전체 품목은 아래 상세에 보관</p>
     </section>
     <section class="md-focus-card md-spent-card" id="spent" aria-labelledby="spent-title">
@@ -71,7 +72,7 @@
       <strong class="md-focus-amount" data-total="remaining">{{ partial "microdak/money.html" $s.remaining }}<small>원</small></strong>
       <p class="md-amount-note">{{ if and (eq $s.recorded 0) (eq $s.remainingAssumed (len $d.parts)) }}전체 계획액 · 기보유·기지출 반영 전{{ else }}잔여 지출 예상 · {{ $s.remainingAssumed }}개 항목은 예산 기준 추정{{ end }}</p>
       <div class="md-future-breakdown">{{ range $category := slice "핵심 전장" "기구·주변 부품" "배송·세금" "개발·예비비" }}{{ $sum := 0 }}{{ range where $d.parts "category" $category }}{{ $r := partial "microdak/remaining.html" . }}{{ $sum = add $sum $r.amount }}{{ end }}<div><span>{{ $category }}</span><b>{{ partial "microdak/money.html" $sum }}원</b></div>{{ end }}</div>
-      <p class="md-card-footnote">9/17 IMU·Radxa 구매가 반영 · HAT 2장 제작 견적 유지<br>호스트 통합 인건비 별도</p>
+      <p class="md-card-footnote">9/29 HAT 3장 발주액 681,495원 반영 · 배송비 포함<br>호스트 통합 인건비 별도</p>
     </section>
   </div>
   <div class="pop-section-heading" id="progress"><div><p class="pop-label">ONE STEP AT A TIME</p><h2>얼마나 왔을까요?</h2></div><p>작은 완료들이 모여, 실물의 첫걸음까지.</p></div>

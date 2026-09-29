@@ -1,4 +1,4 @@
-﻿---
+---
 title: "MicroDak 전장·보드 배선도 — 몸통 IMU를 HAT J7에 연결"
 date: 2026-09-16T00:00:00+09:00
 draft: false
@@ -13,7 +13,7 @@ comments: false
 <div class="status" style="display:flex;flex-wrap:wrap;gap:12px;padding:16px;border:1px solid #8ab2c7;border-radius:10px"><strong>이번 구성 확정</strong><span>메인 컴퓨터: Radxa Zero 3W</span><span>몸통 IMU: 완제품 / J7</span><span>모터: XL330-M288-T ×15</span><span>IMU: SparkFun LSM6DSV16X Qwiic (구매 완료)</span></div>
 <p class="evidence"><strong>채택 근거:</strong> 사용자가 전달한 다른 개발자의 J7 연결 기립·보행 성공 보고를 바탕으로 이 경로를 채택했다. 보고 원문·상세 설정은 이 문서에 첨부되지 않았다. 이 보고는 해당 개발자 시스템의 실적이며, 현재 MicroDak의 실물 시험 완료 기록으로 합산하지 않는다.</p>
 
-<div class="status" style="background:#eef8ff;border:1px solid #9bc7e8"><strong>몸통 IMU 구매 완료 · 2026-09-17</strong><span><strong>SparkFun 6DoF IMU Breakout - LSM6DSV16X (Qwiic)</strong> 1개</span><span>구매가: <strong>49,120원</strong></span><span>상태: 입고·J7 연결·Radxa 드라이버 검증 대기</span><a href="https://www.devicemart.co.kr/goods/view?no=15077890" target="_blank" rel="noopener">DeviceMart 구매 링크 ↗</a></div>
+<div class="status" style="background:#eef8ff;border:1px solid #9bc7e8"><strong>몸통 IMU 구매 완료 · 2026-09-17</strong><span><strong>SparkFun 6DoF IMU Breakout - LSM6DSV16X (Qwiic)</strong> 1개</span><span>구매가: <strong>49,120원</strong></span><span>상태: 2026-09-28 입고 완료 · J7 연결·Radxa 드라이버 검증 대기</span><a href="https://www.devicemart.co.kr/goods/view?no=15077890" target="_blank" rel="noopener">DeviceMart 구매 링크 ↗</a></div>
 
 <p><a href="/microdak/wiring/" target="_blank" rel="noopener"><strong>배선도 전체 화면으로 보기 ↗</strong></a> · 각 도면을 누르면 SVG 원본을 확대할 수 있습니다.</p>
 

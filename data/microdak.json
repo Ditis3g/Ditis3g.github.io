@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-18",
+  "updated": "2026-09-29",
   "specification": "v0.7",
   "specification_date": "2026-09-17",
-  "price_date": "2026-09-17",
+  "price_date": "2026-09-29",
   "review_date": "2026-09-14",
-  "phase": "외형 설계·MuJoCo 이식 완료 · HAT·IMU·Radxa 구매 완료 · 실물 통합 대기",
+  "phase": "Radxa·IMU 입고 완료 · HAT 3장 발주·배송 대기 · 설계 수정과 3D 출력 진행 중",
   "sources": [
     {
       "name": "MicroDak 전장·보드 배선도",
@@ -13,8 +13,8 @@
     },
     {
       "name": "운영자 진행 현황",
-      "version": "2026-09-17",
-      "scope": "모터·IMU·Radxa 구매 실적, HAT 견적, J7 몸통 IMU 구성 및 실물 통합 현황"
+      "version": "2026-09-29",
+      "scope": "Radxa·IMU 9/28 배송 완료, HAT 3장 발주 총액 681,495원(배송비 포함), 설계 수정·3D 출력 진행 보고 및 실물 사진 2장"
     },
     {
       "name": "MicroDak 기구·전장 제작사양서",
@@ -24,7 +24,7 @@
     {
       "name": "1대 제작 예상견적",
       "version": "2026-09-16 · 모터 구매 실적 반영",
-      "scope": "모터·IMU·Radxa·필라멘트 구매 실적과 HAT 2장 제작 계획 반영. 외주 출력·이전 IMU 전용 보드·HAT 예비비 항목 제외."
+      "scope": "기존 구매 실적을 기준으로 HAT 3장 실제 발주 금액을 2026-09-29 현황에 반영. 외주 출력·이전 IMU 전용 보드·HAT 예비비 항목 제외."
     },
     {
       "name": "Fanduck IMU 설계·펌웨어 검토",
@@ -67,12 +67,12 @@
       "high_krw": 160398,
       "price_basis": "AliExpress 구매 완료 · 2026-09-17",
       "note": "Radxa ZERO 3W, 4GB RAM, 32GB eMMC, GPIO 헤더 포함. AliExpress 구매가 160,398원.",
-      "order_status": "ordered",
-      "received_qty": 0,
+      "order_status": "received",
+      "received_qty": 1,
       "actual_krw": 160398,
       "actual_final": true,
-      "purchase_note": "2026-09-17 구매 완료 · AliExpress 상품 1005007614734251",
-      "updated": "2026-09-17",
+      "purchase_note": "2026-09-17 구매 완료 · AliExpress 상품 1005007614734251 · 2026-09-28 배송 완료(운영자 확인)",
+      "updated": "2026-09-28",
       "remaining_krw": 0,
       "purchase_url": "https://ko.aliexpress.com/item/1005007614734251.html"
     },
@@ -81,21 +81,21 @@
       "name": "HAT C1 PCBA (4층)",
       "category": "핵심 전장",
       "kind": "material",
-      "qty": 2,
+      "qty": 3,
       "unit": "장",
-      "unit_krw": 416900,
-      "estimate_krw": 833800,
-      "low_krw": 833800,
-      "high_krw": 833800,
-      "price_basis": "업체 견적",
-      "note": "U2: 379,000원/장 VAT 별도; 2장 공급가 758,000원 + VAT 10% 75,800원. 1장 장착 + 1장 예비; 배송비 포함 여부 미기재",
-      "order_status": "unrecorded",
-      "received_qty": null,
-      "actual_krw": null,
-      "actual_final": false,
-      "purchase_note": "",
-      "updated": null,
-      "remaining_krw": null
+      "unit_krw": 227165,
+      "estimate_krw": 681495,
+      "low_krw": 681495,
+      "high_krw": 681495,
+      "price_basis": "운영자 확인 · 2026-09-29 · 배송비 포함 제작 발주 총액",
+      "note": "HAT C1 PCBA 3장 제작 발주 완료. 배송비 포함 총 681,495원. 장당 227,165원은 총액을 3장으로 나눈 평균 금액입니다.",
+      "order_status": "ordered",
+      "received_qty": 0,
+      "actual_krw": 681495,
+      "actual_final": true,
+      "purchase_note": "2026-09-29 진행 보고: 3장 제작 발주 완료 · 배송 대기. 기존 2장 견적을 실제 3장 발주 금액으로 갱신.",
+      "updated": "2026-09-29",
+      "remaining_krw": 0
     },
     {
       "id": "A04",
@@ -110,12 +110,12 @@
       "high_krw": 49120,
       "price_basis": "DeviceMart 구매 완료 · 2026-09-17",
       "note": "몸통 장착용 완제품 1개. HAT J7 직접 연결 후보. 구매가는 제품 1개 기준이며 케이블·배송비는 별도 확인.",
-      "order_status": "ordered",
-      "received_qty": 0,
+      "order_status": "received",
+      "received_qty": 1,
       "actual_krw": 49120,
       "actual_final": true,
-      "purchase_note": "2026-09-17 구매 완료 · DeviceMart 판매 페이지",
-      "updated": "2026-09-17",
+      "purchase_note": "2026-09-17 구매 완료 · DeviceMart 판매 페이지 · 2026-09-28 배송 완료(운영자 확인)",
+      "updated": "2026-09-28",
       "remaining_krw": 0,
       "purchase_url": "https://www.devicemart.co.kr/goods/view?no=15077890"
     },
@@ -446,7 +446,7 @@
       "low_krw": 100000,
       "high_krw": 250000,
       "price_basis": "추정",
-      "note": "HAT VAT는 A03에 포함. HAT 배송 및 IMU 모듈 세금·배송 미확정; 예비액 전액 충당 보장 아님",
+      "note": "HAT 배송비는 A03 발주 총액에 포함되어 별도 계상하지 않음. 나머지 품목의 미확정 배송·세금·결제 비용 예비액.",
       "order_status": "unrecorded",
       "received_qty": null,
       "actual_krw": null,
@@ -501,19 +501,19 @@
   "quotes": [
     {
       "name": "HAT C1 · 엠피게이트",
-      "status": "견적 수령",
-      "amount_krw": 833800,
-      "basis": "2026-09-11 · 2장 제작",
+      "status": "3장 제작 발주 완료 · 배송 대기",
+      "amount_krw": 681495,
+      "basis": "2026-09-29 진행 보고 · 3장 발주 총액 · 배송비 포함",
       "details": [
-        "공급가 758,000원 + VAT 10% 계산 75,800원",
-        "1장 장착 + 1장 예비 계획. 416,900원/장은 2장 견적의 장당 금액",
-        "선결제 · 발주 후 출발 기준 4주 · 견적 유효 30일",
-        "두께·동박·양면 실장·검사·배송 포함 범위 확인 후 발주 검토"
+        "HAT C1 PCBA 3장 제작 발주 완료",
+        "배송비 포함 총 681,495원",
+        "장당 평균 227,165원(배송비 포함 총액 ÷ 3장)",
+        "현재 배송 대기 · 입고 후 수량·외관·동작 확인 예정"
       ]
     },
     {
       "name": "몸통 IMU · 완제품 모듈",
-      "status": "구매 완료 · 통합 대기",
+      "status": "2026-09-28 입고 완료 · 장착·통합 대기",
       "amount_krw": 49120,
       "basis": "2026-09-17 · DeviceMart 구매가",
       "details": [
@@ -526,21 +526,21 @@
   ],
   "priorities": [
     {
-      "title": "3D 프린터로 외형 출력",
-      "status": "출력 준비",
-      "detail": "Bambu Lab 프린터와 ASA·TPU 필라멘트를 사용해 MicroDak 외형 부품을 출력합니다.",
-      "next": "도면 최종 확인 → 출력 조건 설정 → 부품별 출력·후처리"
+      "title": "설계를 수정하며 3D 부품 출력",
+      "status": "출력 진행 중",
+      "detail": "3D 프린터로 부품을 계속 출력하고 있습니다. 출력 과정에서 필요한 설계 수정을 병행합니다.",
+      "next": "설계 수정 → 부품 출력 → 출력물 확인·후처리"
     },
     {
-      "title": "HAT 보드 제작 발주",
-      "status": "발주 준비",
-      "detail": "HAT C1 PCBA 2장(장착 1장·예비 1장) 제작을 발주하고 납기·실장·검사 범위를 확인합니다.",
-      "next": "최종 Gerber·BOM·좌표 검토 → 제작 발주 → 입고 검사"
+      "title": "HAT 3장 배송 대기",
+      "status": "제작 발주 완료",
+      "detail": "HAT 보드 3장을 배송비 포함 총 681,495원에 제작 발주했습니다. 현재 배송을 기다리고 있습니다.",
+      "next": "배송·입고 확인 → 수량·외관 검사 → 단품 시험"
     },
     {
       "title": "Radxa 프로그램 제작",
       "status": "통합 준비",
-      "detail": "Radxa ZERO 3W에서 모터 제어, J7 몸통 IMU 입력, 자세 처리와 실물 시험용 프로그램을 준비합니다.",
+      "detail": "2026-09-28 입고한 Radxa ZERO 3W와 SparkFun IMU를 바탕으로 OS·개발환경과 J7 센서 통합을 준비합니다.",
       "next": "OS·개발환경 준비 → J7 IMU 단품 통신 → 모터·자세 제어 통합"
     }
   ],
@@ -549,9 +549,9 @@
       "short": "외형 설계",
       "title": "외형·껍데기 설계",
       "state": "done",
-      "status": "출력 준비 완료",
-      "detail": "운영자 확인: 외형 설계 완료. 3D 프린터가 도착하면 바로 출력할 수 있습니다.",
-      "next": "프린터 도착 후 출력"
+      "status": "기본 설계 완료 · 출력 중 수정",
+      "detail": "기본 외형 설계를 바탕으로 부품을 출력하고 있으며, 출력 과정에서 설계를 수정하고 있습니다.",
+      "next": "출력물 확인 → 필요한 설계 수정"
     },
     {
       "short": "HAT 설계",
@@ -565,17 +565,17 @@
       "short": "HAT 견적",
       "title": "HAT 제작 견적",
       "state": "done",
-      "status": "견적 수령 완료",
-      "detail": "HAT C1 PCBA 2장 견적 833,800원 확보. 1장 장착·1장 예비이며, 발주·입고 완료를 의미하지 않습니다.",
-      "next": "제작 발주·입고"
+      "status": "발주 금액 확정",
+      "detail": "HAT C1 PCBA 3장 제작 발주 총액 681,495원(배송비 포함). 기존 2장 견적을 실제 발주 조건으로 갱신했습니다.",
+      "next": "배송·입고 확인"
     },
     {
       "short": "IMU 구매·장착",
       "title": "몸통 IMU 완제품 구매·장착",
-      "state": "pending",
-      "status": "구매 완료 · 장착 대기",
-      "detail": "SparkFun LSM6DSV16X Qwiic 1개 구매 완료(49,120원). 몸통 고정, J7 핀·케이블 확인, 단품 통신 시험이 남았습니다.",
-      "next": "입고 확인 → 몸통 고정·J7 배선 → 단품 시험"
+      "state": "progress",
+      "status": "입고 완료 · 장착 대기",
+      "detail": "SparkFun LSM6DSV16X Qwiic 1개가 2026-09-28 배송 완료되었습니다. 몸통 고정, J7 연결과 단품 통신 시험을 준비합니다.",
+      "next": "몸통 고정·J7 배선 → 단품 시험"
     },
     {
       "short": "모터 구매·입고",
@@ -589,25 +589,25 @@
       "short": "Radxa 구매·준비",
       "title": "메인 컴퓨터 Radxa ZERO 3W",
       "state": "progress",
-      "status": "발주 완료 · 입고 대기",
-      "detail": "4GB RAM·32GB eMMC·GPIO 헤더 포함 Radxa ZERO 3W를 160,398원에 발주 완료했습니다. 현재 입고 대기이며, 입고 후 HAT 40핀 적층과 J7 IMU 연결을 확인합니다.",
-      "next": "입고 확인 → 단독 부팅 → HAT·J7 설정"
+      "status": "입고 완료 · 설정 대기",
+      "detail": "Radxa ZERO 3W(4GB RAM·32GB eMMC·GPIO 헤더 포함) 1개가 2026-09-28 배송 완료되었습니다. 단독 부팅과 HAT·J7 설정을 준비합니다.",
+      "next": "단독 부팅 → OS·개발환경 준비 → HAT·J7 설정"
     },
     {
       "short": "외형 출력",
       "title": "3D 프린터 외형 출력",
-      "state": "pending",
-      "status": "출력 대기",
-      "detail": "Bambu Lab X2D용 ASA·TPU 필라멘트와 출력 도면을 준비했습니다. MicroDak 외형 출력은 아직 시작 전입니다.",
-      "next": "도면 최종 확인 → 출력 → 후처리"
+      "state": "progress",
+      "status": "설계 수정·출력 진행 중",
+      "detail": "3D 프린터 부품 출력을 진행하고 있습니다. 중간중간 설계를 수정하며 출력 작업을 이어가고 있습니다.",
+      "next": "설계 수정·출력 반복 → 후처리·조립 준비"
     },
     {
       "short": "HAT 보드 제작",
       "title": "HAT C1 보드 제작",
-      "state": "pending",
-      "status": "제작 대기",
-      "detail": "HAT C1 PCBA 2장(장착 1장·예비 1장) 제작을 준비하고 있습니다. Gerber·BOM·POS 최종 확인 후 제작을 진행합니다.",
-      "next": "제작 자료 최종 검토 → 제작 발주 → 입고 검사"
+      "state": "progress",
+      "status": "3장 발주 완료 · 배송 대기",
+      "detail": "HAT C1 보드 3장을 배송비 포함 총 681,495원에 제작 발주했습니다. 현재 배송 대기 중입니다.",
+      "next": "배송·입고 확인 → 수량·외관 검사 → 단품 시험"
     },
     {
       "short": "조립·실물 확인",
@@ -746,6 +746,16 @@
   ],
   "history": [
     {
+      "date": "2026-09-29",
+      "title": "HAT 3장 발주 완료 · 설계 수정과 3D 출력 진행",
+      "detail": "HAT 보드 3장을 배송비 포함 총 681,495원에 제작 발주했으며 배송 대기 중입니다. 3D 부품은 중간중간 설계를 수정하며 출력하고 있습니다."
+    },
+    {
+      "date": "2026-09-28",
+      "title": "Radxa·IMU 완제품 배송 완료",
+      "detail": "Radxa ZERO 3W와 SparkFun LSM6DSV16X IMU 완제품이 입고되었습니다. 실물 사진은 9/29 제작 진행 일지에 첨부했습니다."
+    },
+    {
       "date": "2026-09-17",
       "title": "3D 프린트 필라멘트 구매 완료",
       "detail": "파이토스에서 Bambu Lab ASA White 1kg(52,800원)과 TPU Yellow 1kg(66,000원)을 구매. 구조부품은 ASA, 연질·완충부는 TPU로 출력 예정."
@@ -798,7 +808,7 @@
     {
       "date": "2026-09-11",
       "title": "제작사양서 v0.5 · HAT 견적 갱신",
-      "detail": "당시 HAT 3장 VAT 포함 1,250,700원 반영. 현재 계획은 2장(1장 장착·1장 예비), 833,800원으로 변경."
+      "detail": "당시 HAT 3장 VAT 포함 1,250,700원 반영. 이후 2장 견적 833,800원을 검토했으며, 2026-09-29 보고 기준 실제 발주는 3장·배송비 포함 681,495원으로 확정."
     },
     {
       "date": "2026-09-07",
@@ -856,20 +866,20 @@
       "name": "3D 프린터 · 뱀부랩 X2D Combo",
       "actual_krw": 1349000,
       "actual_final": true,
-      "updated": "2026-09-16",
-      "note": "운영자 입력. 기존 제작 예산 외 장비 구매 비용. 프린터 도착 대기."
+      "updated": "2026-09-29",
+      "note": "운영자 입력. 기존 제작 예산 외 장비 구매 비용. 현재 설계 수정을 병행하며 3D 부품 출력 진행 중."
     }
   ],
   "current_purchase_plan": [
     {
       "name": "Radxa ZERO 3W",
-      "detail": "4GB RAM · 32GB eMMC · GPIO 헤더 포함 · 160,398원 · AliExpress 구매 완료",
-      "status": "구매 완료"
+      "detail": "4GB RAM · 32GB eMMC · GPIO 헤더 포함 · 160,398원 · AliExpress 구매 완료 · 2026-09-28 배송 완료",
+      "status": "입고 완료"
     },
     {
       "name": "몸통 IMU 완제품",
-      "detail": "SparkFun LSM6DSV16X Qwiic 1개 · 49,120원 · DeviceMart 구매 완료",
-      "status": "구매 완료"
+      "detail": "SparkFun LSM6DSV16X Qwiic 1개 · 49,120원 · DeviceMart 구매 완료 · 2026-09-28 배송 완료",
+      "status": "입고 완료"
     },
     {
       "name": "Bambu Lab ASA White",
@@ -880,6 +890,11 @@
       "name": "Bambu Lab TPU Yellow",
       "detail": "1kg · 66,000원 · 파이토스 구매 완료",
       "status": "구매 완료"
+    },
+    {
+      "name": "HAT C1 보드 3장",
+      "detail": "배송비 포함 총 681,495원 · 제작 발주 완료",
+      "status": "배송 대기"
     }
   ],
   "progress_basis": "완료 단계 ÷ 전체 단계 · 각 단계 동일 비중, 작업 시간 기준 아님",
