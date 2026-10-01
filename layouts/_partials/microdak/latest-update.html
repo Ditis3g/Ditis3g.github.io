@@ -1,15 +1,12 @@
 <section class="md-panel md-latest-update" aria-labelledby="latest-update-title">
-  <p class="pop-label">2026.09.29 · 제작 진행 일지</p>
-  <h2 id="latest-update-title">Radxa·IMU 도착! HAT는 배송 대기, 부품은 출력 중</h2>
-  <p>Radxa와 IMU 완제품은 <strong>9월 28일 배송 완료</strong>. HAT 보드 <strong>3장</strong>은 <strong>배송비 포함 681,495원</strong>에 제작 발주했습니다. 3D 부품은 설계를 수정하며 계속 출력하고 있습니다.</p>
-  <div class="md-arrival-gallery">
-    {{ with site.GetPage "/posts/microdak-progress-20260929" }}
-      {{ range slice (dict "file" "radxa.jpg" "label" "Radxa ZERO 3W · 9/28 입고") (dict "file" "imu.jpg" "label" "SparkFun IMU · 9/28 입고") }}
-        {{ $photo := $.Site.GetPage "/posts/microdak-progress-20260929" }}
-        {{ $original := $photo.Resources.GetMatch .file }}{{ $thumb := $original.Resize "700x webp q85" }}
-        <figure><a href="{{ $original.RelPermalink }}"><img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" alt="{{ .label }} 실물 사진" loading="lazy"></a><figcaption>{{ .label }}</figcaption></figure>
-      {{ end }}
-    {{ end }}
-  </div>
-  <a href="/posts/microdak-progress-20260929/">사진과 함께 제작 진행 일지 읽기 →</a>
+  <p class="pop-label">2026.10.01 · 제작 진행 일지</p>
+  <h2 id="latest-update-title">더미 가조립으로 설계 보완 중 · Radxa와 MuJoCo 연동 완료</h2>
+  <p>외형 출력 후 더미 모터로 가조립하며 장착 치수와 결합부 문제를 발견해 <strong>STL을 지속적으로 수정</strong>하고 있습니다. <strong>Radxa 설정·빌드·실행과 MuJoCo 연동 구동은 완료</strong>했습니다. 실제 모터는 아직 배송 대기 중입니다.</p>
+  {{ with site.GetPage "/posts/microdak-progress-20261001" }}
+    {{ $original := .Resources.GetMatch "radxa-mujoco.png" }}
+    {{ $preview := $original.Resize "1600x webp q90" }}
+    <figure class="md-build-screenshot"><a href="{{ $original.RelPermalink }}"><img src="{{ $preview.RelPermalink }}" width="{{ $preview.Width }}" height="{{ $preview.Height }}" alt="MicroDak LIVE와 Radxa 제어 모니터, MuJoCo 시뮬레이터 연동 구동 화면" loading="lazy"></a><figcaption>Radxa 프로그램과 MuJoCo 연동 구동 · 누르면 원본 확대</figcaption></figure>
+  {{ end }}
+  <a href="/posts/microdak-progress-20261001/">STL 수정 내역과 실행 화면 보기 →</a>
+  <p class="md-small"><a href="/posts/microdak-progress-20260929/">이전 기록 · Radxa·IMU 입고 사진과 HAT 발주</a></p>
 </section>
