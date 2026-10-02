@@ -29,15 +29,15 @@ comments: false
 
 더미 모터를 활용해 다리 구조를 구성하고, 관절의 배치와 움직임, 외형 설계를 확인했습니다. 아래 사진은 출력해 구성한 더미 다리의 실물 모습입니다.
 
-<figure class="md-dummy-photo"><a href="dummy-legs.jpg"><img src="dummy-legs.jpg" alt="검은색 구조물과 노란색 발바닥으로 구성된 좌우 더미 다리 실물" loading="lazy"></a><figcaption>출력과 점검을 완료한 더미 다리 · 사진을 누르면 원본 확대</figcaption></figure>
+{{< dummy-legs-photo >}}
 
 이번 점검은 **더미를 이용한 기구 구성과 움직임 확인**입니다. 실제 모터를 연결한 동력 구동과 로봇 보행 시험은 모터 입고 후 진행할 단계로 남아 있습니다.
 
 ## 3D 프린팅 과정 영상
 
-제작 과정을 기록한 3D 프린팅 영상을 함께 첨부합니다. 아래 재생 버튼으로 볼 수 있습니다.
+제작 과정을 기록한 3D 프린팅 영상을 함께 첨부합니다. 음소거 상태로 자동 반복 재생되며, 재생 버튼으로 일시정지하거나 다시 볼 수 있습니다.
 
-<figure class="md-printing-video"><video controls playsinline preload="metadata" poster="printing-poster.jpg" width="1920" height="1080" aria-label="MicroDak 부품 3D 프린팅 과정 영상"><source src="3d-printing.mp4" type="video/mp4"><a href="3d-printing.mp4">3D 프린팅 영상 열기</a></video><figcaption>3D 프린팅 과정 영상 · 약 11초 · 10월 2일 진행 기록에 첨부</figcaption></figure>
+<figure class="md-printing-video"><video controls autoplay muted loop playsinline preload="metadata" poster="printing-poster.jpg" width="1920" height="1080" aria-label="MicroDak 부품 3D 프린팅 과정 영상"><source src="3d-printing.mp4" type="video/mp4"><a href="3d-printing.mp4">3D 프린팅 영상 열기</a></video><figcaption>3D 프린팅 과정 영상 · 약 11초 · 자동 반복 재생</figcaption></figure>
 
 [영상 파일 직접 열기](3d-printing.mp4)
 

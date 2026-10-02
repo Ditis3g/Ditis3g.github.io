@@ -1,0 +1,3 @@
+{{ $original := (.Page.Resources.GetMatch "dummy-legs.jpg").Process "r270" }}
+{{ $preview := $original.Resize "1400x webp q90" }}
+<figure class="md-dummy-photo"><a href="{{ $original.RelPermalink }}"><img src="{{ $preview.RelPermalink }}" width="{{ $preview.Width }}" height="{{ $preview.Height }}" alt="시계방향으로 90도 회전한 좌우 더미 다리 실물 사진" loading="lazy"></a><figcaption>출력과 점검을 완료한 더미 다리 · 사진을 누르면 확대</figcaption></figure>
