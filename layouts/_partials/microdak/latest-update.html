@@ -1,12 +1,14 @@
 <section class="md-panel md-latest-update" aria-labelledby="latest-update-title">
-  <p class="pop-label">2026.10.01 · 제작 진행 일지</p>
-  <h2 id="latest-update-title">더미 가조립으로 설계 보완 중 · Radxa와 MuJoCo 연동 완료</h2>
-  <p>외형 출력 후 더미 모터로 가조립하며 장착 치수와 결합부 문제를 발견해 <strong>STL을 지속적으로 수정</strong>하고 있습니다. <strong>Radxa 설정·빌드·실행과 MuJoCo 연동 구동은 완료</strong>했습니다. 실제 모터는 아직 배송 대기 중입니다.</p>
-  {{ with site.GetPage "/posts/microdak-progress-20261001" }}
-    {{ $original := .Resources.GetMatch "radxa-mujoco.png" }}
-    {{ $preview := $original.Resize "1600x webp q90" }}
-    <figure class="md-build-screenshot"><a href="{{ $original.RelPermalink }}"><img src="{{ $preview.RelPermalink }}" width="{{ $preview.Width }}" height="{{ $preview.Height }}" alt="MicroDak LIVE와 Radxa 제어 모니터, MuJoCo 시뮬레이터 연동 구동 화면" loading="lazy"></a><figcaption>Radxa 프로그램과 MuJoCo 연동 구동 · 누르면 원본 확대</figcaption></figure>
+  <p class="pop-label">2026.10.02 · 제작 진행 일지</p>
+  <h2 id="latest-update-title">더미 다리 점검 완료 · 이제 머리까지 만들어 봅니다</h2>
+  <p><strong>더미 다리 출력과 관절 구성·움직임·외형 점검을 완료</strong>했습니다. 현재 더미 머리를 제작하며 최종 외형과 관절 구성을 확인할 준비를 하고 있습니다. 모터는 배송 대기 중이며, 배터리·전원 구성도 학습 중입니다.</p>
+  {{ with site.GetPage "/posts/microdak-progress-20261002" }}
+    {{ $original := .Resources.GetMatch "dummy-legs.jpg" }}{{ $preview := $original.Resize "1000x webp q85" }}
+    <div class="md-fabrication-media">
+      <figure><a href="{{ $original.RelPermalink }}"><img src="{{ $preview.RelPermalink }}" width="{{ $preview.Width }}" height="{{ $preview.Height }}" alt="출력과 관절 점검을 완료한 좌우 더미 다리" loading="lazy"></a><figcaption>더미 다리 실물 · 관절과 외형 점검 완료</figcaption></figure>
+      <figure><video controls playsinline preload="metadata" poster="{{ (.Resources.GetMatch "printing-poster.jpg").RelPermalink }}" aria-label="3D 프린팅 과정 영상"><source src="{{ (.Resources.GetMatch "3d-printing.mp4").RelPermalink }}" type="video/mp4"><a href="{{ (.Resources.GetMatch "3d-printing.mp4").RelPermalink }}">영상 열기</a></video><figcaption>3D 프린팅 과정 · 약 11초 · 재생 버튼으로 보기</figcaption></figure>
+    </div>
   {{ end }}
-  <a href="/posts/microdak-progress-20261001/">STL 수정 내역과 실행 화면 보기 →</a>
-  <p class="md-small"><a href="/posts/microdak-progress-20260929/">이전 기록 · Radxa·IMU 입고 사진과 HAT 발주</a></p>
+  <a href="/posts/microdak-progress-20261002/">사진·영상과 함께 오늘 진행 일지 읽기 →</a>
+  <p class="md-small"><a href="/posts/microdak-progress-20261001/">이전 기록 · STL 수정과 Radxa·MuJoCo 연동 완료</a></p>
 </section>

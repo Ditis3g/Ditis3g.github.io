@@ -42,7 +42,7 @@
   </section>
   <ol class="pop-journey" aria-label="실물로 만나는 과정">
     <li><span class="pop-journey-icon">01</span><div><small>DONE · 연동 완료</small><strong>Radxa와 MuJoCo 구동</strong></div><span class="pop-journey-arrow" aria-hidden="true">↗</span></li>
-    <li aria-current="step"><span class="pop-journey-icon">02</span><div><small>NOW · 지금은</small><strong>더미 가조립과 설계 보완</strong></div><span class="pop-journey-arrow" aria-hidden="true">↗</span></li>
+    <li aria-current="step"><span class="pop-journey-icon">02</span><div><small>NOW · 지금은</small><strong>다리 점검 완료·머리 제작</strong></div><span class="pop-journey-arrow" aria-hidden="true">↗</span></li>
     <li><span class="pop-journey-icon">03</span><div><small>SOON · 함께 기다려요</small><strong>실물 마이크로닥과 인사!</strong></div><span class="pop-journey-arrow" aria-hidden="true">✳</span></li>
   </ol>
   <div class="pop-section-heading" id="notebook"><div><p class="pop-label">THE MAKING OF MICRODAK</p><h2>우리의 작업 노트<span>✎</span></h2></div><p><span class="pop-progress-chip">{{ $percent }}% 진행 중</span><small>{{ $d.updated }} 업데이트 · {{ $done }}/{{ $total }}단계 완료</small></p></div>
@@ -56,7 +56,7 @@
     <section class="md-focus-card md-buy-card" id="shopping" aria-labelledby="shopping-title">
       <div class="md-focus-heading"><h2 id="shopping-title">{{ partial "microdak/icon.html" "materials" }}구매·입고 현황</h2><span class="md-card-tag">주요 품목 {{ len $d.current_purchase_plan }}종</span></div>
       <div class="md-shopping-groups">{{ range $d.current_purchase_plan }}<div><p><strong>{{ .name }}</strong><small>{{ .detail }}</small></p><span>{{ .status }}</span></div>{{ end }}</div>
-      <p class="md-procurement-note"><b>모터</b> 15개 구매 완료 · 배송 대기 (396,000원)<br><b>프린터</b> 외형 출력 완료 · 더미 가조립 후 STL 보완<br><b>필라멘트</b> ASA White 1kg·TPU Yellow 1kg 구매 완료 (118,800원)<br><b>Radxa ZERO 3W</b> 설정·빌드·MuJoCo 연동 구동 완료<br><b>HAT</b> 3장 발주 완료 · 배송 대기 (배송비 포함 681,495원)<br><b>몸통 IMU</b> SparkFun LSM6DSV16X 9/28 입고 완료 (49,120원) · J7 통합 대기</p>
+      <p class="md-procurement-note"><b>모터</b> 15개 구매 완료 · 배송 대기 (396,000원)<br><b>프린터</b> 더미 다리 출력·점검 완료 · 머리 제작 중<br><b>필라멘트</b> ASA White 1kg·TPU Yellow 1kg 구매 완료 (118,800원)<br><b>Radxa ZERO 3W</b> 설정·빌드·MuJoCo 연동 구동 완료<br><b>HAT</b> 3장 발주 완료 · 배송 대기 (배송비 포함 681,495원)<br><b>몸통 IMU</b> SparkFun LSM6DSV16X 9/28 입고 완료 (49,120원) · J7 통합 대기</p>
       <p class="md-card-footnote">운영자 최신 계획 기준 · 기존 견적의 전체 품목은 아래 상세에 보관</p>
     </section>
     <section class="md-focus-card md-spent-card" id="spent" aria-labelledby="spent-title">
@@ -75,7 +75,7 @@
       <p class="md-card-footnote">9/29 HAT 3장 발주액 681,495원 반영 · 배송비 포함<br>호스트 통합 인건비 별도</p>
     </section>
   </div>
-  <div class="pop-section-heading" id="progress"><div><p class="pop-label">ONE STEP AT A TIME</p><h2>얼마나 왔을까요?</h2></div><p>Radxa·MuJoCo 연동 완료 · 더미 가조립 후 STL 보완 중</p></div>
+  <div class="pop-section-heading" id="progress"><div><p class="pop-label">ONE STEP AT A TIME</p><h2>얼마나 왔을까요?</h2></div><p>더미 다리 점검 완료 · 머리 제작·전원 구성 학습 중</p></div>
   {{ partial "microdak/progress.html" $d }}
   <div class="md-panel pop-wiring" style="margin-bottom:20px"><strong>전장·보드 배선도 · J7 몸통 IMU 구성</strong><p>Radxa Zero 3W 기준 · 전체 구성, 전원 분리, J7 핀 배열, 모터 하네스 4종</p><a href="/posts/microdak-wiring-j7/">상세 배선도·설명 보기 →</a> · <a href="/microdak/wiring/">도면 전체 화면 ↗</a></div>
   <div class="md-detail-folders" aria-label="필요할 때 펼쳐 보는 상세 자료">

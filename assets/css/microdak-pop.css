@@ -191,3 +191,5 @@ html[data-scheme="dark"] .microdak-pop .md-lane-heading h3{
 @media(max-width:540px){.md-arrival-gallery{grid-template-columns:1fr}.md-latest-update h2{font-size:2rem}}
 
 .md-build-screenshot{margin:20px 0}.md-build-screenshot img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid #ded8e7}.md-build-screenshot figcaption{font-size:1.3rem;line-height:1.6;margin:8px 0 16px}
+
+.md-fabrication-media{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin:24px 0}.md-fabrication-media figure{margin:0;min-width:0}.md-fabrication-media img,.md-fabrication-media video{display:block;width:100%;height:460px;object-fit:contain;border-radius:12px;background:#171719}.md-fabrication-media figcaption{font-size:1.3rem;line-height:1.6;margin-top:10px}@media(max-width:650px){.md-fabrication-media{grid-template-columns:1fr}.md-fabrication-media img,.md-fabrication-media video{height:auto;max-height:540px}}
