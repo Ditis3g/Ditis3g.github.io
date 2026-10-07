@@ -1,14 +1,8 @@
 <section class="md-panel md-latest-update" aria-labelledby="latest-update-title">
-  <p class="pop-label">2026.10.02 · 제작 진행 일지</p>
-  <h2 id="latest-update-title">더미 다리 점검 완료 · 이제 머리까지 만들어 봅니다</h2>
-  <p><strong>더미 다리 출력과 관절 구성·움직임·외형 점검을 완료</strong>했습니다. 현재 더미 머리를 제작하며 최종 외형과 관절 구성을 확인할 준비를 하고 있습니다. 모터는 배송 대기 중이며, 배터리·전원 구성도 학습 중입니다.</p>
-  {{ with site.GetPage "/posts/microdak-progress-20261002" }}
-    {{ $original := (.Resources.GetMatch "dummy-legs.jpg").Process "r270" }}{{ $preview := $original.Resize "1000x webp q85" }}
-    <div class="md-fabrication-media">
-      <figure><a href="{{ $original.RelPermalink }}"><img src="{{ $preview.RelPermalink }}" width="{{ $preview.Width }}" height="{{ $preview.Height }}" alt="출력과 관절 점검을 완료한 좌우 더미 다리" loading="lazy"></a><figcaption>더미 다리 실물 · 관절과 외형 점검 완료</figcaption></figure>
-      <figure><video controls autoplay muted loop playsinline preload="metadata" poster="{{ (.Resources.GetMatch "printing-poster.jpg").RelPermalink }}" aria-label="3D 프린팅 과정 영상"><source src="{{ (.Resources.GetMatch "3d-printing.mp4").RelPermalink }}" type="video/mp4"><a href="{{ (.Resources.GetMatch "3d-printing.mp4").RelPermalink }}">영상 열기</a></video><figcaption>3D 프린팅 과정 · 약 11초 · 자동 반복 재생</figcaption></figure>
-    </div>
-  {{ end }}
-  <a href="/posts/microdak-progress-20261002/">사진·영상과 함께 오늘 진행 일지 읽기 →</a>
-  <p class="md-small"><a href="/posts/microdak-progress-20261001/">이전 기록 · STL 수정과 Radxa·MuJoCo 연동 완료</a></p>
+  <p class="pop-label">2026.10.07 · 제작 진행 일지</p>
+  <h2 id="latest-update-title">더미 전체 외형 완성 · 관절 구조와 간섭 점검 완료</h2>
+  <p><strong>머리부터 다리까지 더미 외형 출력을 모두 완료</strong>하고 액추에이터 관절 구조와 간섭을 사전 점검했습니다. 보드와 배터리 위치도 거의 확정했습니다. 몇 군데 손볼 부분을 보완하며 실제 부품 장착을 준비합니다.</p>
+  {{ with site.GetPage "/posts/microdak-progress-20261007" }}{{ partial "microdak/demo-photos.html" . }}{{ end }}
+  <a href="/posts/microdak-progress-20261007/">정면·측면 사진과 함께 진행 일지 읽기 →</a>
+  <p class="md-small"><a href="/posts/microdak-progress-20261002/">이전 기록 · 더미 다리 사진과 3D 프린팅 영상</a></p>
 </section>

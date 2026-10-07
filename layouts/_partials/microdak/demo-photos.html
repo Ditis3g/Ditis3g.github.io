@@ -1,0 +1,8 @@
+<div class="md-fabrication-media md-demo-gallery">
+  {{ range slice (dict "file" "dummy-front.jpg" "alt" "머리부터 발까지 외형 출력을 완료한 MicroDak 더미의 정면" "caption" "더미 정면 · 전체 외형 출력 완료") (dict "file" "dummy-side.jpg" "alt" "부리와 목, 몸통 및 다리 배치가 보이는 MicroDak 더미의 측면" "caption" "더미 측면 · 관절 구조와 간섭 사전 점검 완료") }}
+    {{ $original := $.Resources.GetMatch .file }}
+    {{ $upright := $original.Filter images.AutoOrient }}
+    {{ $preview := $upright.Resize "1000x webp q85" }}
+    <figure><a href="{{ $original.RelPermalink }}"><img src="{{ $preview.RelPermalink }}" width="{{ $preview.Width }}" height="{{ $preview.Height }}" alt="{{ .alt }}" loading="lazy"></a><figcaption>{{ .caption }}</figcaption></figure>
+  {{ end }}
+</div>
