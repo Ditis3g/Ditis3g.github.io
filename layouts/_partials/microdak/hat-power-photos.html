@@ -1,0 +1,6 @@
+<div class="md-demo-gallery md-hat-gallery">
+  {{ range slice (dict "file" "hat-power-correct.png" "alt" "HAT C1 앞면에서 J13 가운데와 아래 패드가 빨간색으로 표시된 올바른 전원 연결 위치" "caption" "정상 연결 위치 · 가운데 2번 +BATT / 아래 1번 GND") (dict "file" "hat-power-mistake.png" "alt" "HAT C1 J13 위와 가운데 패드가 빨간색으로 표시된 잘못된 전원 연결 위치" "caption" "당시 잘못 선택한 위치 · 위 3번 DATA / 가운데 2번 +BATT. 이 위치로 전원을 연결하면 안 됩니다.") }}
+    {{ $original := $.Resources.GetMatch .file }}
+    <figure><a href="{{ $original.RelPermalink }}"><img src="{{ $original.RelPermalink }}" width="{{ $original.Width }}" height="{{ $original.Height }}" alt="{{ .alt }}" loading="lazy"></a><figcaption>{{ .caption }}</figcaption></figure>
+  {{ end }}
+</div>
