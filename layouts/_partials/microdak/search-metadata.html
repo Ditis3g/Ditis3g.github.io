@@ -1,0 +1,25 @@
+{{- /* Describe the existing workshop without adding visible page content. */ -}}
+{{- $website := dict
+    "@type" "WebSite"
+    "@id" (printf "%s#website" .Site.Home.Permalink)
+    "url" .Site.Home.Permalink
+    "name" .Site.Title
+-}}
+{{- $microdak := dict
+    "@type" "Thing"
+    "@id" (printf "%s#microdak" .Permalink)
+    "name" "MicroDak"
+    "alternateName" "마이크로닥"
+-}}
+{{- $workshop := dict
+    "@context" "https://schema.org"
+    "@type" "WebPage"
+    "@id" (printf "%s#webpage" .Permalink)
+    "url" .Permalink
+    "name" (printf "MicroDak %s" .Title)
+    "description" (partial "data/description" .)
+    "inLanguage" .Language.Locale
+    "isPartOf" $website
+    "about" $microdak
+-}}
+<script type="application/ld+json">{{ $workshop | jsonify | safeJS }}</script>

@@ -1,6 +1,11 @@
 {{- $pageTitle := .Title -}}
 {{- $siteTitle := .Site.Title -}}
 {{- $paginator := partial "helper/paginator.html" . -}}
+{{- $isMicrodakWorkshop := eq .RelPermalink "/microdak/" -}}
+
+{{- if $isMicrodakWorkshop -}}
+    {{- $pageTitle = printf "MicroDak %s" $pageTitle -}}
+{{- end -}}
 
 {{- $title := slice -}}
 
@@ -11,8 +16,8 @@
 
 {{- $title = $title | append (default $siteTitle $pageTitle) -}}
 
-{{- /* Keep the visible home heading; identify its publisher in search metadata. */ -}}
-{{- if and .IsHome (ne $pageTitle $siteTitle) -}}
+{{- /* Keep visible headings; identify these landing pages in search metadata. */ -}}
+{{- if and (or .IsHome $isMicrodakWorkshop) (ne $pageTitle $siteTitle) -}}
     {{- $title = $title | append $siteTitle -}}
 {{- end -}}
 

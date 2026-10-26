@@ -13,6 +13,9 @@
 }}
 <script type="application/ld+json">{{ $website | jsonify | safeJS }}</script>
 {{- end }}
+{{- if eq .RelPermalink "/microdak/" }}
+{{- partial "microdak/search-metadata.html" . }}
+{{- end }}
 {{- if hugo.IsProduction }}
 {{- with site.Params.adsense.client }}
 <meta name="google-adsense-account" content="{{ . }}">
