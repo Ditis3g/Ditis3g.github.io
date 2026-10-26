@@ -47,6 +47,8 @@ jobs:
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
+      - name: Publish Search Console sitemap
+        run: cp public/sitemap.xml public/sitemap-search.xml
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
