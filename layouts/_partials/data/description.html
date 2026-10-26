@@ -1,0 +1,21 @@
+<!-- Use site subtitle by default -->
+{{ $description := .Site.Params.sidebar.subtitle }}
+
+<!-- Seprate description exists -->
+{{ if .Site.Params.description }}
+    {{ $description = .Site.Params.description }}
+{{ end }}
+
+{{ if .Description }}
+    <!-- Page description exists -->
+    {{ $description = .Description }}
+{{ else if or .IsHome .IsPage }}
+    <!-- Use the existing page text, including the home introduction. -->
+    {{ $description = .Summary }}
+{{ end }}
+
+{{ if .IsHome }}
+    {{ $description = $description | plainify | replaceRE `\s+` " " | strings.TrimSpace }}
+{{ end }}
+
+{{ return (replaceRE "\n" " " $description | plainify) }}

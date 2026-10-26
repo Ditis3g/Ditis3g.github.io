@@ -1,0 +1,19 @@
+{{- $pageTitle := .Title -}}
+{{- $siteTitle := .Site.Title -}}
+{{- $paginator := partial "helper/paginator.html" . -}}
+
+{{- $title := slice -}}
+
+{{- if and $paginator $paginator.HasPrev -}}
+    <!-- Add page number-->
+    {{ $title = $title | append (printf "Page %d" $paginator.PageNumber) }}
+{{- end -}}
+
+{{- $title = $title | append (default $siteTitle $pageTitle) -}}
+
+{{- /* Keep the visible home heading; identify its publisher in search metadata. */ -}}
+{{- if and .IsHome (ne $pageTitle $siteTitle) -}}
+    {{- $title = $title | append $siteTitle -}}
+{{- end -}}
+
+{{ return delimit $title " - " }}
