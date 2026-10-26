@@ -13,6 +13,9 @@
 
     {{ with .Content }}<div class="book-home-intro">{{ . }}</div>{{ end }}
 
+    {{ partial "home-project.html" . }}
+
+    <h2 id="book-contents" class="book-home-title" style="font-size:24px;margin:30px 0 16px">책으로 이어 읽기</h2>
     {{ partial "book-toc.html" . }}
 
     {{- partial "footer/footer" . -}}

@@ -111,6 +111,9 @@ buildExpired = false
   rssFullContent = true
   description = "Physical AI를 비롯해 돈 되는 모든 걸 다 하는 드림팀"
 
+  [params.adsense]
+    client = "ca-pub-4949016061201758"
+
   [params.footer]
     since = 2026
     customText = ""

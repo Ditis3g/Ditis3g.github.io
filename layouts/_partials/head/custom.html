@@ -1,3 +1,14 @@
 {{- with site.Params.goatcounter }}
 <script data-goatcounter="https://{{ . }}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 {{- end }}
+{{- if hugo.IsProduction }}
+{{- with site.Params.adsense.client }}
+<meta name="google-adsense-account" content="{{ . }}">
+{{- end }}
+{{- /* 목록·태그·검색·정책 페이지에는 광고를 로드하지 않는다. */}}
+{{- if and (ne .Params.ads false) (or .IsHome (eq .Section "microdak") (and .IsPage (eq .Section "posts"))) }}
+{{- with site.Params.adsense.client }}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ . }}" crossorigin="anonymous"></script>
+{{- end }}
+{{- end }}
+{{- end }}
