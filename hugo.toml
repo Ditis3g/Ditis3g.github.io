@@ -84,6 +84,14 @@ buildExpired = false
     [menu.main.params]
       icon = "microdak"
 
+  [[menu.main]]
+    identifier = "mjsoft"
+    name = "MJ소프트"
+    url = "/mjsoft/"
+    weight = 56
+    [menu.main.params]
+      icon = "code"
+
   [[menu.social]]
     identifier = "youtube"
     name = "YouTube"
