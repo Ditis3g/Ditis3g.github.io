@@ -1,0 +1,27 @@
+[
+  {
+    "file": "lama-full.onnx",
+    "bytes": 208044816,
+    "sha256": "1faef5301d78db7dda502fe59966957ec4b79dd64e16f03ed96913c7a4eb68d6"
+  },
+  {
+    "file": "sesr-x2.onnx",
+    "bytes": 93732,
+    "sha256": "4b686864a8b17cf9aaad0d787f7b7a133c95317f408cac5204701d7291199711"
+  },
+  {
+    "file": "tiny_face_detector_model-shard1",
+    "bytes": 193321,
+    "sha256": "b7503ce7df31039b1c43316a9b865cab6a70dd748cc602d3fa28b551503c3871"
+  },
+  {
+    "file": "tiny_face_detector_model-weights_manifest.json",
+    "bytes": 2953,
+    "sha256": "14c60659a31b6b7b1320077171b8f8adcb24ef0e62dde62ce603bcb49a1b49b5"
+  },
+  {
+    "file": "u2netp.onnx",
+    "bytes": 4574861,
+    "sha256": "309c8469258dda742793dce0ebea8e6dd393174f89934733ecc8b14c76f4ddd8"
+  }
+]

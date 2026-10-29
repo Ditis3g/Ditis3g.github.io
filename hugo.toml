@@ -86,7 +86,7 @@ buildExpired = false
 
   [[menu.main]]
     identifier = "mjsoft"
-    name = "MJ소프트"
+    name = "Mj소프트"
     url = "/mjsoft/"
     weight = 56
     [menu.main.params]
